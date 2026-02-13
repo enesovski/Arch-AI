@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1980da08f07e442abb53cd63da52595d, type: 3}
+  m_Name: Robot Eye Configuration
+  m_EditorClassIdentifier: 
+  fadeDuration: 0.7
+  easeMethod: 32
+  passiveEyeLigthIntensity: 0.5
+  passiveFlareIntensity: 0.4
+  passiveFlareScale: 0.3
+  passiveColor: {r: 0, g: 1.3244523, b: 2.9960787, a: 1}
+  threatenedEyeLightIntensity: 0.6
+  threatenedFlareIntensity: 0.4
+  threatenedFlareScale: 0.45
+  threatenedColor: {r: 2.9960787, g: 1.1592317, b: 0, a: 1}
+  aggressiveEyeLightIntensity: 0.6
+  aggressiveFlareIntensity: 0.4
+  aggressiveFlareScale: 0.4
+  aggressiveColor: {r: 2, g: 0, b: 0.012971878, a: 1}
