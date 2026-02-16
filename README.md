@@ -31,92 +31,183 @@ Arch-AI is designed to power sophisticated AI agents in game environments with t
 
 ## Architecture
 
-### High-Level System Diagram
+### High-Level System Diagram: The "Body" of an AI Entity
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Arch-AI Framework                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Behavior Graph Agent (Decision Tree)         │  │
-│  │  ┌──────────┬──────────┬──────────┬────────────┐    │  │
-│  │  │ Passive  │Suspicious│Aggressive│Return Home│    │  │
-│  │  └──────────┴──────────┴──────────┴────────────┘    │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                            ▲                                │
-│                            │                                │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │            Blackboard (Central Data Store)         │   │
-│  │  - All module references                           │   │
-│  │  - Shared state and configuration                  │   │
-│  └────────────────────────────────────────────────────┘   │
-│                            △                                │
-│        ┌───────────────────┼───────────────────┐           │
-│        │                   │                   │           │
-│   ┌────▼────┐         ┌───▼────┐        ┌────▼───┐       │
-│   │Detection│         │Movement│        │ Attack │       │
-│   │ Module  │         │ Module  │        │ Module │       │
-│   ├────┬────┤         ├───┬────┤        ├────┬───┤       │
-│   │VS  │HS  │         │Nav│Rot │        │Melee│Rng│     │
-│   │AS  │    │         │Mesh    │        │     │   │     │
-│   └────┴────┘         └───┴────┘        └────┴───┘       │
-│                                                             │
-│   ┌──────────────┐    ┌──────────────┐  ┌────────────┐   │
-│   │ Aggro Module │    │ Threat       │  │ Animator   │   │
-│   │              │    │ Evaluation   │  │ Module     │   │
-│   └──────────────┘    └──────────────┘  └────────────┘   │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Reaction Bus System                         │  │
-│  │  ┌─────────────┐          ┌──────────────┐         │  │
-│  │  │ Aggro       │          │ Death        │         │  │
-│  │  │ Reactions   │          │ Reactions    │         │  │
-│  │  └─────────────┘          └──────────────┘         │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Brain["🧠 BRAIN"]
+        BT["Behavior Tree<br/>(Decision Making)<br/>Passive | Suspicious | Aggressive"]
+    end
+    
+    subgraph Blackboard["🔗 BLACKBOARD - Central Nervous System"]
+        BBtext["Shared State | Module References | Configuration"]
+    end
+    
+    subgraph Organs["🫀 ORGANS (Action Modules)"]
+        MM["🚶 Movement Module<br/>(Navigation + Rotation)<br/>NavMesh Agent | Ground Fitter"]
+        AM["⚔️ Attack Module<br/>(Combat)<br/>Melee | Ranged"]
+        ANM["🎬 Animator Module<br/>(Visual Feedback)"]
+    end
+    
+    subgraph Senses["👁️ SENSES (Information Modules)"]
+        DM["🔍 Detection Module<br/>(Visual | Audio | Hit)<br/>What can I see/hear/feel?"]
+        TM["📊 Threat Evaluation<br/>(Threat Assessment)<br/>How dangerous is it?"]
+        AGM["😠 Aggro Module<br/>(Emotional State)<br/>Am I angry/scared/calm?"]
+    end
+    
+    subgraph Events["📢 REACTION SYSTEM"]
+        ARB["Aggro Reactions Bus"]
+        DRB["Death Reactions Bus"]
+    end
+    
+    BT -->|Reads & Commands| Blackboard
+    Blackboard -->|Provides State| BT
+    
+    Blackboard -->|Activates| MM
+    Blackboard -->|Activates| AM
+    Blackboard -->|Activates| ANM
+    
+    Blackboard -->|Reads Data| DM
+    Blackboard -->|Reads Data| TM
+    Blackboard -->|Reads Data| AGM
+    
+    MM -.->|Updates Position| Blackboard
+    AM -.->|Reports Combat| Blackboard
+    ANM -.->|Syncs Animation| Blackboard
+    
+    DM -.->|Target Detected| Blackboard
+    TM -.->|Threat Level| Blackboard
+    AGM -.->|Status Changed| Blackboard
+    
+    Blackboard -->|Triggers| ARB
+    Blackboard -->|Triggers| DRB
+    
+    style Brain fill:#FFE4B5
+    style Blackboard fill:#87CEEB
+    style Organs fill:#90EE90
+    style Senses fill:#FFB6C1
+    style Events fill:#DDA0DD
 ```
 
 ### Class Hierarchy
 
-```
-Entity System:
-├── GameEntity (Base AI Agent)
-│   ├── AggroStatus (Passive → Suspicious → Aggressive)
-│   └── Faction (Team affiliation)
-└── EntityProfile (Configuration asset)
+```mermaid
+classDiagram
+    class IEntityModule {
+        <<interface>>
+        +SetBlackboard(Blackboard)
+    }
 
-Module System:
-├── IEntityModule (Interface)
-│   ├── BaseEntityModule
-│   ├── UpdateableEntityModule
-│   ├── AttackModule
-│   │   ├── MeleeAttackModule
-│   │   └── RangedAttackModule
-│   ├── DetectionModule
-│   │   ├── VisualSensor
-│   │   ├── AudioSensor
-│   │   └── HitSensor
-│   ├── MovementModule
-│   │   ├── RotationModule
-│   │   └── NavMeshAgent integration
-│   ├── AggroModule
-│   └── ThreatEvaluation
-└── Blackboard (Central data hub)
+    class BaseEntityModule {
+        #blackboard: Blackboard
+        +SetBlackboard(Blackboard)*
+    }
 
-Behavior System:
-├── Behavior Trees
-│   ├── Aggressive Behavior Tree
-│   └── Passive Behavior Tree
-├── Actions (6+ action types)
-└── Conditions (4+ condition types)
+    class UpdateableEntityModule {
+        +OnUpdate()*
+    }
 
-Reaction System:
-├── IReaction (Event handler interface)
-├── AggroReactionsBus
-├── DeathReactionsBus
-└── DissolveReactionsBus
+    class AttackModule {
+        -meleSubModule: MeleeAttackModule
+        -rangedSubModule: RangedAttackModule
+        +ExecuteAttack()
+    }
+
+    class MeleeAttackModule {
+        +MeleeAttackDefinition definition
+        +ExecuteMeleeAttack()
+    }
+
+    class RangedAttackModule {
+        +RangedAttackDefinition definition
+        +ExecuteRangedAttack()
+    }
+
+    class DetectionModule {
+        +VisualSensor visualSensor
+        +AudioSensor audioSensor
+        +HitSensor hitSensor
+        +OnTargetDetected()
+    }
+
+    class MovementModule {
+        +RotationModule rotationModule
+        +Navigate(target)
+    }
+
+    class RotationModule {
+        +SmoothRotate(direction)
+    }
+
+    class AggroModule {
+        +RegisterAggro(entity)
+        +UpdateThreatLevel()
+    }
+
+    class ThreatEvaluator {
+        +CalculateThreatScore(entity)
+    }
+
+    class GameEntity {
+        +EntityProfile profile
+        +FactionType faction
+        +RegisterAggro(entity)
+        +UnregisterAggro(entity)
+    }
+
+    class Blackboard {
+        +AttackModule attackModule
+        +DetectionModule detectionModule
+        +MovementModule movementModule
+        +AggroModule aggroModule
+        +BehaviorGraphAgent behaviorGraphAgent
+        +float nestRadius
+        +Initialize()
+    }
+
+    class BehaviorGraphAgent {
+        +AggressiveBehaviorTree
+        +PassiveBehaviorTree
+        +Execute()
+    }
+
+    class IReaction {
+        <<interface>>
+        +OnReactionTriggered()*
+    }
+
+    class ReactionBus {
+        +Subscribe(reaction)
+        +Publish(event)
+    }
+
+    IEntityModule <|-- BaseEntityModule
+    BaseEntityModule <|-- UpdateableEntityModule
+    UpdateableEntityModule <|-- AttackModule
+    UpdateableEntityModule <|-- DetectionModule
+    UpdateableEntityModule <|-- MovementModule
+    UpdateableEntityModule <|-- AggroModule
+    
+    AttackModule -- MeleeAttackModule
+    AttackModule -- RangedAttackModule
+    
+    DetectionModule -- "3" BaseSensor
+    MovementModule -- RotationModule
+    
+    AggroModule -- ThreatEvaluator
+    
+    Blackboard -- AttackModule
+    Blackboard -- DetectionModule
+    Blackboard -- MovementModule
+    Blackboard -- AggroModule
+    Blackboard -- BehaviorGraphAgent
+    Blackboard -- GameEntity
+    
+    GameEntity -- EntityProfile
+    
+    IReaction <|-- AggroReactionsBus
+    IReaction <|-- DeathReactionsBus
+    ReactionBus -- IReaction
 ```
 
 ---
@@ -189,16 +280,47 @@ Detects threats using three sensor types working in parallel:
 | **Hit Sensor (HitSensor)** | Collision/damage callbacks | Immediate reaction to being attacked |
 
 **Detection Pipeline:**
-```
-Entity Takes Damage / Makes Sound / Comes Into View
-        ▼
-    Sensor Triggers
-        ▼
-DetectionModule.OnTargetDetected()
-        ▼
-    Target Added to Awareness
-        ▼
-AggroModule.UpdateThreatLevel()
+```mermaid
+sequenceDiagram
+    actor World as World<br/>(Environment)
+    participant VS as Visual Sensor
+    participant AS as Audio Sensor
+    participant HS as Hit Sensor
+    participant DM as Detection Module
+    participant BB as Blackboard
+    participant AGM as Aggro Module
+    
+    alt Target Comes Into View
+        World->>VS: Target In Range
+        activate VS
+        VS->>VS: Check LineOfSight
+        VS->>DM: OnTargetDetected()
+        deactivate VS
+    else Sound Detected
+        World->>AS: Sound Event
+        activate AS
+        AS->>AS: Calculate Distance
+        AS->>DM: OnTargetDetected()
+        deactivate AS
+    else Entity Hit
+        World->>HS: Damage Received
+        activate HS
+        HS->>DM: OnTargetDetected()
+        deactivate HS
+    end
+    
+    activate DM
+    DM->>BB: Update Target
+    deactivate DM
+    
+    activate BB
+    BB->>AGM: UpdateThreatLevel()
+    deactivate BB
+    
+    activate AGM
+    AGM->>AGM: Calculate Threat Score
+    AGM->>BB: Set AggroStatus
+    deactivate AGM
 ```
 
 ### 4. Attack Module
@@ -272,6 +394,40 @@ Idle (nestRadius) → Wander → Chase Target → Flee → Return Home
 └─────────────────────────────────────────┘
 ```
 
+```mermaid
+stateDiagram-v2
+    [*] --> Passive
+    
+    Passive --> Suspicious: detect_threat
+    note right of Passive
+        • Normal patrolling/idle
+        • Low threat awareness
+        • Behavior: Wander/Idle
+    end note
+    
+    Suspicious --> Aggressive: confirm_threat<br/>or close_distance
+    note right of Suspicious
+        • Aware of potential threat
+        • Increased detection sensitivity
+        • Behavior: Investigate/Move Toward
+    end note
+    
+    Aggressive --> Passive: target_escaped<br/>or threat_eliminated
+    note right of Aggressive
+        • Active engagement
+        • Attacking/pursuing
+        • May trigger allies
+        • Behavior: Chase/Attack
+    end note
+    
+    Aggressive --> Suspicious: lost_sight<br/>lost_track
+    Suspicious --> Passive: no_confirmation
+    
+    style Passive fill:#90EE90
+    style Suspicious fill:#FFD700
+    style Aggressive fill:#FF6B6B
+```
+
 **Threat Evaluation System:**
 
 The ThreatEvaluator calculates dynamic threat scores based on:
@@ -291,23 +447,37 @@ The system uses Unity Behavior Graph agents with two primary behavior trees:
 
 #### Passive Behavior Tree
 Used for non-hostile entities with cautious behavior:
-```
-Idle/Wander
-    ├─ DetectThreat?
-    │   ├─ Yes → SuspiciousState → Investigate
-    │   └─ No → ContinueWander
-    └─ InNest? → ReturnToNest
+```mermaid
+graph TD
+    A["🌳 Passive Tree Root"] --> B{Is Threat<br/>Detected?}
+    B -->|Yes| C["😕 SuspiciousState<br/>Investigate"]
+    B -->|No| D["🚶 Wander/Idle<br/>Patrol"]
+    C --> E{Confirm<br/>Threat?}
+    E -->|Yes| F["😠 Switch to<br/>Aggressive"]
+    E -->|No| D
+    D --> G{In Nest<br/>Radius?}
+    G -->|No| H["🏠 ReturnToNest"]
+    H --> D
+    G -->|Yes| D
 ```
 
 #### Aggressive Behavior Tree
 Used for hostile entities with attack focus:
-```
-SearchForTarget
-    ├─ TargetFound?
-    │   ├─ InRange? → AttackTarget
-    │   └─ OutOfRange? → ChaseTarget
-    ├─ CanAttack? → AttackTarget
-    └─ Threat Gone? → ReturnToNest
+```mermaid
+graph TD
+    A["🌳 Aggressive Tree Root"] --> B["🔍 SearchForTarget<br/>Scan Environment"]
+    B --> C{Target<br/>Found?}
+    C -->|No| B
+    C -->|Yes| D{In Attack<br/>Range?}
+    D -->|Yes| E{CanAttack<br/>Condition?}
+    E -->|Yes| F["⚔️ AttackTarget<br/>Execute Attack"]
+    E -->|No| G["🚶 Wait/Reposition"]
+    D -->|No| H["🏃 ChaseTarget<br/>Pursue"]
+    H --> D
+    F --> I{Threat<br/>Alive?}
+    I -->|Yes| D
+    I -->|No| J["🏠 ReturnToNest<br/>Back to Patrol"]
+    J --> B
 ```
 
 ### Available Actions
@@ -642,7 +812,7 @@ When extending Arch-AI:
 
 ## License
 
-This project is part of the Arch AI game framework.
+This project is part of the Archzeka game framework.
 
 ---
 
