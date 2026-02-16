@@ -727,26 +727,15 @@ public class CustomModule : UpdateableEntityModule
 ### Module Lifecycle
 
 ```
-┌──────────────┐
-│   Created    │
-└──────┬───────┘
+    Created    
        ▼
-┌──────────────────────────┐
-│ SetBlackboard() called   │ ← Module receives reference
-└──────┬───────────────────┘
+SetBlackboard() called   │ Module receives reference
        ▼
-┌──────────────────────────┐
-│ Initialize() called      │ ← Setup complete
-└──────┬───────────────────┘
+Initialize() called      │ Setup complete
        ▼
-┌──────────────────────────┐
-│ OnUpdate() loop          │ ← UpdateableEntityModule only
-│ (per frame)              │
-└──────┬───────────────────┘
+OnUpdate() loop          | per update interval (0.3 seconds)           
        ▼
-┌──────────────────────────┐
-│ OnDisable() cleanup      │
-└──────────────────────────┘
+OnDisable() cleanup     
 ```
 
 ---
@@ -784,37 +773,6 @@ Assets/AI System/
 ├── Reactions/            # Event handler system
 └── Utils/                # Utility functions
 ```
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|:---|:---|
-| Entity not detecting targets | Check sensor configuration and LineOfSight |
-| NavMesh not working | Ensure NavMesh is baked and agent fits |
-| Behavior tree not executing | Verify BehaviorGraphAgent is enabled |
-| Attack not landing | Check attack range and target position |
-| Slow performance | Profile with Profiler, reduce entity count |
-
----
-
-## Contributing
-
-When extending Arch-AI:
-1. Follow modular design patterns
-2. Implement proper interfaces (IEntityModule, ISensor, etc.)
-3. Use Blackboard for inter-module communication
-4. Add corresponding behavior tree nodes
-5. Test with multiple entity instances
-
----
-
-## License
-
-This project is part of the Archzeka game framework.
-
----
 
 **Last Updated:** February 2026  
 **Version:** 1.0
