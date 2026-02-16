@@ -1,4 +1,4 @@
-﻿using Artifika.AI.Aggro.Reactions;
+using Artifika.AI.Aggro.Reactions;
 using Artifika.AI.Attack;
 using Artifika.AI.Death.Reactions;
 using Sirenix.OdinInspector;
@@ -46,8 +46,8 @@ namespace Artifika.AI
             aggroModule?.SetBlackboard(this);
             rotationModule?.Initialize(agent, fitter);
             
-            deathReactionsBus.Initialize(this);
-            aggroReactionsBus.Initialize(this);
+            deathReactionsBus?.Initialize(this);
+            aggroReactionsBus?.Initialize(this);
         }
 
         #region Properties

@@ -15,9 +15,21 @@ public partial class WanderAction : Action
     private MovementModule _movementModule;
     protected override Status OnStart()
     {
-        _movementModule = Blackboard.Value.movementModule;
+        var bb = Blackboard != null ? Blackboard.Value : null;
+        if (bb == null || bb.movementModule == null)
+        {
+            Debug.LogWarning("WanderAction: Blackboard or MovementModule is not assigned.", this);
+            return Status.Failure;
+        }
+
+        _movementModule = bb.movementModule;
 
         MovementProfile movementData = _movementModule.MovementProfile;
+        if (movementData == null)
+        {
+            Debug.LogWarning("WanderAction: MovementProfile is not assigned on MovementModule.", this);
+            return Status.Failure;
+        }
         Transform transform = _movementModule.transform;
 
         Vector3 nest = _movementModule.SpawnPoint;
@@ -33,7 +45,11 @@ public partial class WanderAction : Action
             return Status.Failure;
 
         _movementModule.SetSpeed(_movementModule.MovementProfile.wanderSpeed);
-        _movementModule.MoveTo(wanderTarget);
+
+        // If the server-side MoveTo fails (no valid path), fail the node instead of leaving it running.
+        if (!_movementModule.MoveTo(wanderTarget))
+            return Status.Failure;
+
         return Status.Running;
     }
 

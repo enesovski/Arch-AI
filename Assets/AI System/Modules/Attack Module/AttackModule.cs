@@ -70,6 +70,9 @@ namespace Artifika.AI.Attack
         {
             foreach (var def in attackDefinitions)
             {
+                if (def.attackDefinition == null)
+                    continue;
+
                 if (cooldowns.TryGetValue(def.attackDefinition, out float currentCooldown))
                 {
                     cooldowns[def.attackDefinition] = Mathf.Max(0f, currentCooldown - deltaTime);
@@ -82,10 +85,10 @@ namespace Artifika.AI.Attack
             if (!canAttack)
                 return false;
 
-            if (!target || healthComponent.Health <= 0)
+            if (!target || healthComponent == null || healthComponent.Health <= 0)
                 return false;
 
-            return SelectBestDefinition();
+            return SelectBestDefinition() != null;
         }
 
         public void Attack()
@@ -111,6 +114,9 @@ namespace Artifika.AI.Attack
 
         private IEnumerator PerformAttackSequence(BaseAttackDefinition def)
         {
+            if (!def)
+                yield break;
+
             canAttack = false;
             
             if (def.StopDuringAttack && movementModule != null)
@@ -160,6 +166,9 @@ namespace Artifika.AI.Attack
 
         private BaseAttackDefinition SelectBestDefinition()
         {
+            if (!target)
+                return null;
+
             float bestScore = float.MinValue;
             BaseAttackDefinition bestDef = null;
 
@@ -169,8 +178,13 @@ namespace Artifika.AI.Attack
             foreach (AttackData attack in attackDefinitions)
             {
                 BaseAttackDefinition def = attack.attackDefinition;
+                if (def == null)
+                    continue;
 
-                if (cooldowns[def] > 0f)
+                if (!cooldowns.TryGetValue(def, out float currentCooldown))
+                    continue;
+
+                if (currentCooldown > 0f)
                     continue;
 
                 if (distance < def.MinRange || distance > def.MaxRange)
@@ -180,8 +194,7 @@ namespace Artifika.AI.Attack
                 float score = def.DistanceUtilityCurve.Evaluate(distancePercentage)
                               + def.HealthUtilityCurve.Evaluate(healthPercentage)
                               + UnityEngine.Random.Range(0f, def.RandomUtilityVariance)
-                              + def.AdditionalUtilityScore
-                              - (cooldowns[def] > 0f ? def.CooldownPenalty : 0f);
+                              + def.AdditionalUtilityScore;
 
                 if (score > bestScore)
                 {

@@ -12,7 +12,15 @@ public partial class CanAttackCondition : Condition
 
     public override bool IsTrue()
     {
-        return Blackboard.Value.attackModule.CanAttack();
+        var bb = Blackboard != null ? Blackboard.Value : null;
+
+        if (bb == null || bb.attackModule == null)
+        {
+            Debug.LogWarning("CanAttackCondition: Blackboard or AttackModule is not assigned.", this);
+            return false;
+        }
+
+        return bb.attackModule.CanAttack();
     }
 
     public override void OnStart()

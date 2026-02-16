@@ -29,12 +29,15 @@ public class EntityCoordinator : NetworkBehaviour
         foreach (var module in GetComponents<IEntityModule>())
             module?.Initialize();
 
-        healthComponent = blackboard?.healthComponent;
+        healthComponent = blackboard != null ? blackboard.healthComponent : null;
 
         cachedWait = new WaitForSeconds(updateInterval);
         updateCoroutine = StartCoroutine(UpdateCycle());
 
-        healthComponent.OnDeath += StopUpdateCoroutine;
+        if (healthComponent != null)
+        {
+            healthComponent.OnDeath += StopUpdateCoroutine;
+        }
     }
     
     private IEnumerator UpdateCycle()
@@ -84,6 +87,11 @@ public class EntityCoordinator : NetworkBehaviour
         if (updateCoroutine != null)
         {
             StopCoroutine(updateCoroutine);
+        }
+
+        if (healthComponent != null)
+        {
+            healthComponent.OnDeath -= StopUpdateCoroutine;
         }
 
         registeredModules.Clear();
