@@ -536,6 +536,7 @@ Entity Action Occurs
 Subscribed Handlers Execute
 ```
 
+<<<<<<< HEAD
 ```mermaid
 graph LR
     subgraph Events["📢 Entity Events"]
@@ -578,6 +579,8 @@ graph LR
     style Handlers fill:#87CEEB
 ```
 
+=======
+>>>>>>> eb6605e836655949f0088c0bc3850476ca4295ca
 ---
 
 ## Configuration
@@ -768,6 +771,7 @@ public class CustomModule : UpdateableEntityModule
 
 ### Module Lifecycle
 
+<<<<<<< HEAD
 ```mermaid
 stateDiagram-v2
     [*] --> Created: New Instance
@@ -802,6 +806,18 @@ stateDiagram-v2
     end note
     
     Cleanup --> [*]: Destroyed
+=======
+```
+    Created    
+       ▼
+SetBlackboard() called   │ Module receives reference
+       ▼
+Initialize() called      │ Setup complete
+       ▼
+OnUpdate() loop          | per update interval (0.3 seconds)           
+       ▼
+OnDisable() cleanup     
+>>>>>>> eb6605e836655949f0088c0bc3850476ca4295ca
 ```
 
 ---
@@ -840,6 +856,7 @@ Assets/AI System/
 └── Utils/                # Utility functions
 ```
 
+<<<<<<< HEAD
 ---
 
 ## Troubleshooting
@@ -873,3 +890,7 @@ This project is part of the Archzeka game framework.
 
 **Last Updated:** February 2026  
 **Version:** 1.0
+=======
+**Last Updated:** February 2026  
+**Version:** 1.0
+>>>>>>> eb6605e836655949f0088c0bc3850476ca4295ca
