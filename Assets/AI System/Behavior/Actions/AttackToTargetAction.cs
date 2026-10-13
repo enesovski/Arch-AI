@@ -18,16 +18,25 @@ public partial class AttackToTargetAction : Action
 
     protected override Status OnStart()
     {
-        _attackModule = Blackboard.Value.attackModule;
+        var blackboard = Blackboard != null ? Blackboard.Value : null;
+        _attackModule = blackboard != null ? blackboard.attackModule : null;
         _attackStarted = false;
         
         if (!_attackModule)
             return Status.Failure;
-        
-        if (!_attackModule.canAttack)
+
+        if (_attackModule.IsAttackCommitted)
+        {
+            _attackStarted = true;
+            return Status.Running;
+        }
+
+        if (!_attackModule.CanStartAttack())
             return Status.Failure;
 
-        _attackModule.Attack();
+        if (!_attackModule.Attack())
+            return Status.Failure;
+
         _attackStarted = true;
 
         return Status.Running;
@@ -35,13 +44,16 @@ public partial class AttackToTargetAction : Action
 
     protected override Status OnUpdate()
     {
+        if (!_attackModule)
+            return Status.Failure;
+
         if (!_attackStarted)
             return Status.Failure;
         
-        if (!_attackModule.canAttack)
-            return Status.Running;
+        if (!_attackModule.IsAttackCommitted)
+            return Status.Success;
 
-        return Status.Success;
+        return Status.Running;
     }
 
     protected override void OnEnd()
@@ -49,4 +61,3 @@ public partial class AttackToTargetAction : Action
         _attackStarted = false;
     }
 }
-

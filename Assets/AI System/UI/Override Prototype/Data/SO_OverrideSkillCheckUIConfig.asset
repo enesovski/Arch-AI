@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4405fb357f9cc7545b8d5f5cbecc6c8a, type: 3}
+  m_Name: SO_OverrideSkillCheckUIConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.UI.Override.OverrideSkillCheckUIConfigSO
+  reachTheme: {fileID: 11400000, guid: 98972d851a944df4a9402eac62a896e7, type: 2}
+  rootSize: 720
+  timingRingDiameter: 350
+  fadeDuration: 0.18
+  feedbackAnimationDuration: 0.28
+  resultFlashDuration: 0.12
+  successPulseScale: 1.08
+  terminalFeedbackDuration: 0.95
+  completionCountDuration: 0.28
+  completionFlashDuration: 0.12
+  completionPulseScale: 1.08
+  completionFailureShakeDuration: 0.28
+  completionFailureShakeAngle: 3.5
+  hintTextAlpha: 0.62
+  terminalSuccessBackdropAlpha: 1
+  terminalFailureBackdropAlpha: 1
+  localizationTable: UI
+  titleLocalizationKey: UI_OverrideSkillCheck_Title
+  titleFallback: ROBOT OVERRIDE
+  timingHintLocalizationKey: UI_OverrideSkillCheck_TimingHint
+  timingHintFallback: HOLD ATTACK  /  PRESS SPACE
+  stabilizationHintLocalizationKey: UI_OverrideSkillCheck_StabilizationHint
+  stabilizationHintFallback: HOLD ATTACK  /  STEER SIGNAL
+  successFeedbackLocalizationKey: UI_OverrideSkillCheck_Success
+  successFeedbackFallback: SUCCESS
+  failedFeedbackLocalizationKey: UI_OverrideSkillCheck_Failed
+  failedFeedbackFallback: FAILED
+  stabilizationArenaDiameter: 350
+  stabilizationSuccessRadius: 0.24
+  stabilizationCursorDiameter: 30
+  stabilizationPulseDuration: 1.65
+  stabilizationMouseImpulse: 0.035
+  stabilizationStickAcceleration: 5
+  stabilizationDriftAcceleration: 0.72
+  stabilizationNoiseAcceleration: 0.48
+  stabilizationDamping: 1.75
+  stabilizationMaxSpeed: 1.55
+  stabilizationBoundaryBounce: 0.3
+  backgroundUsesPalette: 1
+  backgroundPaletteColor: 0
+  backgroundColor: {r: 0.098, g: 0.137, b: 0.176, a: 1}
+  primaryUsesPalette: 1
+  primaryPaletteColor: 1
+  primaryColor: {r: 1, g: 1, b: 1, a: 1}
+  accentUsesPalette: 1
+  accentPaletteColor: 2
+  accentColor: {r: 0.82, g: 0.655, b: 1, a: 1}
+  secondaryUsesPalette: 1
+  secondaryPaletteColor: 3
+  secondaryColor: {r: 1, g: 0.575, b: 0, a: 1}
+  negativeUsesPalette: 1
+  negativePaletteColor: 4
+  negativeColor: {r: 1, g: 0.294, b: 0.294, a: 1}
+  completionColorUsesPalette: 1
+  completionPaletteColor: 1
+  completionOverrideColor: {r: 1, g: 1, b: 1, a: 1}
+  completionFlashUsesPalette: 0
+  completionFlashPaletteColor: 2
+  completionFlashOverrideColor: {r: 0.43830088, g: 1, b: 0.3726415, a: 1}
+  terminalSuccessTextUsesPalette: 1
+  terminalSuccessTextPaletteColor: 1
+  terminalSuccessTextOverrideColor: {r: 1, g: 1, b: 1, a: 1}
+  terminalFailureTextUsesPalette: 1
+  terminalFailureTextPaletteColor: 1
+  terminalFailureTextOverrideColor: {r: 1, g: 1, b: 1, a: 1}
+  terminalSuccessBackgroundUsesPalette: 0
+  terminalSuccessBackgroundPaletteColor: 2
+  terminalSuccessBackgroundOverrideColor: {r: 0.28, g: 0.84, b: 0.48, a: 1}
+  terminalFailureBackgroundUsesPalette: 1
+  terminalFailureBackgroundPaletteColor: 4
+  terminalFailureBackgroundOverrideColor: {r: 1, g: 0.294, b: 0.294, a: 1}
+  titleFontUsesPalette: 1
+  titlePaletteFont: 3
+  titleOverrideFont: {fileID: 0}
+  hintFontUsesPalette: 1
+  hintPaletteFont: 2
+  hintOverrideFont: {fileID: 0}
+  completionFontUsesPalette: 1
+  completionPaletteFont: 4
+  completionOverrideFont: {fileID: 0}
+  terminalFontUsesPalette: 1
+  terminalPaletteFont: 4
+  terminalOverrideFont: {fileID: 0}

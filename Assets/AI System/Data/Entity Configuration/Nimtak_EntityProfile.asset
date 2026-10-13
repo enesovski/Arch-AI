@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2808a44356b9ea40bc4a124737f26a6, type: 3}
+  m_Name: Nimtak_EntityProfile
+  m_EditorClassIdentifier: 
+  entityName: Nimtak
+  entityId: nimtak
+  description: 
+  prefab: {fileID: 2214958360230104961, guid: 4b72c405fa13fd94e9e6907f751361ee, type: 3}
+  baseEntityType: 2
+  isTameable: 0
+  tamedPrefab: {fileID: 0}
+  bossDisplayName: 
+  potentialDrops:
+  - item: {fileID: 11400000, guid: e349e842b1a7a854abb0269ae83ab798, type: 2}
+    dropRange: {x: 4, y: 6}
+    dropChance: 100
+  - item: {fileID: 11400000, guid: a20267ae8fced7a48aad2fe6f961d647, type: 2}
+    dropRange: {x: 4, y: 7}
+    dropChance: 100

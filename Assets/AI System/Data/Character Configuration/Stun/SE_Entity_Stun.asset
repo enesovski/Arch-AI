@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905e7fb5f9d76e141bfb127cac403a0e, type: 3}
+  m_Name: SE_Entity_Stun
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectDefinition
+  effectName: Stunned
+  effectNameLocalizationKey: 
+  reapplyType: 0
+  effectStrength: 2
+  icon: {fileID: 0}
+  showOnUI: 0
+  effectType: 1
+  hasDuration: 1
+  durationSeconds: 30
+  screenEffectType: 0
+  Modules:
+  - {fileID: 11400000, guid: 47df16c00a712404f96f8b365ab8d0d8, type: 2}

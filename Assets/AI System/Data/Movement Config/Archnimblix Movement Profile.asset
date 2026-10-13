@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd35b03940c69d04dae1cfb9a4034b84, type: 3}
+  m_Name: Archnimblix Movement Profile
+  m_EditorClassIdentifier: 
+  entityType: 4
+  walkMovementSpeed: 3
+  wanderDistanceRange: {x: 12, y: 30}
+  runMovementSpeed: 7
+  runDistanceInterval: 0
+  combatWithdrawalSpeed: 7
+  combatCirclingSpeed: 5
+  combatStepCircling: 1
+  combatCircleStepDistance: 5
+  combatCirclePauseRange: {x: 0.8, y: 1.5}
+  combatApproachRangeFraction: 0.9
+  combatFaceTargetWhileRepositioning: 1
+  combatCircleDegreesPerSecond: 12
+  combatFacingFollowSpeed: 90
+  combatReplanInterval: 0.35
+  combatDestinationChangeThreshold: 0.5
+  combatWaypointTolerance: 0.3
+  combatNavMeshSampleRadius: 1
+  strafeDistance: 4.5
+  flankDistance: 6
+  searchMovementSpeed: 8
+  lookAroundDuration: 2
+  searchDistanceRange: {x: 4, y: 7}
+  teleportRadius: 70
+  stopRadius: 8
+  followRadius: 18

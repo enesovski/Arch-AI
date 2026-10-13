@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f51e7d9c8a43db8cc47e44bfe7a6f1, type: 3}
+  m_Name: Luminex Combat Configuration
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Attack.CombatConfiguration
+  combatRadius: 23
+  closeCombatRadius: 4

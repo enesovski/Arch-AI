@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad528ded1bf6b68449ac75611b124732, type: 3}
+  m_Name: Archnimblix_GroundSlam
+  m_EditorClassIdentifier: 
+  attackType: 0
+  minRange: 0
+  maxRange: 15
+  cooldown: 1
+  stopDuringAttack: 1
+  lookAtTargetMode: 1
+  animationClip: {fileID: -8694128566501732347, guid: 9bde5ec78daf9354dbc7fdbd4ebc82ff,
+    type: 3}
+  animationIndex: 1
+  telegraphTime: 0.8
+  executeTime: 0.38
+  recoveryTime: 0.25
+  distanceUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.14357209
+      value: 1.1997736
+      inSlope: 0.0018202129
+      outSlope: 0.0018202129
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.26050374
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.23326372
+      outSlope: -0.23326372
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  healthUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  additionalUtilityVariance: 0
+  damageConfig: {fileID: 11400000, guid: 3ccb141080d23df45a8a3ef958d376ee, type: 2}
+  damageVariancePercent: 0.2
+  attackableLayers:
+    serializedVersion: 2
+    m_Bits: 262208
+  attackRadius: 3
+  attackRange: 9.5
+  knockbackEnabled: 1
+  knockbackHorizontalSpeed: 20
+  knockbackUpwardSpeed: 12
+  knockbackDeceleration: 9.5

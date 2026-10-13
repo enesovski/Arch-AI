@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4b85b995e7043e7bfa8699f49ca68b5, type: 3}
+  m_Name: Mecha Melee Combat Profile
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.MeleeCombatProfile
+  positioning: 0
+  frontHalfAngle: 50
+  flankAngle: 120
+  holdingDistance: 9
+  recoveryMode: 1
+  circleDuration: 1
+  circleDurationVariance: 0.3
+  minimumWithdrawalTime: 0.6
+  withdrawalTimeout: 2
+  blockedSectorGrace: 2
+  attackFacingHalfAngle: 45

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad528ded1bf6b68449ac75611b124732, type: 3}
+  m_Name: Nimblix_GroundSlam
+  m_EditorClassIdentifier: 
+  attackType: 0
+  minRange: 1
+  maxRange: 6
+  cooldown: 15
+  stopDuringAttack: 1
+  lookAtTargetMode: 1
+  animationClip: {fileID: 1783717033803400624, guid: 3354ff2205cb2094aacf55a896f2a65e,
+    type: 3}
+  animationIndex: 1
+  telegraphTime: 0
+  executeTime: 1
+  recoveryTime: 1
+  distanceUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0755122
+      value: 0.86472714
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0220759
+      value: 1.0928783
+      inSlope: 0.49253312
+      outSlope: 0.49253312
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2649377
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  healthUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  additionalUtilityVariance: 0
+  damageConfig: {fileID: 11400000, guid: fbd4e96ec79d7ca4dbb5d5ae4bfe9ad6, type: 2}
+  damageVariancePercent: 0.2
+  attackableLayers:
+    serializedVersion: 2
+    m_Bits: 262208
+  attackRadius: 4
+  attackRange: 7

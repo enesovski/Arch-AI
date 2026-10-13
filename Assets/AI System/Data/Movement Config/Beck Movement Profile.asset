@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd35b03940c69d04dae1cfb9a4034b84, type: 3}
+  m_Name: Beck Movement Profile
+  m_EditorClassIdentifier: Assembly-CSharp::MovementProfile
+  entityType: 3
+  walkMovementSpeed: 6
+  wanderDistanceRange: {x: 12, y: 30}
+  runMovementSpeed: 8
+  runDistanceInterval: 2
+  strafeDistance: 11
+  flankDistance: 6
+  repositionDistance: 8
+  searchMovementSpeed: 6
+  lookAroundDuration: 2
+  searchDistanceRange: {x: 4, y: 7}
+  teleportRadius: 70
+  stopRadius: 8
+  followRadius: 18

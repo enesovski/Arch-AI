@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6515311724a05b3498f2d9d7cb22be47, type: 3}
+  m_Name: Mecha_Laser
+  m_EditorClassIdentifier: 
+  animationIndex: 2
+  attackType: 1
+  minRange: 12
+  maxRange: 30
+  cooldown: 11
+  telegraphTime: 0
+  executeTime: 2.5
+  recoveryTime: 0.5
+  stopDuringAttack: 1
+  lookAtTargetMode: 1
+  distanceUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0031095743
+      value: 0.03918004
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.48711705
+      value: 0.7512727
+      inSlope: 0.2173344
+      outSlope: 0.2173344
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.28485256
+    - serializedVersion: 3
+      time: 0.9389283
+      value: 0.77680916
+      inSlope: -0.14724769
+      outSlope: -0.14724769
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.48322558
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  healthUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cooldownPenalty: 60
+  randomUtilityVariance: 0.2
+  additionalUtilityVariance: 0.05
+  projectileMovementType: 1
+  projectilePrefab: {fileID: 2060297566863613578, guid: de5840ffda8083a488a1a9e10eea9b11,
+    type: 3}
+  projectileCount: 1
+  spreadAngle: 15
+  spreadRadius: 0

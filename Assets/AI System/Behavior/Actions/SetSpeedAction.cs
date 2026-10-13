@@ -7,7 +7,7 @@ using Unity.Properties;
 using Blackboard = Artifika.AI.Blackboard;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Set Speed", story: "Set [Blackboard] speed to [Float]", category: "Action", id: "5786eafe995b4451915d661f8b6bb9ef")]
+[NodeDescription(name: "Set Speed", story: "Set [Blackboard] movement speed to [Float]", category: "Action", id: "5786eafe995b4451915d661f8b6bb9ef")]
 public partial class SetSpeedAction : Action
 {
     [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;

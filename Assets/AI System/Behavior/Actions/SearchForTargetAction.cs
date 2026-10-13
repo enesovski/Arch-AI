@@ -1,6 +1,9 @@
 using System;
+using Artifika.AI;
+using Artifika.AI.Aggro;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.AI;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
@@ -15,63 +18,68 @@ public partial class SearchForTargetAction : Action
 
     private MovementModule _movementModule;
     private AggroModule _aggroModule;
+    private RotationModule _rotationModule;
 
-    public float lookAroundDuration = 2f;
-    public int searchPointCount = 3;
-    public float minSearchDistance = 3f;
-    public float maxSearchDistance = 6f;
+    private float minSearchDistance = 3f;
+    private float maxSearchDistance = 6f;
+    private float waitAtPointDuration = 2f;
 
     private enum SearchPhase
     {
         GoingToLastSeen,
-        LookingAround,
-        SearchingNearby,
-        Complete
+        MovingToSearchPoint,
+        WaitingAtSearchPoint
     }
 
     private SearchPhase currentPhase;
-    private float lookAroundTimer;
-    private Vector3[] searchPoints;
-    private int currentSearchIndex;
+    private Vector3 searchCenter;
+    private float waitUntilTime;
 
     protected override Status OnStart()
     {
+        if (Blackboard?.Value == null)
+            return Status.Failure;
+
         _movementModule = Blackboard.Value.movementModule;
         _aggroModule = Blackboard.Value.aggroModule;
+        _rotationModule = Blackboard.Value.rotationModule;
+
+        if (_movementModule == null || _aggroModule == null || _movementModule.MovementProfile == null)
+            return Status.Failure;
+        
+        minSearchDistance =  _movementModule.MovementProfile.MinSearchDistance;
+        maxSearchDistance =  _movementModule.MovementProfile.MaxSearchDistance;
+        waitAtPointDuration = Mathf.Max(0f, _movementModule.MovementProfile.lookAroundDuration);
         
         currentPhase = SearchPhase.GoingToLastSeen;
-        lookAroundTimer = 0f;
-        currentSearchIndex = 0;
-        searchPoints = null;
+        waitUntilTime = 0f;
+        searchCenter = _aggroModule.SearchOrigin;
 
-        MovementModule movementModule = _movementModule;
-        Vector3 lastSeen = _aggroModule.LastKnownPosition;
+        _movementModule.SetSpeed(_movementModule.MovementProfile.searchMovementSpeed);
+        _rotationModule?.SetMode(RotationMode.Agent);
 
-        movementModule.SetSpeed(movementModule.MovementProfile.searchSpeed);
-        movementModule.MoveTo(lastSeen);
+        if (!MoveToSearchPoint(searchCenter))
+            MoveToNextSearchPoint();
 
         return Status.Running;
     }
 
     protected override Status OnUpdate()
     {
-        if (_aggroModule.CurrentAggroState != AggroState.Suspicious)
-            return Status.Failure;
+        if (_aggroModule.CurrentSuspiciousState != SuspiciousState.Searching)
+            return Status.Success;
 
         switch (currentPhase)
         {
             case SearchPhase.GoingToLastSeen:
                 return UpdateGoingToLastSeen();
 
-            case SearchPhase.LookingAround:
-                return UpdateLookingAround();
+            case SearchPhase.MovingToSearchPoint:
+                return UpdateMovingToSearchPoint();
 
-            case SearchPhase.SearchingNearby:
-                return UpdateSearchingNearby();
-
-            case SearchPhase.Complete:
-                return Status.Success;
-
+            case SearchPhase.WaitingAtSearchPoint:
+                return UpdateWaitingAtSearchPoint();
+            
             default:
                 return Status.Failure;
         }
@@ -81,84 +89,92 @@ public partial class SearchForTargetAction : Action
     {
         if (_movementModule.HasArrived())
         {
-            currentPhase = SearchPhase.LookingAround;
-            lookAroundTimer = lookAroundDuration;
-            _movementModule.SetSpeed(0f); 
+            StartWaitingAtCurrentPoint();
         }
 
         return Status.Running;
     }
 
-    private Status UpdateLookingAround()
-    {
-        lookAroundTimer -= Time.deltaTime;
-
-
-        if (lookAroundTimer <= 0f)
-        {
-            Vector3 lastSeen = _aggroModule.LastKnownPosition;
-            searchPoints = GenerateSearchPoints(lastSeen);
-
-            if (searchPoints.Length > 0)
-            {
-                currentPhase = SearchPhase.SearchingNearby;
-                currentSearchIndex = 0;
-
-                _movementModule.SetSpeed(_movementModule.MovementProfile.searchSpeed);
-                _movementModule.MoveTo(searchPoints[0]);
-            }
-            else
-            {
-                currentPhase = SearchPhase.Complete;
-                return Status.Success;
-            }
-        }
-
-        return Status.Running;
-    }
-
-    private Status UpdateSearchingNearby()
+    private Status UpdateMovingToSearchPoint()
     {
         if (_movementModule.HasArrived())
         {
-            currentSearchIndex++;
-
-            if (currentSearchIndex >= searchPoints.Length)
-            {
-                currentPhase = SearchPhase.Complete;
-                return Status.Success;
-            }
-            else
-            {
-                _movementModule.MoveTo(searchPoints[currentSearchIndex]);
-            }
+            StartWaitingAtCurrentPoint();
         }
 
         return Status.Running;
     }
 
-    private Vector3[] GenerateSearchPoints(Vector3 center)
+    private Status UpdateWaitingAtSearchPoint()
     {
-        System.Collections.Generic.List<Vector3> validPoints = new System.Collections.Generic.List<Vector3>();
+        if (Time.time >= waitUntilTime)
+            MoveToNextSearchPoint();
 
-        float angleStep = 360f / searchPointCount;
+        return Status.Running;
+    }
 
-        for (int i = 0; i < searchPointCount; i++)
+    private void StartWaitingAtCurrentPoint()
+    {
+        _movementModule.Stop();
+        waitUntilTime = Time.time + waitAtPointDuration;
+        currentPhase = SearchPhase.WaitingAtSearchPoint;
+    }
+
+    private void MoveToNextSearchPoint()
+    {
+        if (TryPickSearchPoint(searchCenter, out Vector3 point) && MoveToSearchPoint(point))
         {
-            float angle = angleStep * i + UnityEngine.Random.Range(-20f, 20f); 
-            float distance = UnityEngine.Random.Range(minSearchDistance, maxSearchDistance);
-
-            Vector3 offset = Quaternion.Euler(0, angle, 0) * Vector3.forward * distance;
-            Vector3 searchPoint = center + offset;
-
-            validPoints.Add(searchPoint);
+            currentPhase = SearchPhase.MovingToSearchPoint;
+            return;
         }
 
-        return validPoints.ToArray();
+        StartWaitingAtCurrentPoint();
+    }
+
+    private bool TryPickSearchPoint(Vector3 center, out Vector3 point)
+    {
+        const int attempts = 12;
+
+        for (int i = 0; i < attempts; i++)
+        {
+            float angle = UnityEngine.Random.Range(0f, 360f);
+            float distance = UnityEngine.Random.Range(minSearchDistance, maxSearchDistance);
+            Vector3 offset = Quaternion.Euler(0f, angle, 0f) * Vector3.forward * distance;
+
+            if (TryResolveSearchPoint(center + offset, out point))
+                return true;
+        }
+
+        point = center;
+        return false;
+    }
+
+    private bool MoveToSearchPoint(Vector3 point)
+    {
+        if (!TryResolveSearchPoint(point, out Vector3 validPoint))
+            return false;
+
+        _movementModule.SetSpeed(_movementModule.MovementProfile.searchMovementSpeed);
+        return _movementModule.MoveTo(validPoint);
+    }
+
+    private bool TryResolveSearchPoint(Vector3 point, out Vector3 validPoint)
+    {
+        validPoint = point;
+
+        if (!NavMesh.SamplePosition(point, out NavMeshHit hit, 2.5f, NavMesh.AllAreas))
+            return false;
+
+        if (!MovementPointPicker.IsPathReachable(_movementModule.transform.position, hit.position))
+            return false;
+
+        validPoint = hit.position;
+        return true;
     }
 
     protected override void OnEnd()
     {
-        _movementModule.Stop();
+        _movementModule?.Stop();
+        _rotationModule?.SetMode(RotationMode.Agent);
     }
 }

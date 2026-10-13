@@ -14,26 +14,29 @@ public partial class ChaseTargetAction : Action
     [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
     [SerializeReference] public BlackboardVariable<GameEntity> Target;
     
-    private MovementModule _movementModule;
-    private AttackModule _attackModule;
+    private MovementModule movementModule;
+    private AttackModule attackModule;
 
-    private const float DestinationThresholdSqr = 0.01f;
-    private Vector3 _lastIssuedDestination = Vector3.positiveInfinity;
+    private const float MOVE_THRESHOLD_SQR = 0.01f;
+    private Vector3 lastDestination = Vector3.positiveInfinity;
 
     protected override Status OnStart()
     {
-        _movementModule = Blackboard.Value.movementModule;
-        _attackModule = Blackboard.Value.attackModule;
+        var blackboard = Blackboard != null ? Blackboard.Value : null;
+        movementModule = blackboard != null ? blackboard.movementModule : null;
+        attackModule = blackboard != null ? blackboard.attackModule : null;
+        lastDestination = Vector3.positiveInfinity;
         
-        if (_movementModule)
-            _movementModule.SetSpeed(_movementModule.MovementProfile.chaseSpeed);
+        if (movementModule)
+            movementModule.SetSpeed(movementModule.MovementProfile.runMovementSpeed);
+
+        movementModule?.BeginMeleeMovement();
+
         return Status.Running;
     }
 
     protected override Status OnUpdate()
     {
-        MovementModule movementModule = _movementModule;
-        AttackModule attackModule = _attackModule;
         GameEntity targetEntity = Target.Value;
 
         if (!targetEntity)
@@ -42,11 +45,14 @@ public partial class ChaseTargetAction : Action
         if (!movementModule || !attackModule)
             return Status.Failure;
 
-        if (attackModule.CanAttack())
+        if (attackModule.ShouldUseAttackBranch())
         {
             movementModule.Stop();
             return Status.Success;
         }
+
+        if (movementModule.UpdateRangedMovement(targetEntity) || movementModule.UpdateMeleeMovement(targetEntity))
+            return Status.Running;
 
         Transform threatPos = targetEntity.transform;
         if (!threatPos)
@@ -54,10 +60,7 @@ public partial class ChaseTargetAction : Action
 
         Vector3 desiredPoint;
 
-        if (MovementPointPicker.TryPickChasePoint(
-                movementModule.transform,
-                threatPos,
-                movementModule.MovementProfile.flankAngleMax,
+        if (MovementPointPicker.TryPickChasePoint(movementModule.transform, threatPos,
                 out Vector3 chasePoint))
         {
             desiredPoint = chasePoint;
@@ -67,14 +70,10 @@ public partial class ChaseTargetAction : Action
             desiredPoint = threatPos.position;
         }
 
-        if ((_lastIssuedDestination - desiredPoint).sqrMagnitude > DestinationThresholdSqr)
+        if ((lastDestination - desiredPoint).sqrMagnitude > MOVE_THRESHOLD_SQR)
         {
             movementModule.MoveTo(desiredPoint);
-            _lastIssuedDestination = desiredPoint;
-        }
-        else
-        {
-            movementModule.MoveTo(desiredPoint); 
+            lastDestination = desiredPoint;
         }
 
         return Status.Running;
@@ -82,9 +81,9 @@ public partial class ChaseTargetAction : Action
 
     protected override void OnEnd()
     {
-        _movementModule?.Stop();
+        movementModule?.EndMeleeMovement();
+        movementModule?.EndRangedMovement();
+        lastDestination = Vector3.positiveInfinity;
+        movementModule?.Stop();
     }
-
-
 }
-

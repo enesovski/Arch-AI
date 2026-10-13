@@ -31,7 +31,7 @@ public partial class ReturnToNestAction : Action
         }
 
         _movementModule.SetStopped(false);
-        _movementModule.SetSpeed(_movementModule.MovementProfile.chaseSpeed);
+        _movementModule.SetSpeed(_movementModule.MovementProfile.runMovementSpeed);
         _movementModule.MoveTo(nest);
 
         return Status.Running;

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad528ded1bf6b68449ac75611b124732, type: 3}
+  m_Name: Iribax_ForwardJump
+  m_EditorClassIdentifier: 
+  animationIndex: 0
+  attackType: 0
+  minRange: 11
+  maxRange: 14
+  cooldown: 1
+  stopDuringAttack: 1
+  lookAtTargetMode: 1
+  animationClip: {fileID: -623603649343465320, guid: 0f1d83a27e7b2c246944e07cc0d2bbc4,
+    type: 3}
+  telegraphTime: 0
+  executeTime: 1
+  recoveryTime: 0.2
+  distanceUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  healthUtilityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  additionalUtilityVariance: 0
+  damageConfig: {fileID: 11400000, guid: 4165c04fd9ec370448a85e7d5884b775, type: 2}
+  damageVariancePercent: 0.2
+  attackableLayers:
+    serializedVersion: 2
+    m_Bits: 262208
+  attackRadius: 0
+  attackRange: 0
