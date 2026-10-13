@@ -28,6 +28,42 @@ The *spine* is a design analogy, not a single central event bus. Communication h
 
 **[Explore the architecture, class diagrams, and a combat sequence →](ARCHITECTURE.md)**
 
+
+## Behavior Graphs
+
+Arch-AI uses Unity Behavior Graphs to organize high-level decisions, while custom utility scoring handles tactical action selection.
+
+### Enemy Behavior Graph
+
+The enemy graph separates behavior into three primary states: **Passive**, **Suspicious**, and **Aggressive**. Transitions are driven by the Aggro Module, allowing entities to react to threats, investigate suspicious activity, and engage targets.
+
+<p align="center">
+  <img src="Docs/Images/Enemy_BT.jpg" alt="Enemy Behavior Graph" width="900">
+</p>
+
+### Utility-Based Action Selection
+
+Within the aggressive branch, a custom **Utility Action Selector** evaluates tactical options based on the entity's current context.
+
+Actions such as attacking, chasing, flanking, strafing, and repositioning are scored using configurable response curves, allowing entities to adapt their behavior dynamically.
+
+<p align="center">
+  <img src="Docs/Images/Utility_Selector.png" alt="Utility Action Selector" width="900">
+</p>
+
+### Companion Behavior Graph
+
+Companions use a separate graph supporting **Autonomous**, **Commanded**, **Mounted**, and **Disabled** states.
+
+Autonomous and action commands execute through reusable subgraphs, allowing companions to switch between independent behavior and player-directed actions.
+
+<p align="center">
+  <img src="Docs/Images/Companion_BT.png" alt="Companion Behavior Graph" width="900">
+</p>
+
+For a deeper look at the system's architecture and component relationships, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+
 ## Key systems
 
 ### Perception and threat memory
