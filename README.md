@@ -1,93 +1,89 @@
 # Arch-AI
 
-A modular Unity AI system combining behavior graphs, utility scoring, threat memory, and melee and ranged combat. This repository contains the `Assets/AI System` folder exported from a larger game; it is not a standalone Unity project.
+**A modular, server-authoritative AI system for Unity.**
 
-## Architecture
+Arch-AI combines **Unity Behavior graphs**, **utility-based decisions**, and **specialized gameplay modules** to support creatures with different combat styles and behaviors. It was developed within a larger game project and is shared here as a source-code showcase, not as a standalone Unity package.
 
-`EntityCoordinator` initializes the entity and ticks its updateable modules on the server. `Blackboard` holds the entity's shared references and produces a `TacticalContext` for utility scoring. Behavior graph actions issue commands to the modules; reaction buses translate state changes into animation, audio, effects, and other game responses.
+The architecture is inspired by the human nervous system: **senses** gather information, the **brain** decides what to do, a **spinal communication layer** carries context and signals, and the **limbs** execute actions. The goal is to keep *perception, decision-making, and execution* independent enough to reuse across different entities.
+
+## Architecture at a glance
 
 ```mermaid
-flowchart LR
-    Coordinator[EntityCoordinator] --> Modules[Entity modules]
-    Sensors[Visual and hit sensors] --> Detection[Detection and threat memory]
-    Detection --> Aggro[Aggro and engagement state]
-    Aggro --> Blackboard[Blackboard]
-    Blackboard --> Context[TacticalContext]
-    Context --> Utility[Utility scoring]
-    Utility --> Graph[Unity Behavior graph]
-    Graph --> Movement[Movement and rotation]
-    Graph --> Attack[Melee and ranged attacks]
-    Aggro --> Reactions[Reaction buses]
-    Attack --> Reactions
+flowchart TB
+    S["Senses<br/>VisualSensor / HitSensor"] --> D["DetectionModule<br/>Threat memory"]
+    D --> A["AggroModule<br/>Target + engagement state"]
+    A --> H["AggroBehaviorAssignerReaction<br/>Graph-variable synchronization"]
+    H --> G["Unity Behavior Graph<br/>Behavior selection"]
+    G --> X["Action nodes<br/>Chase / Attack / Search / Flee"]
+    X --> E["Execution modules<br/>Movement / Rotation / Attack"]
+
+    B["Blackboard<br/>References + TacticalContext"] -.-> G
+    A -.-> R["Events + reaction buses"]
+    R --> P["Animation / Audio / VFX"]
+    C["EntityCoordinator<br/>Server initialization + update scheduling"] -.-> D
+    C -.-> A
 ```
 
-The existing component boundaries keep decisions, navigation, attack execution, and presentation separate. ScriptableObject configurations provide entity settings, movement profiles, attack definitions, utility response curves, and faction relationships.
+The *spine* is a design analogy, not a single central event bus. Communication happens through shared component references (`Blackboard`), C# events, graph-variable adapters, and specialized reaction buses. `EntityCoordinator` handles initialization and scheduled updates rather than making AI decisions.
 
-## Systems
+**[Explore the architecture, class diagrams, and a combat sequence →](ARCHITECTURE.md)**
 
-- **Detection and aggro:** visual and hit sensors, decaying threat memory, target selection, engagement states, investigation, and search behavior.
-- **Utility scoring:** mandatory gates, weighted response curves, multiplicative scores, and optional random variance.
-- **Combat:** attack commitment and cooldowns, collider-based melee range, melee approach/withdrawal, ranged positioning, and animation event relays.
-- **Movement:** NavMesh navigation, movement profiles, ground fitting integration, facing policies, strafing, flanking, and fleeing.
-- **Companions and taming:** autonomous/action commands, companion states, server-validated taming, ownership, progress credit, and effects.
-- **Reactions and spawning:** aggro, stun, death, dissolve, loot, spawn anchors, and spawn zone management.
+## Key systems
 
-## Source layout
+### Perception and threat memory
+
+`VisualSensor` and `HitSensor` feed `DetectionModule`, which filters observations and tracks threats through `ThreatEvaluator`. Threats have scores, last-known positions, and memory that decays over time, allowing agents to investigate or search after losing sight of a target.
+
+### Aggro and engagement state
+
+`AggroModule` interprets threat information and handles **target selection** and transitions between `Passive`, `Alerted`, `Searching`, and `Engaged`. It also emits events when the target or state changes. This is the entity's *response to a situation*, separate from the choice of a specific action.
+
+### Behavior graphs
+
+Unity Behavior graphs orchestrate high-level behaviors such as **chasing, attacking, searching, fleeing, and following an owner**. The repository includes separate **Melee**, **Ranged**, **Passive**, and **Companion** graphs. Custom action and condition nodes interact with modules rather than implementing all movement and combat logic inside the graph.
+
+### Utility scoring
+
+Within the behavior graph, `UtilityActionSelectorSequence` can select a contextual action by evaluating a `TacticalContext` built from distance, health, line of sight, threat, and other inputs. `UtilityActionDefinition` assets define **mandatory conditions, weighted response curves, multipliers, and optional variance**. A hysteresis bias helps avoid rapid switching between similarly scored actions.
+
+Utility scoring **complements** the behavior graph; it does not replace the full graph. `AttackModule` also performs its own more focused selection among eligible attack definitions.
+
+### Movement and combat
+
+`MovementModule` handles navigation and melee/ranged positioning, while `RotationModule` controls facing. `AttackModule` manages attack selection, cooldowns, and commitment, then delegates execution to `MeleeAttackModule` or `RangedAttackModule`. Animation events determine when the actual hit or projectile action occurs.
+
+### Reactions and companions
+
+Event-driven reaction buses connect gameplay state changes to **animation, audio, visual effects, death handling, and other responses**. Companion systems add owner commands, companion states, and behavior-graph synchronization. Taming support is integrated with the larger game's gameplay systems.
+
+## Design principles
+
+- **Separation of concerns:** detect, interpret, decide, and execute in distinct components.
+- **Composable behavior:** reuse modules while changing graphs, configurations, and attack definitions.
+- **Data-driven tuning:** configure movement, combat, aggro, and utility scoring with ScriptableObjects.
+- **Server authority:** AI updates and gameplay decisions run on the server, with networked components handling synchronization.
+- **Extensible reactions:** respond to state changes without putting presentation logic into decision code.
+
+## Repository structure
 
 ```text
 Assets/AI System/
-├── Behavior/       Actions, conditions, enums, nodes, and saved graphs
+├── Behavior/         # Behavior graph assets, actions, conditions, utility nodes
 ├── Scripts/
-│   ├── Core/       Entities, module contracts, blackboard, configuration, taming
-│   ├── Modules/    Aggro, attacks, commands, detection, movement, visual modules
-│   ├── Tactics/    Tactical context and utility axis inputs
-│   ├── Reactions/  Event-driven presentation and game responses
-│   ├── Integrations/Stats/
-│   ├── Utils/
-│   └── World/
-├── Spawners/
-├── Data/
-├── Prefabs/
-├── Resources/
-└── Tests/Editor/
+│   ├── Core/         # Entity lifecycle, blackboard, module abstractions, configuration
+│   ├── Modules/      # Detection, aggro, movement, attack, commands
+│   ├── Tactics/      # Tactical context and utility inputs
+│   ├── Reactions/    # Event-driven gameplay and presentation reactions
+│   └── World/        # Companion-related world interactions
+├── Data/             # ScriptableObject assets and profiles
+├── Spawners/         # Spawn management
+└── Tests/Editor/     # EditMode tests
 ```
 
-AI code lives under `Artifika.AI` and its existing subnamespaces. Editor tooling and tests use dedicated namespaces. Fields, locals, and parameters use camelCase. Public APIs, Unity callbacks, animation event names, and Behavior graph field names retain their established names.
+## Integration notes
 
-## Assemblies and dependencies
+This repository contains the AI source and assets **extracted from a larger Unity project**. It has no standalone `Packages/manifest.json` or complete host-game implementation, so it is **not directly runnable as-is**.
 
-`Artifika.AI.Utility.asmdef` contains the utility scoring model. The `.asmref` in `Scripts/Tactics` includes the tactical context and axis inputs in that same assembly. This boundary has no dependency on the host game's entity, combat, or UI implementations. Odin inspector attributes remain a dependency, supplied by the existing precompiled Odin assembly.
+The code depends on **Unity Behavior**, **Netcode for GameObjects**, **Odin Inspector**, and other gameplay and presentation integrations. Host-game systems such as health/damage, projectiles, stats, and ground fitting must also be supplied. Existing EditMode tests are intended to run in the original host project.
 
-The remaining runtime and editor code compiles in Unity's predefined assemblies. It directly uses gameplay code absent from this export; putting it in a root asmdef would require those host dependencies to move into compatible assemblies first. An asmdef cannot reference `Assembly-CSharp`; see [Unity's assembly reference rules](https://docs.unity3d.com/6000.0/Documentation/Manual/assembly-definitions-referencing.html).
-
-The source uses these Unity packages and third-party libraries:
-
-| Dependency | Usage |
-| --- | --- |
-| Unity Behavior and Properties | Behavior graphs, custom nodes, property bags |
-| Netcode for GameObjects and Collections | Server authority, RPCs, replicated state |
-| TextMeshPro and Michsky Reach UI | Host boss health presentation tests |
-| Odin Inspector | Inspector configuration and editor tools |
-| DOTween | Presentation animation |
-| More Mountains Feedbacks | Audio and visual feedback |
-| Highlight Plus | Tameable entity highlighting |
-| Host game code | Health/damage, projectiles, stats, inventory, player input/state, ground fitting, music, registries, and events |
-
-No package versions are pinned in this export. Use the compatible versions from the original game project and preserve the supplied `.meta` files when importing.
-
-## Integration
-
-1. Import `Assets/AI System` into the host Unity project with its gameplay dependencies and third-party libraries.
-2. Configure entity references on `Blackboard`, `EntityCoordinator`, and the relevant modules. The Blackboard inspector's **Gather References** tool can populate component references.
-3. Assign the entity, movement, combat, and utility configurations and the appropriate Behavior graph.
-4. Keep the `FactionRelations` asset under `Resources` and configure the damage permission matrix.
-5. Connect the host interaction flow to `TamingController.TryTameServer(clientId, playerObject, target)` on the server. Taming validates the connected player, range, current player permissions, and the living, stunned, tameable target before conversion.
-6. Check server/client behavior, attack animation events, spawn ownership, and companion/taming integration in the host project.
-
-Namespace and utility assembly migrations use `MovedFrom`; renamed serialized fields use `FormerlySerializedAs`. Saved graph and asset type references are migrated alongside the source. Graph node IDs and existing script GUIDs are retained. External host callers may need updated `using Artifika.AI;` directives when importing the namespaced types. Named arguments to `SetBlackboard` now use `newBlackboard:` instead of `_blackboard:`.
-
-## Verification
-
-The existing EditMode tests cover melee combat, hold-ground behavior, ranged positioning, and boss health presentation. Run them with Unity Test Runner in the host project after import. Boss health tests require the host game's health and UI implementations.
-
-This export has no `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`, or standalone build configuration, so it cannot run the Unity test suite by itself.
+For the full system breakdown, important classes, communication patterns, and execution flow, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
