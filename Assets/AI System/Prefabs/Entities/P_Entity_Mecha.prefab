@@ -7964,7 +7964,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 157bb9ef701c47afaf2182269e25aba8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityStatsController
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.EntityStatsController
   ShowTopMostFoldoutHeaderGroup: 1
   stunStatusEffectDefinition: {fileID: 11400000, guid: 4fd934763cead8c468708b365f430760, type: 2}
   tamingEnabled: 0

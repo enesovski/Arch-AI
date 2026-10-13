@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 519fc3bfa16875f4aa8047abba813ac7, type: 3}
   m_Name: FactionRelations
-  m_EditorClassIdentifier: Assembly-CSharp::FactionRelationsSO
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.FactionRelationsSO
   damagePermissions: 1a0000000d000000120000001200000001000000

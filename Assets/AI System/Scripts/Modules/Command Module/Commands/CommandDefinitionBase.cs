@@ -1,17 +1,22 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public abstract class CommandDefinitionBase : ScriptableObject
+namespace Artifika.AI
 {
-    [Title("Command Definiton")]
-    public string CommandKey => commandKey;
-    public string DisplayName => displayName;
-
-    [SerializeField] private string commandKey;
-    [SerializeField] private string displayName;
-
-    public bool IsValid()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public abstract class CommandDefinitionBase : ScriptableObject
     {
-        return !string.IsNullOrWhiteSpace(commandKey);
+        [Title("Command Definiton")]
+        public string CommandKey => commandKey;
+        public string DisplayName => displayName;
+
+        [SerializeField] private string commandKey;
+        [SerializeField] private string displayName;
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(commandKey);
+        }
     }
 }

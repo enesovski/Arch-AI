@@ -1,27 +1,31 @@
 using System;
 using Unity.Behavior;
 using UnityEngine;
-
+using UnityEngine.Scripting.APIUpdating;
 using Blackboard = Artifika.AI.Blackboard;
 
-[Serializable, Unity.Properties.GeneratePropertyBag]
-[Condition(name: "Should Use Attack Branch", story: "[Blackboard] should use attack branch", category: "Conditions", id: "efad8d6ade32443ea10282fdf687d580")]
-public partial class ShouldUseAttackBranchCondition : Condition
+namespace Artifika.AI
 {
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-
-    public override bool IsTrue()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, Unity.Properties.GeneratePropertyBag]
+    [Condition(name: "Should Use Attack Branch", story: "[Blackboard] should use attack branch", category: "Conditions", id: "efad8d6ade32443ea10282fdf687d580")]
+    public partial class ShouldUseAttackBranchCondition : Condition
     {
-        var blackboard = Blackboard != null ? Blackboard.Value : null;
-        var attackModule = blackboard != null ? blackboard.attackModule : null;
-        return attackModule != null && attackModule.ShouldUseAttackBranch();
-    }
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
 
-    public override void OnStart()
-    {
-    }
+        public override bool IsTrue()
+        {
+            var blackboard = Blackboard != null ? Blackboard.Value : null;
+            var attackModule = blackboard != null ? blackboard.attackModule : null;
+            return attackModule != null && attackModule.ShouldUseAttackBranch();
+        }
 
-    public override void OnEnd()
-    {
+        public override void OnStart()
+        {
+        }
+
+        public override void OnEnd()
+        {
+        }
     }
 }

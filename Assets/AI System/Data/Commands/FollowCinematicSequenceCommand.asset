@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b3dec88d4841c583da58a4c1d8ba19, type: 3}
   m_Name: FollowCinematicSequenceCommand
-  m_EditorClassIdentifier: Assembly-CSharp::AutonomousCommandDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.AutonomousCommandDefinition
   commandKey: followcinematicsequence
   displayName: Cinematic Sequence
   subgraph: {fileID: -9009710317048634714, guid: be84cc797cfb7c7448a79ac05945d390,

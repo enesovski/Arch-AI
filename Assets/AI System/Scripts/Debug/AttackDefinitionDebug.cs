@@ -1,28 +1,33 @@
 using Artifika.AI.Attack;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public class AttackDefinitionDebug : MonoBehaviour
+namespace Artifika.AI
 {
-    [SerializeField] Transform attackPoint;
-    [SerializeField] MeleeAttackDefinition attackDef;
-
-    private void OnDrawGizmosSelected()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class AttackDefinitionDebug : MonoBehaviour
     {
-        if (attackPoint == null) return;
-        Gizmos.color = Color.red;
+        [SerializeField] private Transform attackPoint;
+        [SerializeField] private MeleeAttackDefinition attackDef;
 
-        Vector3 pointA = attackPoint.position;
-        Vector3 pointB = attackPoint.position + transform.forward * attackDef.AttackRange;
+        private void OnDrawGizmosSelected()
+        {
+            if (attackPoint == null) return;
+            Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(pointA, attackDef.AttackRadius);
-        Gizmos.DrawWireSphere(pointB, attackDef.AttackRadius);
+            Vector3 pointA = attackPoint.position;
+            Vector3 pointB = attackPoint.position + transform.forward * attackDef.AttackRange;
 
-        Gizmos.DrawLine(pointA + Vector3.up * attackDef.AttackRadius, pointB + Vector3.up * attackDef.AttackRadius);
-        Gizmos.DrawLine(pointA - Vector3.up * attackDef.AttackRadius, pointB - Vector3.up * attackDef.AttackRadius);
-        Gizmos.DrawLine(pointA + transform.right * attackDef.AttackRadius, pointB + transform.right * attackDef.AttackRadius);
-        Gizmos.DrawLine(pointA - transform.right * attackDef.AttackRadius, pointB - transform.right * attackDef.AttackRadius);
+            Gizmos.DrawWireSphere(pointA, attackDef.AttackRadius);
+            Gizmos.DrawWireSphere(pointB, attackDef.AttackRadius);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(attackPoint.position, attackPoint.position + transform.forward * attackDef.AttackRange);
+            Gizmos.DrawLine(pointA + Vector3.up * attackDef.AttackRadius, pointB + Vector3.up * attackDef.AttackRadius);
+            Gizmos.DrawLine(pointA - Vector3.up * attackDef.AttackRadius, pointB - Vector3.up * attackDef.AttackRadius);
+            Gizmos.DrawLine(pointA + transform.right * attackDef.AttackRadius, pointB + transform.right * attackDef.AttackRadius);
+            Gizmos.DrawLine(pointA - transform.right * attackDef.AttackRadius, pointB - transform.right * attackDef.AttackRadius);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(attackPoint.position, attackPoint.position + transform.forward * attackDef.AttackRange);
+        }
     }
 }

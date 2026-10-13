@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c6b4381ae3376e459fe39b07f1af17b, type: 3}
   m_Name: Axis_AggroCount
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.AggroCountAxisInput
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.AggroCountAxisInput
   maxAggroCount: 4

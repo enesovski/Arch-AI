@@ -11,4 +11,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15d3879a4b654e4a92c3f393d35b7df1, type: 3}
   m_Name: Axis_SelfHealth
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.SelfHealthAxisInput
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.SelfHealthAxisInput

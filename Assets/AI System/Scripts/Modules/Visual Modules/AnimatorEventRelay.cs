@@ -1,70 +1,73 @@
-using Artifika.AI.Death.Reactions;
 using Artifika.AI.Attack;
+using Artifika.AI.Death.Reactions;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[DisallowMultipleComponent]
-public sealed class AnimatorEventRelay : MonoBehaviour
+namespace Artifika.AI
 {
-    [SerializeField] private AnimatorEventHandler animatorEventHandler;
-    [SerializeField] private VisualEffectsModule visualEffectsModule;
-    [SerializeField] private AnimatorEffectPlayer animatorEffectPlayer;
-    [SerializeField] private DeathReactionsBus deathReactionsBus;
-    [SerializeField] private HarvestAnimRelay harvestAnimRelay;
-
-    private void Awake()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [DisallowMultipleComponent]
+    public sealed class AnimatorEventRelay : MonoBehaviour
     {
-        ResolveTargets();
-    }
+        [SerializeField] private AnimatorEventHandler animatorEventHandler;
+        [SerializeField] private VisualEffectsModule visualEffectsModule;
+        [SerializeField] private AnimatorEffectPlayer animatorEffectPlayer;
+        [SerializeField] private DeathReactionsBus deathReactionsBus;
+        [SerializeField] private HarvestAnimRelay harvestAnimRelay;
 
-    private void Reset()
-    {
-        ResolveTargets();
-    }
+        private void Awake()
+        {
+            ResolveTargets();
+        }
 
-    public void onAttackAnimationInvoke(BaseAttackDefinition attackDefinition)
-    {
-        ResolveTargets();
-        animatorEventHandler?.onAttackAnimationInvoke(attackDefinition);
-    }
+        private void Reset()
+        {
+            ResolveTargets();
+        }
 
-    public void PlayEffect(string key)
-    {
-        ResolveTargets();
-        visualEffectsModule?.PlayEffect(key);
-        animatorEffectPlayer?.PlayEffect(key);
-    }
+        public void onAttackAnimationInvoke(BaseAttackDefinition attackDefinition)
+        {
+            ResolveTargets();
+            animatorEventHandler?.onAttackAnimationInvoke(attackDefinition);
+        }
 
-    public void AE_HarvestInstant()
-    {
-        ResolveTargets();
-        harvestAnimRelay?.AE_HarvestInstant();
-    }
+        public void PlayEffect(string key)
+        {
+            ResolveTargets();
+            visualEffectsModule?.PlayEffect(key);
+            animatorEffectPlayer?.PlayEffect(key);
+        }
 
-    public void AE_ExecuteOnDespawnReactions()
-    {
-        if (Unity.Netcode.NetworkManager.Singleton != null && !Unity.Netcode.NetworkManager.Singleton.IsServer)
-            return;
+        public void AE_HarvestInstant()
+        {
+            ResolveTargets();
+            harvestAnimRelay?.AE_HarvestInstant();
+        }
 
-        ResolveTargets();
-        deathReactionsBus?.ExecuteOnDespawnReactions();
-    }
+        public void AE_ExecuteOnDespawnReactions()
+        {
+            if (Unity.Netcode.NetworkManager.Singleton != null && !Unity.Netcode.NetworkManager.Singleton.IsServer)
+                return;
 
+            ResolveTargets();
+            deathReactionsBus?.ExecuteOnDespawnReactions();
+        }
 
-    private void ResolveTargets()
-    {
-        if (animatorEventHandler == null)
-            animatorEventHandler = GetComponentInParent<AnimatorEventHandler>(true);
+        private void ResolveTargets()
+        {
+            if (animatorEventHandler == null)
+                animatorEventHandler = GetComponentInParent<AnimatorEventHandler>(true);
 
-        if (visualEffectsModule == null)
-            visualEffectsModule = GetComponentInParent<VisualEffectsModule>(true);
+            if (visualEffectsModule == null)
+                visualEffectsModule = GetComponentInParent<VisualEffectsModule>(true);
 
-        if (animatorEffectPlayer == null)
-            animatorEffectPlayer = GetComponentInParent<AnimatorEffectPlayer>(true);
+            if (animatorEffectPlayer == null)
+                animatorEffectPlayer = GetComponentInParent<AnimatorEffectPlayer>(true);
 
-
-        if (deathReactionsBus == null)
-            deathReactionsBus = GetComponentInParent<DeathReactionsBus>(true);
-        if (harvestAnimRelay == null)
-            harvestAnimRelay = GetComponentInParent<HarvestAnimRelay>(true);
+            if (deathReactionsBus == null)
+                deathReactionsBus = GetComponentInParent<DeathReactionsBus>(true);
+            if (harvestAnimRelay == null)
+                harvestAnimRelay = GetComponentInParent<HarvestAnimRelay>(true);
+        }
     }
 }

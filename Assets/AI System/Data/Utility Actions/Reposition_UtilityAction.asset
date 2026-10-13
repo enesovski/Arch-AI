@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 210990dc682b47d5b34dcb4925c31ff6, type: 3}
   m_Name: Reposition_UtilityAction
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.UtilityActionDefinition
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.UtilityActionDefinition
   actionName: Reposition
   mandatoryConditions: []
   multiplier: 0.65

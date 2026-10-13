@@ -1,196 +1,190 @@
-using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Artifika.AI;
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[DisallowMultipleComponent]
-public class EntityCoordinator : NetworkBehaviour
+namespace Artifika.AI
 {
-    [Title("Update Settings")]
-    [SerializeField] private float updateInterval = 0.3f;
-    [SerializeField] protected Blackboard blackboard;
-    public float GetUpdateInterval() => updateInterval;
-
-    private HealthComponent healthComponent;
-    private readonly List<IUpdatableEntityModule> registeredModules = new();
-    private Coroutine updateCoroutine;
-
-    private WaitForSeconds waitForSeconds;
-    private readonly HashSet<object> updateLocks = new();
-
-    // Multiplier applied by the SimulationDistance system so entities far from
-    // every player think less often. 1 = full rate, and it is clamped there —
-    // this may only ever remove work, never add it.
-    private float updateIntervalScale = 1f;
-    private float ScaledInterval => updateInterval * updateIntervalScale;
-
-    /// <summary>
-    /// Scales how often this entity's modules tick. Takes effect after the
-    /// current wait completes — UpdateCycle re-reads the field each iteration.
-    /// </summary>
-    public void SetUpdateIntervalScale(float scale)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [DisallowMultipleComponent]
+    public class EntityCoordinator : NetworkBehaviour
     {
-        scale = Mathf.Max(1f, scale);
-        if (Mathf.Approximately(scale, updateIntervalScale))
-            return;
+        [Title("Update Settings")]
+        [SerializeField] private float updateInterval = 0.3f;
+        [SerializeField] protected Blackboard blackboard;
+        public float GetUpdateInterval() => updateInterval;
 
-        updateIntervalScale = scale;
-        waitForSeconds = new WaitForSeconds(ScaledInterval);
-    }
-    
-    public override void OnNetworkSpawn()
-    {
-        if (!NetworkManager.Singleton || !NetworkManager.Singleton.IsServer)
+        private HealthComponent healthComponent;
+        private readonly List<IUpdatableEntityModule> registeredModules = new();
+        private Coroutine updateCoroutine;
+
+        private WaitForSeconds waitForSeconds;
+        private readonly HashSet<object> updateLocks = new();
+
+        private float updateIntervalScale = 1f;
+        private float ScaledInterval => updateInterval * updateIntervalScale;
+
+        // The new interval takes effect after the current wait completes.
+        public void SetUpdateIntervalScale(float scale)
         {
-            DisableClientAiComponents();
-            enabled = false;
-            return;
+            scale = Mathf.Max(1f, scale);
+            if (Mathf.Approximately(scale, updateIntervalScale))
+                return;
+
+            updateIntervalScale = scale;
+            waitForSeconds = new WaitForSeconds(ScaledInterval);
         }
-        
-        blackboard?.Initialize();
 
-        foreach (var module in GetComponents<IEntityModule>())
-            module?.Initialize();
-
-        healthComponent = blackboard?.healthComponent;
-
-        waitForSeconds = new WaitForSeconds(ScaledInterval);
-        updateCoroutine = StartCoroutine(UpdateCycle());
-
-        if (healthComponent != null)
+        public override void OnNetworkSpawn()
         {
-            healthComponent.OnDeath += DisableUpdate;
-        }
-    }
-    
-    private IEnumerator UpdateCycle()
-    {
-        while (true)
-        {
-            foreach (var t in registeredModules)
+            if (!NetworkManager.Singleton || !NetworkManager.Singleton.IsServer)
             {
-                t.PerformUpdate(ScaledInterval);
+                DisableClientAiComponents();
+                enabled = false;
+                return;
             }
 
-            yield return waitForSeconds;
-        }
-    }
+            blackboard?.Initialize();
 
-    private void DisableClientAiComponents()
-    {
-        
-        if (blackboard == null)
-            blackboard = GetComponent<Blackboard>();
+            foreach (var module in GetComponents<IEntityModule>())
+                module?.Initialize();
 
-        foreach (var module in GetComponentsInChildren<BaseEntityModule>(true))
-            SetBehaviourEnabled(module, false);
+            healthComponent = blackboard?.healthComponent;
 
-        if (blackboard == null)
-            return;
-        
-        SetBehaviourEnabled(blackboard.behaviorGraphAgent, false);
-        SetBehaviourEnabled(blackboard.fitter, false);
-        SetBehaviourEnabled(blackboard.agent, false);
-        SetBehaviourEnabled(blackboard.movementModule, false);
-        SetBehaviourEnabled(blackboard.rotationModule, false);
-        SetBehaviourEnabled(blackboard.attackModule, false);
-        SetBehaviourEnabled(blackboard.aggroModule, false);
-        SetBehaviourEnabled(blackboard.animatorModule, false);
-
-        
-    }
-
-    private static void SetBehaviourEnabled(Behaviour behaviour, bool enabled)
-    {
-        if (behaviour != null)
-            behaviour.enabled = enabled;
-    }
-    
-
-    public void EnableUpdate()
-    {
-        if (updateCoroutine != null)
-            return;
-
-        if (updateLocks.Count > 0)
-            return;
-
-        if (healthComponent && !healthComponent.IsAlive)
-            return;
-
-        if (waitForSeconds == null)
             waitForSeconds = new WaitForSeconds(ScaledInterval);
+            updateCoroutine = StartCoroutine(UpdateCycle());
 
-        updateCoroutine = StartCoroutine(UpdateCycle());
-    }
-    public void DisableUpdate()
-    {
-        if (updateCoroutine == null)
-        {
-            return;
+            if (healthComponent != null)
+            {
+                healthComponent.OnDeath += DisableUpdate;
+            }
         }
 
-        StopCoroutine(updateCoroutine);
-        updateCoroutine = null;
-    }
-
-    public void AddUpdateLock(object owner)
-    {
-        if (owner == null)
-            return;
-
-        if (updateLocks.Add(owner))
-            DisableUpdate();
-    }
-
-    public void RemoveUpdateLock(object owner)
-    {
-        if (owner == null)
-            return;
-
-        if (!updateLocks.Remove(owner))
-            return;
-
-        if (updateLocks.Count == 0)
-            EnableUpdate();
-    }
-    
-    public void RegisterModule(IUpdatableEntityModule module)
-    {
-        if (module == null)
-            return;
-
-        if (!registeredModules.Contains(module))
+        private IEnumerator UpdateCycle()
         {
-            registeredModules.Add(module);
+            while (true)
+            {
+                foreach (var t in registeredModules)
+                {
+                    t.PerformUpdate(ScaledInterval);
+                }
+
+                yield return waitForSeconds;
+            }
         }
-    }
 
-    public void UnregisterModule(IUpdatableEntityModule module)
-    {
-        if (module == null) return;
-
-        if (registeredModules.Contains(module))
+        private void DisableClientAiComponents()
         {
-            registeredModules.Remove(module);
+            if (blackboard == null)
+                blackboard = GetComponent<Blackboard>();
+
+            foreach (var module in GetComponentsInChildren<BaseEntityModule>(true))
+                SetBehaviourEnabled(module, false);
+
+            if (blackboard == null)
+                return;
+
+            SetBehaviourEnabled(blackboard.behaviorGraphAgent, false);
+            SetBehaviourEnabled(blackboard.fitter, false);
+            SetBehaviourEnabled(blackboard.agent, false);
+            SetBehaviourEnabled(blackboard.movementModule, false);
+            SetBehaviourEnabled(blackboard.rotationModule, false);
+            SetBehaviourEnabled(blackboard.attackModule, false);
+            SetBehaviourEnabled(blackboard.aggroModule, false);
+            SetBehaviourEnabled(blackboard.animatorModule, false);
         }
-    }
 
-    private void OnDestroy()
-    {
-        if (updateCoroutine != null)
+        private static void SetBehaviourEnabled(Behaviour behaviour, bool enabled)
         {
+            if (behaviour != null)
+                behaviour.enabled = enabled;
+        }
+
+        public void EnableUpdate()
+        {
+            if (updateCoroutine != null)
+                return;
+
+            if (updateLocks.Count > 0)
+                return;
+
+            if (healthComponent && !healthComponent.IsAlive)
+                return;
+
+            if (waitForSeconds == null)
+                waitForSeconds = new WaitForSeconds(ScaledInterval);
+
+            updateCoroutine = StartCoroutine(UpdateCycle());
+        }
+        public void DisableUpdate()
+        {
+            if (updateCoroutine == null)
+            {
+                return;
+            }
+
             StopCoroutine(updateCoroutine);
+            updateCoroutine = null;
         }
 
-        if (healthComponent != null)
+        public void AddUpdateLock(object owner)
         {
-            healthComponent.OnDeath -= DisableUpdate;
+            if (owner == null)
+                return;
+
+            if (updateLocks.Add(owner))
+                DisableUpdate();
         }
 
-        registeredModules.Clear();
-        updateLocks.Clear();
+        public void RemoveUpdateLock(object owner)
+        {
+            if (owner == null)
+                return;
+
+            if (!updateLocks.Remove(owner))
+                return;
+
+            if (updateLocks.Count == 0)
+                EnableUpdate();
+        }
+
+        public void RegisterModule(IUpdatableEntityModule module)
+        {
+            if (module == null)
+                return;
+
+            if (!registeredModules.Contains(module))
+            {
+                registeredModules.Add(module);
+            }
+        }
+
+        public void UnregisterModule(IUpdatableEntityModule module)
+        {
+            if (module == null) return;
+
+            if (registeredModules.Contains(module))
+            {
+                registeredModules.Remove(module);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (updateCoroutine != null)
+            {
+                StopCoroutine(updateCoroutine);
+            }
+
+            if (healthComponent != null)
+            {
+                healthComponent.OnDeath -= DisableUpdate;
+            }
+
+            registeredModules.Clear();
+            updateLocks.Clear();
+        }
     }
 }

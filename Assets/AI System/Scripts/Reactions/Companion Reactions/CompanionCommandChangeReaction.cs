@@ -1,54 +1,58 @@
-﻿using Unity.Behavior;
+using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[RequireComponent(typeof(BehaviorGraphAgent))]
-[RequireComponent(typeof(CommandModule))]
-public class BehaviorCommandLinker : MonoBehaviour
+namespace Artifika.AI
 {
-    private BehaviorGraphAgent agent;
-    private CommandModule commandModule;
-
-    private const string AutonomousCommandKey = "Autonomous Command";
-    private const string ActionCommandKey = "Action Command";
-
-    private void Awake()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [RequireComponent(typeof(BehaviorGraphAgent))]
+    [RequireComponent(typeof(CommandModule))]
+    public class BehaviorCommandLinker : MonoBehaviour
     {
-        agent = GetComponent<BehaviorGraphAgent>();
-        commandModule = GetComponent<CommandModule>();
-    }
+        private BehaviorGraphAgent agent;
+        private CommandModule commandModule;
 
-    private void OnEnable()
-    {
-        commandModule.OnAutonomousCommandChanged += HandleAutonomousChanged;
-        commandModule.OnActionCommandChanged += HandleActionChanged;
-        
-        HandleAutonomousChanged(null, commandModule.CurrentAutonomousCommandDefinition);
-        HandleActionChanged(null, commandModule.CurrentActionCommandDefinition);
-    }
+        private const string AutonomousCommandKey = "Autonomous Command";
+        private const string ActionCommandKey = "Action Command";
 
-    private void OnDisable()
-    {
-        if (commandModule != null)
+        private void Awake()
         {
-            commandModule.OnAutonomousCommandChanged -= HandleAutonomousChanged;
-            commandModule.OnActionCommandChanged -= HandleActionChanged;
+            agent = GetComponent<BehaviorGraphAgent>();
+            commandModule = GetComponent<CommandModule>();
         }
-    }
-    
 
-    private void HandleAutonomousChanged(AutonomousCommandDefinition prev, AutonomousCommandDefinition next)
-    {
-        if (agent != null && agent.BlackboardReference != null)
+        private void OnEnable()
         {
-            agent.BlackboardReference.SetVariableValue(AutonomousCommandKey, next);
+            commandModule.OnAutonomousCommandChanged += HandleAutonomousChanged;
+            commandModule.OnActionCommandChanged += HandleActionChanged;
+
+            HandleAutonomousChanged(null, commandModule.CurrentAutonomousCommandDefinition);
+            HandleActionChanged(null, commandModule.CurrentActionCommandDefinition);
         }
-    }
 
-    private void HandleActionChanged(ActionCommandDefinition prev, ActionCommandDefinition next)
-    {
-        if (agent != null && agent.BlackboardReference != null)
+        private void OnDisable()
         {
-            agent.BlackboardReference.SetVariableValue(ActionCommandKey, next);
+            if (commandModule != null)
+            {
+                commandModule.OnAutonomousCommandChanged -= HandleAutonomousChanged;
+                commandModule.OnActionCommandChanged -= HandleActionChanged;
+            }
+        }
+
+        private void HandleAutonomousChanged(AutonomousCommandDefinition prev, AutonomousCommandDefinition next)
+        {
+            if (agent != null && agent.BlackboardReference != null)
+            {
+                agent.BlackboardReference.SetVariableValue(AutonomousCommandKey, next);
+            }
+        }
+
+        private void HandleActionChanged(ActionCommandDefinition prev, ActionCommandDefinition next)
+        {
+            if (agent != null && agent.BlackboardReference != null)
+            {
+                agent.BlackboardReference.SetVariableValue(ActionCommandKey, next);
+            }
         }
     }
 }

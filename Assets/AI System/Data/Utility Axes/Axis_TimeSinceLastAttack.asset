@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 421033f55ff441e586b4dce06400a066, type: 3}
   m_Name: Axis_TimeSinceLastAttack
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.TimeSinceLastAttackAxisInput
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.TimeSinceLastAttackAxisInput
   maxTimeSinceLastAttack: 3

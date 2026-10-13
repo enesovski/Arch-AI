@@ -1,52 +1,56 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using Artifika.AI;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[DisallowMultipleComponent]
-[Title("Companion State Coordinator Reaction")]
-public sealed class CompanionStateReaction : SerializedMonoBehaviour, ICompanionReaction
+namespace Artifika.AI
 {
-    private EntityCoordinator coordinator;
-    
-    public Dictionary<CompanionState, List<Behaviour>> disabledBehaviorsPerState = new Dictionary<CompanionState, List<Behaviour>>();
-
-    public void Initialize(Blackboard blackboard)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [DisallowMultipleComponent]
+    [Title("Companion State Coordinator Reaction")]
+    public sealed class CompanionStateReaction : SerializedMonoBehaviour, ICompanionReaction
     {
-        coordinator = blackboard.GetComponent<EntityCoordinator>();
-    }
+        private EntityCoordinator coordinator;
 
-    public void OnCompanionStateChanged(CompanionState previousState, CompanionState nextState)
-    {
-        if (!coordinator) return;
+        public Dictionary<CompanionState, List<Behaviour>> disabledBehaviorsPerState = new Dictionary<CompanionState, List<Behaviour>>();
 
-        if (disabledBehaviorsPerState.TryGetValue(previousState, out var behaviorsToEnable))
+        public void Initialize(Blackboard blackboard)
         {
-            foreach (var behavior in behaviorsToEnable)
-            {
-                if (behavior) behavior.enabled = true;
-            }
+            coordinator = blackboard.GetComponent<EntityCoordinator>();
         }
 
-        if (disabledBehaviorsPerState.TryGetValue(nextState, out var behaviorsToDisable))
+        public void OnCompanionStateChanged(CompanionState previousState, CompanionState nextState)
         {
-            foreach (var behavior in behaviorsToDisable)
+            if (!coordinator) return;
+
+            if (disabledBehaviorsPerState.TryGetValue(previousState, out var behaviorsToEnable))
             {
-                if (behavior) behavior.enabled = false;
+                foreach (var behavior in behaviorsToEnable)
+                {
+                    if (behavior) behavior.enabled = true;
+                }
             }
-        }
 
-        switch (nextState)
-        {
-            case CompanionState.Mounted:
-            case CompanionState.Disabled:
-                coordinator.DisableUpdate();
-                break;
+            if (disabledBehaviorsPerState.TryGetValue(nextState, out var behaviorsToDisable))
+            {
+                foreach (var behavior in behaviorsToDisable)
+                {
+                    if (behavior) behavior.enabled = false;
+                }
+            }
 
-            case CompanionState.Autonomous:
-            case CompanionState.Commanded:
-                coordinator.EnableUpdate();
-                break;
+            switch (nextState)
+            {
+                case CompanionState.Mounted:
+                case CompanionState.Disabled:
+                    coordinator.DisableUpdate();
+                    break;
+
+                case CompanionState.Autonomous:
+                case CompanionState.Commanded:
+                    coordinator.EnableUpdate();
+                    break;
+            }
         }
     }
 }

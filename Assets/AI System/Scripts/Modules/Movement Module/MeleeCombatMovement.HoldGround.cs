@@ -4,10 +4,12 @@ namespace Artifika.AI
 {
     internal sealed partial class MeleeCombatMovement
     {
-        private Vector3 withdrawalStart, withdrawalDirection;
+        private Vector3 withdrawalStart;
+        private Vector3 withdrawalDirection;
         private float withdrawalDistance;
         private bool withdrawalFinished;
-        private Vector3 holdGroundAnchor, holdGroundTangent;
+        private Vector3 holdGroundAnchor;
+        private Vector3 holdGroundTangent;
         private float holdGroundTargetDistance;
 
         private bool UpdateHoldGroundRecovery(GameEntity target)
@@ -46,7 +48,6 @@ namespace Artifika.AI
                 }
                 else
                 {
-                    // This world-space origin and direction were captured once at attack end.
                     for (int attempt = 0; attempt < 3; attempt++)
                     {
                         float distance = withdrawalDistance * (attempt == 0 ? 1f : attempt == 1 ? 0.5f : 0.25f);
@@ -54,7 +55,7 @@ namespace Artifika.AI
                         if (TryStartLocalStep(candidate, withdrawalStart, withdrawalDistance,
                                 navigation ? navigation.GetCombatWithdrawalSpeed() : 2f)) return true;
                     }
-                    EnterHoldGround(target); // No space behind us: stand here instead of taking a detour.
+                    EnterHoldGround(target);
                 }
             }
 
@@ -75,7 +76,7 @@ namespace Artifika.AI
                     StopHoldGroundMovement();
                     if ((allowFallbackAttack || IsInPreferredSector(angle, 5f)) && facing)
                         SetMeleePhase(MeleeMovementPhase.Rush);
-                    return true; // The graph starts the attack using the normal cooldown/range/facing checks.
+                    return true;
                 }
                 if (recoveryElapsed)
                 {

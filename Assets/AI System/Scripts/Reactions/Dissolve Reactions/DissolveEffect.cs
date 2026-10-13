@@ -1,51 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.Scripting.APIUpdating;
 
-public class DissolveEffect : MonoBehaviour
+namespace Artifika.AI
 {
-
-    private float dissolve = 0f;
-    private bool dissolving = false;
-
-    [SerializeField] private Renderer meshRenderer;
-    private Material dissolveMaterial;
-    [SerializeField] private GameObject parentObj;
-
-    private void Start()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class DissolveEffect : MonoBehaviour
     {
-        if (meshRenderer == null)
-        {
-            meshRenderer = GetComponentInChildren<Renderer>();
-        }
-        dissolveMaterial = meshRenderer.material;
+        private float dissolve = 0f;
+        private bool dissolving = false;
 
-        if (parentObj == null)
+        [SerializeField] private Renderer meshRenderer;
+        private Material dissolveMaterial;
+        [SerializeField] private GameObject parentObj;
+
+        private void Start()
         {
-            if (transform.parent != null)
+            if (meshRenderer == null)
             {
-                parentObj = transform.parent.gameObject;
+                meshRenderer = GetComponentInChildren<Renderer>();
             }
-            else
+            dissolveMaterial = meshRenderer.material;
+
+            if (parentObj == null)
             {
-                parentObj = gameObject; 
+                if (transform.parent != null)
+                {
+                    parentObj = transform.parent.gameObject;
+                }
+                else
+                {
+                    parentObj = gameObject;
+                }
             }
         }
-    }
 
-    private void Update()
-    {
-        if (dissolving)
+        private void Update()
         {
-            dissolve += Time.deltaTime;
-            dissolveMaterial.SetFloat("_Dissolve", Mathf.InverseLerp(0.5f, 1.5f, dissolve));
+            if (dissolving)
+            {
+                dissolve += Time.deltaTime;
+                dissolveMaterial.SetFloat("_Dissolve", Mathf.InverseLerp(0.5f, 1.5f, dissolve));
+            }
         }
-    }
 
-    public void StartFading()
-    {
-        //dissolving = true;
-        //Destroy(parentObj, 1.5f);
+        public void StartFading()
+        {
+        }
     }
 }

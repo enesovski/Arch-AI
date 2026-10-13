@@ -1,7 +1,10 @@
 using Artifika.AI.Attack;
 using Sirenix.OdinInspector;
 using Unity.Behavior;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -15,8 +18,8 @@ namespace Artifika.AI
 
         private bool IsTamed => gameEntity != null && gameEntity.EntityType == EntityType.Tamed;
         private bool IsTameable => gameEntity != null && gameEntity.entityConfiguration != null && gameEntity.entityConfiguration.isTameable;
-        
-        [TitleGroup("Modules")] 
+
+        [TitleGroup("Modules")]
         public AttackModule attackModule;
         public DetectionModule detectionModule;
         public MovementModule movementModule;
@@ -31,16 +34,16 @@ namespace Artifika.AI
         public NavMeshAgent agent;
         public Animator animator;
         public EntityStatsController entityStatsController;
-        
+
         [Title("Busses")] public ReactionBusBase[] reactions;
 
         [Title("Configuration")] public float nestRadius = 40f;
-        
+
         [Tooltip("The number of attackers at which this AI decides the target is too crowded and prefers to strafe/reposition.")]
         [Range(1, 10)] public int maxExpectedAggro = 3;
 
         [TitleGroup("Tameable", VisibleIf = nameof(IsTameable))]
-        
+
         [TitleGroup("Tamed", VisibleIf = nameof(IsTamed))]
         public CompanionStateModule companionStateModule;
 
@@ -86,7 +89,7 @@ namespace Artifika.AI
             if (!healthComponent) return true;
             return healthComponent.IsAlive;
         }
-        
+
         public bool IsStunned()
         {
             if (entityStatsController == null)
@@ -97,14 +100,12 @@ namespace Artifika.AI
 
         public bool CanBeTamed()
         {
-
             return IsAlive()
                 && IsStunned()
                 && gameEntity.entityConfiguration != null
                 && gameEntity.entityConfiguration.isTameable
                 && gameEntity.entityConfiguration.tamedPrefab != null;
         }
-
 
         public IEntityStateModule GetStateModule()
         {
@@ -170,8 +171,7 @@ namespace Artifika.AI
         }
 
         #endregion
-        
-        
+
         private T GetReferenceInParentOrChildren<T>() where T : Component
         {
             T component = GetComponent<T>();
@@ -195,7 +195,6 @@ namespace Artifika.AI
         {
             Undo.RecordObject(this, "Gather Blackboard References");
 
-            // Modules
             attackModule = GetReferenceInChildren<AttackModule>();
             detectionModule = GetReferenceInChildren<DetectionModule>();
             movementModule = GetReferenceInChildren<MovementModule>();
@@ -203,7 +202,6 @@ namespace Artifika.AI
             animatorModule = GetReferenceInChildren<AnimatorModule>();
             rotationModule = GetReferenceInChildren<RotationModule>();
 
-            // Components
             gameEntity = GetReferenceInParentOrChildren<GameEntity>();
             behaviorGraphAgent = GetReferenceInChildren<BehaviorGraphAgent>();
             healthComponent = GetReferenceInParentOrChildren<HealthComponent>();

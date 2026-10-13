@@ -11,4 +11,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebbdd4e109784215b587c4e03d7ac57e, type: 3}
   m_Name: Axis_CanAttack
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.CanAttackAxisInput
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.CanAttackAxisInput

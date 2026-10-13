@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Artifika.AI.Utility
 {
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
     [CreateAssetMenu(
         fileName = "Axis_Distance",
         menuName = "AI/Utility/Axis/Distance")]

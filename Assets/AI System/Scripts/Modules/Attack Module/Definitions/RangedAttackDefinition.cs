@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Artifika.AI.Attack
 {
@@ -20,11 +21,12 @@ namespace Artifika.AI.Attack
         public float SpreadAngle => spreadAngle;
         public float SpreadRadius => spreadRadius;
     }
-}
 
-public enum ProjectileMovementType 
-{ 
-    Linear, 
-    Parabolic,
-    Static
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public enum ProjectileMovementType
+    {
+        Linear,
+        Parabolic,
+        Static
+    }
 }

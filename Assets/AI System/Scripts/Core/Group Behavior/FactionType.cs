@@ -1,8 +1,14 @@
-public enum FactionType
+using UnityEngine.Scripting.APIUpdating;
+
+namespace Artifika.AI
 {
-    Player = 0,
-    ElythianBots = 1,
-    TamedBots = 2,
-    PlayerStructures = 3,
-    WildAnimals = 4,
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public enum FactionType
+    {
+        Player = 0,
+        ElythianBots = 1,
+        TamedBots = 2,
+        PlayerStructures = 3,
+        WildAnimals = 4,
+    }
 }

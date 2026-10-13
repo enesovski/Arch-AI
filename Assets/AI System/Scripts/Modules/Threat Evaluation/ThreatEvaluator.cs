@@ -7,12 +7,12 @@ namespace Artifika.AI
     public class ThreatEvaluator
     {
         private readonly Dictionary<GameEntity, ThreatInfo> threats;
-        private readonly AggroConfiguration _configuration;
+        private readonly AggroConfiguration configuration;
         private readonly List<GameEntity> removalBuffer = new List<GameEntity>();
 
         public ThreatEvaluator(AggroConfiguration configuration)
         {
-            this._configuration = configuration;
+            this.configuration = configuration;
             threats = new Dictionary<GameEntity, ThreatInfo>();
         }
 
@@ -84,7 +84,7 @@ namespace Artifika.AI
 
                 if (threat.HitStrength > 0f)
                 {
-                    threat.HitStrength -= _configuration.hitDecayRate * deltaTime;
+                    threat.HitStrength -= configuration.hitDecayRate * deltaTime;
                     if (threat.HitStrength < 0f)
                         threat.HitStrength = 0f;
                 }
@@ -105,14 +105,14 @@ namespace Artifika.AI
                 ? threat.DetectionStrength
                 : threat.LastDetectionStrength;
 
-            if (threat.TimeSinceLastSeen > _configuration.memoryDecayStartTime)
+            if (threat.TimeSinceLastSeen > configuration.memoryDecayStartTime)
             {
-                float elapsed = threat.TimeSinceLastSeen - _configuration.memoryDecayStartTime;
-                float decayFactor = 1f - (elapsed / _configuration.memoryDecayDuration);
+                float elapsed = threat.TimeSinceLastSeen - configuration.memoryDecayStartTime;
+                float decayFactor = 1f - (elapsed / configuration.memoryDecayDuration);
                 detectionScore *= Mathf.Clamp01(decayFactor);
             }
 
-            return detectionScore + threat.HitStrength * _configuration.hitMultiplier;
+            return detectionScore + threat.HitStrength * configuration.hitMultiplier;
         }
 
         private bool IsEntityValid(GameEntity entity)

@@ -1,6 +1,10 @@
-using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public interface IUpdatableEntityModule : IEntityModule
+namespace Artifika.AI
 {
-    void PerformUpdate(float deltaTime);
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public interface IUpdatableEntityModule : IEntityModule
+    {
+        void PerformUpdate(float deltaTime);
+    }
 }

@@ -1,7 +1,13 @@
-﻿public enum AttackMovementMode
+using UnityEngine.Scripting.APIUpdating;
+
+namespace Artifika.AI
 {
-    Stationary,       
-    AnimationDriven,
-    SlowChase,       
-    ContinueChase,
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public enum AttackMovementMode
+    {
+        Stationary,
+        AnimationDriven,
+        SlowChase,
+        ContinueChase,
+    }
 }

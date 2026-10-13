@@ -1,5 +1,5 @@
-﻿using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace Artifika.AI.Death.Reactions
 {
@@ -11,13 +11,11 @@ namespace Artifika.AI.Death.Reactions
         {
             if(destroyAfter > 0f) StartCoroutine(ExecuteAfter());
             else Despawn(destroyObject);
-
         }
         private IEnumerator ExecuteAfter()
         {
             yield return new WaitForSeconds(destroyAfter);
             Despawn(destroyObject);
-
         }
     }
 }

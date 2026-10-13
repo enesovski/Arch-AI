@@ -1,7 +1,12 @@
-﻿using System;
+using System;
+using UnityEngine.Scripting.APIUpdating;
 
-public interface IEntityStateModule
+namespace Artifika.AI
 {
-        GameEntity CurrentTarget { get; }
-        event Action<TargetChangeEventArgs> OnTargetChanged;
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public interface IEntityStateModule
+    {
+            GameEntity CurrentTarget { get; }
+            event Action<TargetChangeEventArgs> OnTargetChanged;
+    }
 }

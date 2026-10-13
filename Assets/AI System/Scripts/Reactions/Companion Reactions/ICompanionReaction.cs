@@ -1,6 +1,10 @@
-﻿using Artifika.AI;
+using UnityEngine.Scripting.APIUpdating;
 
-public interface ICompanionReaction : IReaction
+namespace Artifika.AI
 {
-    void OnCompanionStateChanged(CompanionState previousState, CompanionState nextState);
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public interface ICompanionReaction : IReaction
+    {
+        void OnCompanionStateChanged(CompanionState previousState, CompanionState nextState);
+    }
 }

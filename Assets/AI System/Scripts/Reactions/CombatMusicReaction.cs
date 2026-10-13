@@ -1,60 +1,65 @@
-﻿using Artifika.Audio.Musics;
+using Artifika.Audio.Musics;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public class CombatMusicReaction : MonoBehaviour
+namespace Artifika.AI
 {
-    [SerializeField] private MusicTrack combatMusic;
-    [SerializeField] private AggroTracker aggroTracker;
-
-    private bool hasRequestedCombatMusic;
-
-    private void OnEnable()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class CombatMusicReaction : MonoBehaviour
     {
-        if (aggroTracker == null)
-            return;
+        [SerializeField] private MusicTrack combatMusic;
+        [SerializeField] private AggroTracker aggroTracker;
 
-        aggroTracker.OnCombatStarted += HandleCombatStarted;
-        aggroTracker.OnCombatEnded += HandleCombatEnded;
-    }
+        private bool hasRequestedCombatMusic;
 
-    private void Start()
-    {
-        if (aggroTracker != null && aggroTracker.IsInCombat)
-            HandleCombatStarted();
-    }
+        private void OnEnable()
+        {
+            if (aggroTracker == null)
+                return;
 
-    private void OnDisable()
-    {
-        if (aggroTracker == null)
-            return;
+            aggroTracker.OnCombatStarted += HandleCombatStarted;
+            aggroTracker.OnCombatEnded += HandleCombatEnded;
+        }
 
-        aggroTracker.OnCombatStarted -= HandleCombatStarted;
-        aggroTracker.OnCombatEnded -= HandleCombatEnded;
-        HandleCombatEnded();
-    }
+        private void Start()
+        {
+            if (aggroTracker != null && aggroTracker.IsInCombat)
+                HandleCombatStarted();
+        }
 
-    private void HandleCombatStarted()
-    {
-        if (!CanControlLocalMusic() || hasRequestedCombatMusic || MusicManager.Instance == null)
-            return;
+        private void OnDisable()
+        {
+            if (aggroTracker == null)
+                return;
 
-        MusicManager.Instance.Request(combatMusic);
-        hasRequestedCombatMusic = true;
-    }
+            aggroTracker.OnCombatStarted -= HandleCombatStarted;
+            aggroTracker.OnCombatEnded -= HandleCombatEnded;
+            HandleCombatEnded();
+        }
 
-    private void HandleCombatEnded()
-    {
-        if (!hasRequestedCombatMusic)
-            return;
+        private void HandleCombatStarted()
+        {
+            if (!CanControlLocalMusic() || hasRequestedCombatMusic || MusicManager.Instance == null)
+                return;
 
-        MusicManager.Instance?.Release(combatMusic);
-        hasRequestedCombatMusic = false;
-    }
+            MusicManager.Instance.Request(combatMusic);
+            hasRequestedCombatMusic = true;
+        }
 
-    private bool CanControlLocalMusic()
-    {
-        return aggroTracker != null
-               && combatMusic != null
-               && (!aggroTracker.IsSpawned || aggroTracker.IsOwner);
+        private void HandleCombatEnded()
+        {
+            if (!hasRequestedCombatMusic)
+                return;
+
+            MusicManager.Instance?.Release(combatMusic);
+            hasRequestedCombatMusic = false;
+        }
+
+        private bool CanControlLocalMusic()
+        {
+            return aggroTracker != null
+                   && combatMusic != null
+                   && (!aggroTracker.IsSpawned || aggroTracker.IsOwner);
+        }
     }
 }

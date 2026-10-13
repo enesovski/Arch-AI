@@ -1,44 +1,47 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public class EntitySpawnZoneKeeper : MonoBehaviour
+namespace Artifika.AI
 {
-    public List<Bounds> spawnZones;
-    public List<Bounds> safeZones;
-
-    public void AddPointOfInterest(Bounds bounds)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class EntitySpawnZoneKeeper : MonoBehaviour
     {
-        spawnZones.Add(bounds);
-    }
+        public List<Bounds> spawnZones;
+        public List<Bounds> safeZones;
 
-    public void RemovePointOfInterest(Bounds bounds)
-    {
-        spawnZones.Remove(bounds);
-    }
-
-    public void AddSafeZone(Bounds bounds)
-    {
-        safeZones.Add(bounds);
-    }
-
-    public void RemoveSafeZone(Bounds bounds)
-    {
-        safeZones.Remove(bounds);
-    }
-
-    public void UpdateZone(Bounds oldBounds, Bounds newBounds)
-    {
-        // This could be for either POIs or Safe Zones, depending on your game logic
-        if (spawnZones.Contains(oldBounds))
+        public void AddPointOfInterest(Bounds bounds)
         {
-            spawnZones.Remove(oldBounds);
-            spawnZones.Add(newBounds);
+            spawnZones.Add(bounds);
         }
-        else if (safeZones.Contains(oldBounds))
+
+        public void RemovePointOfInterest(Bounds bounds)
         {
-            safeZones.Remove(oldBounds);
-            safeZones.Add(newBounds);
+            spawnZones.Remove(bounds);
+        }
+
+        public void AddSafeZone(Bounds bounds)
+        {
+            safeZones.Add(bounds);
+        }
+
+        public void RemoveSafeZone(Bounds bounds)
+        {
+            safeZones.Remove(bounds);
+        }
+
+        public void UpdateZone(Bounds oldBounds, Bounds newBounds)
+        {
+            if (spawnZones.Contains(oldBounds))
+            {
+                spawnZones.Remove(oldBounds);
+                spawnZones.Add(newBounds);
+            }
+            else if (safeZones.Contains(oldBounds))
+            {
+                safeZones.Remove(oldBounds);
+                safeZones.Add(newBounds);
+            }
         }
     }
 }

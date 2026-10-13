@@ -1,65 +1,70 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[DisallowMultipleComponent]
-public sealed class DeathAnimatorTrigger : MonoBehaviour
+namespace Artifika.AI
 {
-    [SerializeField] private HealthComponent healthComponent;
-    [SerializeField] private Animator animator;
-    [SerializeField] private string deathTrigger = "Death";
-
-    private int deathTriggerHash;
-    private bool subscribed;
-
-    private void Awake()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [DisallowMultipleComponent]
+    public sealed class DeathAnimatorTrigger : MonoBehaviour
     {
-        deathTriggerHash = Animator.StringToHash(deathTrigger);
-        ResolveTargets();
-    }
+        [SerializeField] private HealthComponent healthComponent;
+        [SerializeField] private Animator animator;
+        [SerializeField] private string deathTrigger = "Death";
 
-    private void OnEnable()
-    {
-        ResolveTargets();
-        Subscribe();
-    }
+        private int deathTriggerHash;
+        private bool subscribed;
 
-    private void OnDisable()
-    {
-        Unsubscribe();
-    }
+        private void Awake()
+        {
+            deathTriggerHash = Animator.StringToHash(deathTrigger);
+            ResolveTargets();
+        }
 
-    private void ResolveTargets()
-    {
-        if (healthComponent == null)
-            healthComponent = GetComponent<HealthComponent>() ?? GetComponentInChildren<HealthComponent>(true);
+        private void OnEnable()
+        {
+            ResolveTargets();
+            Subscribe();
+        }
 
-        if (animator == null)
-            animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>(true);
-    }
+        private void OnDisable()
+        {
+            Unsubscribe();
+        }
 
-    private void Subscribe()
-    {
-        if (subscribed || healthComponent == null)
-            return;
+        private void ResolveTargets()
+        {
+            if (healthComponent == null)
+                healthComponent = GetComponent<HealthComponent>() ?? GetComponentInChildren<HealthComponent>(true);
 
-        healthComponent.OnDeath += TriggerDeath;
-        subscribed = true;
-    }
+            if (animator == null)
+                animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>(true);
+        }
 
-    private void Unsubscribe()
-    {
-        if (!subscribed || healthComponent == null)
-            return;
+        private void Subscribe()
+        {
+            if (subscribed || healthComponent == null)
+                return;
 
-        healthComponent.OnDeath -= TriggerDeath;
-        subscribed = false;
-    }
+            healthComponent.OnDeath += TriggerDeath;
+            subscribed = true;
+        }
 
-    private void TriggerDeath()
-    {
-        if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsServer)
-            return;
+        private void Unsubscribe()
+        {
+            if (!subscribed || healthComponent == null)
+                return;
 
-        animator?.SetTrigger(deathTriggerHash);
+            healthComponent.OnDeath -= TriggerDeath;
+            subscribed = false;
+        }
+
+        private void TriggerDeath()
+        {
+            if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsServer)
+                return;
+
+            animator?.SetTrigger(deathTriggerHash);
+        }
     }
 }

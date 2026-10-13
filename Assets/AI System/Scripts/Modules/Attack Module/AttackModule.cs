@@ -1,9 +1,9 @@
-using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Artifika.AI.Attack
 {
@@ -111,7 +111,7 @@ namespace Artifika.AI.Attack
                 }
             }
         }
-        
+
         public bool CanStartAttack()
         {
             if (!canAttack)
@@ -156,7 +156,7 @@ namespace Artifika.AI.Attack
             currentAttackCoroutine = StartCoroutine(PerformAttackSequence(def));
             return true;
         }
-        
+
         public void PerformAttack(BaseAttackDefinition def)
         {
             // Matching events may each hit; late or interrupted events must not deal damage.
@@ -188,7 +188,7 @@ namespace Artifika.AI.Attack
 
             currentAttackCoroutine = null;
         }
-        
+
         private void BeginAttack(BaseAttackDefinition def)
         {
             canAttack = false;
@@ -315,7 +315,7 @@ namespace Artifika.AI.Attack
                     break;
             }
 
-            rotationModule.SetRotationSpeed(720f); 
+            rotationModule.SetRotationSpeed(720f);
         }
 
         private void TrackTargetDuringAttack()

@@ -11,5 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04faf44eef3343498ca82c4d95ce9abc, type: 3}
   m_Name: Axis_Distance
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Utility.DistanceAxisInput
+  m_EditorClassIdentifier: Artifika.AI.Utility::Artifika.AI.Utility.DistanceAxisInput
   maxDistance: 30

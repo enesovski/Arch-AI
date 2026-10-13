@@ -1,36 +1,40 @@
 using System;
 using Unity.Behavior;
 using UnityEngine;
-
+using UnityEngine.Scripting.APIUpdating;
 using Blackboard = Artifika.AI.Blackboard;
-[Serializable, Unity.Properties.GeneratePropertyBag]
-[Condition(name: "Is Out Of Nest Radius", story: "[Blackboard] is out of nest", category: "Conditions", id: "467a93e782f91997930121088b46b6cd")]
-public partial class IsOutOfNestCondition : Condition
+
+namespace Artifika.AI
 {
-
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-
-    private MovementModule _movementModule;
-    private float _arriveTolerance = 0.5f;
-    private float _nestRadius;
-    public override bool IsTrue()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, Unity.Properties.GeneratePropertyBag]
+    [Condition(name: "Is Out Of Nest Radius", story: "[Blackboard] is out of nest", category: "Conditions", id: "467a93e782f91997930121088b46b6cd")]
+    public partial class IsOutOfNestCondition : Condition
     {
-        _movementModule = Blackboard.Value.movementModule;
-        _nestRadius = Blackboard.Value.nestRadius;
-        Vector3 nest = _movementModule.SpawnPoint;
-        float sqrDist = (_movementModule.transform.position - nest).sqrMagnitude;
-        if (_nestRadius > 0f && sqrDist <= (_nestRadius + _arriveTolerance) * (_nestRadius + _arriveTolerance))
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
+
+        private MovementModule movementModule;
+        private float arriveTolerance = 0.5f;
+        private float nestRadius;
+        public override bool IsTrue()
         {
-            return false;
+            movementModule = Blackboard.Value.movementModule;
+            nestRadius = Blackboard.Value.nestRadius;
+            Vector3 nest = movementModule.SpawnPoint;
+            float sqrDist = (movementModule.transform.position - nest).sqrMagnitude;
+            if (nestRadius > 0f && sqrDist <= (nestRadius + arriveTolerance) * (nestRadius + arriveTolerance))
+            {
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
 
-    public override void OnStart()
-    {
-    }
+        public override void OnStart()
+        {
+        }
 
-    public override void OnEnd()
-    {
+        public override void OnEnd()
+        {
+        }
     }
 }

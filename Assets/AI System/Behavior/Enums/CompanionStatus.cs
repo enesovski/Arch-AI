@@ -1,11 +1,15 @@
-using System;
 using Unity.Behavior;
+using UnityEngine.Scripting.APIUpdating;
 
-[BlackboardEnum]
-public enum CompanionStatus
+namespace Artifika.AI
 {
-	Autonomous,
-	Commanded,
-	Mounted,
-	Disabled
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [BlackboardEnum]
+    public enum CompanionStatus
+    {
+        Autonomous,
+        Commanded,
+        Mounted,
+        Disabled
+    }
 }

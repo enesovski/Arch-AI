@@ -1,12 +1,15 @@
-﻿using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[CreateAssetMenu(fileName = "Autonomous Command Definition", menuName = "AI/Commands/Autonomous Command Definition")]
-public class AutonomousCommandDefinition: CommandDefinitionBase
+namespace Artifika.AI
 {
-    [Title("Autonomous Command")]
-    public BehaviorGraph subgraph;
-    
-    
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [CreateAssetMenu(fileName = "Autonomous Command Definition", menuName = "AI/Commands/Autonomous Command Definition")]
+    public class AutonomousCommandDefinition: CommandDefinitionBase
+    {
+        [Title("Autonomous Command")]
+        public BehaviorGraph subgraph;
+    }
 }

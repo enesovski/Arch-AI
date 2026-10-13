@@ -1,7 +1,7 @@
+using Sirenix.OdinInspector;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
-using Unity.Netcode;
-using Sirenix.OdinInspector;
 
 namespace Artifika.AI
 {
@@ -16,7 +16,7 @@ namespace Artifika.AI
     {
         [Title("Configuration")]
         [SerializeField] private float defaultRotationSpeed = 360f;
-        
+
         [Title("Debug")]
         [SerializeField, ReadOnly] private RotationMode currentMode;
         [SerializeField, ReadOnly] private float currentYaw;
@@ -24,14 +24,14 @@ namespace Artifika.AI
 
         private NavMeshAgent agent;
         private AIGroundFitter fitter;
-        
+
         private float activeRotationSpeed;
         private Transform lookTarget;
         private Vector3 lookTargetOffset;
 
         public RotationMode CurrentMode => currentMode;
         public float CurrentYaw => currentYaw;
-        
+
         public void Initialize(NavMeshAgent agent, AIGroundFitter fitter)
         {
             this.agent = agent;
@@ -59,13 +59,11 @@ namespace Artifika.AI
 
         #region Public API
 
-        /// <summary> Sets the rotation strategy. Safe to call from BT nodes, reactions, or modules. </summary>
         public void SetMode(RotationMode mode)
         {
             currentMode = mode;
         }
 
-        /// <summary> Assigns a world-space transform for LookAt mode to face. </summary>
         public void SetLookTarget(Transform target)
         {
             SetLookTarget(target, Vector3.zero);
@@ -77,26 +75,22 @@ namespace Artifika.AI
             lookTargetOffset = localOffset;
         }
 
-        /// <summary> Clears the look-at target. </summary>
         public void ClearLookTarget()
         {
             lookTarget = null;
             lookTargetOffset = Vector3.zero;
         }
 
-        /// <summary> Override rotation speed (e.g. slower aim turn, faster snap). </summary>
         public void SetRotationSpeed(float speed)
         {
             activeRotationSpeed = speed;
         }
 
-        /// <summary> Restores rotation speed to the inspector default. </summary>
         public void ResetRotationSpeed()
         {
             activeRotationSpeed = defaultRotationSpeed;
         }
 
-        /// <summary> Instantly snaps yaw to a world angle. Useful for spawning or teleporting. </summary>
         public void SnapYaw(float worldYaw)
         {
             currentYaw = worldYaw;
@@ -138,9 +132,7 @@ namespace Artifika.AI
                 agent.remainingDistance <= Mathf.Max(agent.stoppingDistance, 0.05f))
                 return;
 
-            // desiredVelocity includes local avoidance. In a crowd it can alternate
-            // left and right while the agent barely moves, making the body twitch.
-            // The next path corner is a stable facing direction in Agent mode.
+            // Path corners keep facing stable when local avoidance oscillates.
             Vector3 pathDir = agent.steeringTarget - transform.position;
             pathDir.y = 0f;
 
@@ -161,7 +153,7 @@ namespace Artifika.AI
             Vector3 direction = targetPosition - transform.position;
             direction.y = 0f;
 
-            // Increased threshold to avoid violent 180-degree flips when targets overlap
+            // Avoid yaw flips when targets overlap.
             if (direction.sqrMagnitude > 0.01f)
                 targetYaw = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         }

@@ -49,7 +49,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 755774693303124199
-      type: {class: 'BlackboardVariable`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -58,7 +58,7 @@ MonoBehaviour:
         Name: Aggro Status
         m_Value: 0
     - rid: 755774693303124200
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -67,7 +67,7 @@ MonoBehaviour:
         Name: Target
         m_Value: {fileID: 0}
     - rid: 755774693303124201
-      type: {class: 'BlackboardVariable`1[[SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -152,14 +152,14 @@ MonoBehaviour:
         m_RequiresAllConditions: 1
         m_ObserverType: 0
     - rid: 3737962888551202926
-      type: {class: IsDeadCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsDeadCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202927
-      type: {class: IsStunnedCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsStunnedCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123153
@@ -264,7 +264,7 @@ MonoBehaviour:
         - rid: 3737962888551202943
         m_RegisteredObservers: []
     - rid: 3737962888551202935
-      type: {class: ApproachSuspiciousSourceAction, ns: , asm: Assembly-CSharp}
+      type: {class: ApproachSuspiciousSourceAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 17946398262464275347
@@ -276,7 +276,7 @@ MonoBehaviour:
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202936
-      type: {class: SearchForTargetAction, ns: , asm: Assembly-CSharp}
+      type: {class: SearchForTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 14833358609511259032
@@ -320,7 +320,7 @@ MonoBehaviour:
         m_RequiresAllConditions: 0
         m_ObserverType: 0
     - rid: 3737962888551202939
-      type: {class: ChaseTargetAction, ns: , asm: Assembly-CSharp}
+      type: {class: ChaseTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 12857874874496449204
@@ -347,7 +347,7 @@ MonoBehaviour:
         - rid: 3737962888551202947
         m_RequiresAllConditions: 0
     - rid: 3737962888551202941
-      type: {class: ReturnToNestAction, ns: , asm: Assembly-CSharp}
+      type: {class: ReturnToNestAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 9178992133312183770
@@ -359,7 +359,7 @@ MonoBehaviour:
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202942
-      type: {class: WanderAction, ns: , asm: Assembly-CSharp}
+      type: {class: WanderAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 4464098697083589283
@@ -383,14 +383,14 @@ MonoBehaviour:
         SecondsToWait:
           rid: 755774693303124198
     - rid: 3737962888551202944
-      type: {class: IsAttackCommittedCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsAttackCommittedCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202945
-      type: {class: AttackToTargetAction, ns: , asm: Assembly-CSharp}
+      type: {class: AttackToTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 2907706907679168716
@@ -402,14 +402,14 @@ MonoBehaviour:
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202946
-      type: {class: ShouldUseAttackBranchCondition, ns: , asm: Assembly-CSharp}
+      type: {class: ShouldUseAttackBranchCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202947
-      type: {class: IsOutOfNestCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsOutOfNestCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123153
@@ -492,7 +492,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: ChaseTarget
     Story: '[Blackboard] chases [Target]'
-    RuntimeTypeString: ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 9695917030829202506
@@ -505,14 +505,14 @@ MonoBehaviour:
       Tooltip: 
     - Name: Target
       Type:
-        m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Wander
     Story: '[Blackboard] wanders around'
-    RuntimeTypeString: WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 16527211239432054260
@@ -577,7 +577,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: SearchForTarget
     Story: '[Blackboard] searches area'
-    RuntimeTypeString: SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13090531310446099875
@@ -592,7 +592,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: ReturnToNest
     Story: '[Blackboard] returns to nest'
-    RuntimeTypeString: ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 6622046479453434197
@@ -637,7 +637,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: AttackToTarget
     Story: '[Blackboard] attacks to Target'
-    RuntimeTypeString: AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13079194320586797074
@@ -652,7 +652,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: Approach Suspicious Source
     Story: '[Blackboard] approaches suspicious source'
-    RuntimeTypeString: ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
+    RuntimeTypeString: Artifika.AI.ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 1822923824073403591
@@ -730,7 +730,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 755774692322967959
-      type: {class: 'TypedVariableModel`1[[SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -886,7 +886,7 @@ MonoBehaviour:
         - rid: 755774693303124133
         - rid: 755774693303124134
         NodeType:
-          m_SerializableType: ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 1822923824073403591
@@ -1095,7 +1095,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsOutOfNestCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsOutOfNestCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 10888007914771151430
@@ -1218,7 +1218,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 1220832001267073701
-      type: {class: 'TypedVariableModel`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1277,7 +1277,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 1695467670847834556
@@ -1323,7 +1323,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsStunnedCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsStunnedCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 14781363890115984801
@@ -1412,7 +1412,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsAttackCommittedCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsAttackCommittedCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 378572368579608746
@@ -1502,7 +1502,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: ShouldUseAttackBranchCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ShouldUseAttackBranchCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 4486767059619655151
@@ -1556,7 +1556,7 @@ MonoBehaviour:
         - rid: 3036306316220695523
         - rid: 3036306316220695524
         NodeType:
-          m_SerializableType: AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13079194320586797074
@@ -1643,7 +1643,7 @@ MonoBehaviour:
         - rid: 5478665580825281350
         - rid: 5478665580825281351
         NodeType:
-          m_SerializableType: ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 9695917030829202506
@@ -1675,14 +1675,14 @@ MonoBehaviour:
       data:
         FieldName: Target
         Type:
-          m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         LocalValue:
           rid: 5478665580825281355
         LinkedVariable:
           rid: 1220832001267073701
     - rid: 5478665580825281355
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1703,7 +1703,7 @@ MonoBehaviour:
         - rid: 5478665581963771910
         - rid: 5478665581963771911
         NodeType:
-          m_SerializableType: WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         NodeTypeID:
           m_Value0: 16527211239432054260
@@ -1849,7 +1849,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665787085947262
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2113,7 +2113,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665855455986274
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2135,7 +2135,7 @@ MonoBehaviour:
         - rid: 7360397157645156512
         - rid: 7360397157645156513
         NodeType:
-          m_SerializableType: SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13090531310446099875
@@ -2174,7 +2174,7 @@ MonoBehaviour:
         - rid: 7360397471485264088
         - rid: 7360397471485264089
         NodeType:
-          m_SerializableType: ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 6622046479453434197
@@ -2228,7 +2228,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 755774692322967835
-      type: {class: 'BlackboardVariable`1[[SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2246,7 +2246,7 @@ MonoBehaviour:
         Name: Blackboard
         m_Value: {fileID: 0}
     - rid: 1220832001267073674
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2273,7 +2273,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 5478665787085947106
-      type: {class: 'BlackboardVariable`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2311,7 +2311,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 755774692322967833
-      type: {class: 'TypedVariableModel`1[[SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2333,7 +2333,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 1220832001267073667
-      type: {class: 'TypedVariableModel`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2366,7 +2366,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 3
     - rid: 5478665787085947072
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:

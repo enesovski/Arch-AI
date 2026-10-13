@@ -1,6 +1,6 @@
-using UnityEngine;
-using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,26 +16,25 @@ namespace Artifika.AI.Sensors
 
         public LayerMask ObstacleMask => obstacleMask;
 
-        [Title("Main Sensor")] 
+        [Title("Main Sensor")]
         [SerializeField] private float viewRadius = 15f;
         [SerializeField, Range(0f, 360f)] private float viewAngle = 90f;
-        
-        [Title("Secondary Sensor")] 
+
+        [Title("Secondary Sensor")]
         [SerializeField]
         private bool enableSecondarySensor = true;
 
-        [SerializeField, ShowIf(nameof(enableSecondarySensor))] 
+        [SerializeField, ShowIf(nameof(enableSecondarySensor))]
         [MinValue(0f), LabelText("View Radius")]
         private float proximityRadius = 3f;
 
-        [SerializeField, ShowIf(nameof(enableSecondarySensor))] 
+        [SerializeField, ShowIf(nameof(enableSecondarySensor))]
         [MinMaxSlider(0, 1f), LabelText("Sensor Strength Interval")]
         private Vector2 proximityStrengthInterval = new Vector2(0.4f, 1);
 
         [SerializeField, ShowIf(nameof(enableSecondarySensor)),
         LabelText("Ignore Obstacles")]
         private bool proximityIgnoresObstacles = true;
-
 
         private Transform origin;
         private float cosHalf;

@@ -1,34 +1,38 @@
-using UnityEngine;
 using MoreMountains.Feedbacks;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public class TamingEffectsHandler : MonoBehaviour
+namespace Artifika.AI
 {
-    [SerializeField] private GameObject tamingEffectPrefab;
-    [SerializeField] private float destroyDelay = 5f;
-
-    private void OnEnable()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class TamingEffectsHandler : MonoBehaviour
     {
-        EventManager.Instance?.Subscribe<EntityTamedEvent>(OnEntityTamed);
-    }
+        [SerializeField] private GameObject tamingEffectPrefab;
+        [SerializeField] private float destroyDelay = 5f;
 
-    private void OnDisable()
-    {
-        EventManager.Instance?.Unsubscribe<EntityTamedEvent>(OnEntityTamed);
-    }
-
-    private void OnEntityTamed(EntityTamedEvent evt)
-    {
-        if (tamingEffectPrefab == null) return;
-
-        GameObject effectInstance = Instantiate(tamingEffectPrefab, evt.Position, Quaternion.identity);
-        
-        var mmfPlayer = effectInstance.GetComponent<MMF_Player>();
-        if (mmfPlayer != null)
+        private void OnEnable()
         {
-            mmfPlayer.PlayFeedbacks();
+            EventManager.Instance?.Subscribe<EntityTamedEvent>(OnEntityTamed);
         }
 
-        // Clean up the effect instance after it has played
-        Destroy(effectInstance, destroyDelay);
+        private void OnDisable()
+        {
+            EventManager.Instance?.Unsubscribe<EntityTamedEvent>(OnEntityTamed);
+        }
+
+        private void OnEntityTamed(EntityTamedEvent evt)
+        {
+            if (tamingEffectPrefab == null) return;
+
+            GameObject effectInstance = Instantiate(tamingEffectPrefab, evt.Position, Quaternion.identity);
+
+            var mmfPlayer = effectInstance.GetComponent<MMF_Player>();
+            if (mmfPlayer != null)
+            {
+                mmfPlayer.PlayFeedbacks();
+            }
+
+            Destroy(effectInstance, destroyDelay);
+        }
     }
 }

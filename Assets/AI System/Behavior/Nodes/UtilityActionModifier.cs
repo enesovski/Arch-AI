@@ -1,49 +1,49 @@
 using System;
-using Artifika.AI;
 using Artifika.AI.Utility;
 using Unity.Behavior;
-using UnityEngine;
-using Modifier = Unity.Behavior.Modifier;
 using Unity.Properties;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+using Modifier = Unity.Behavior.Modifier;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Utility Action", story: "Scores [Action]", category: "Flow", id: "a6819e0bcb65dd0dd212b9e26150060a")]
-public partial class UtilityActionModifier : Modifier, IUtilityActionNode
+namespace Artifika.AI
 {
-
-    [SerializeReference]
-    public BlackboardVariable<UtilityActionDefinition> Action;
-
-    public float EvaluateScore(TacticalContext ctx)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "Utility Action", story: "Scores [Action]", category: "Flow", id: "a6819e0bcb65dd0dd212b9e26150060a")]
+    public partial class UtilityActionModifier : Modifier, IUtilityActionNode
     {
-        if (Action?.Value == null)
-            return 0f;
+        [SerializeReference]
+        public BlackboardVariable<UtilityActionDefinition> Action;
 
-        return Action.Value.EvaluateScore(ctx);
-    }
-
-    public string GetActionName()
-    {
-        return Action?.Value != null ? Action.Value.ActionName : "Unnamed Action";
-    }
-
-    protected override Status OnStart()
-    {
-        if (Child != null)
+        public float EvaluateScore(TacticalContext ctx)
         {
-            return StartNode(Child);
+            if (Action?.Value == null)
+                return 0f;
+
+            return Action.Value.EvaluateScore(ctx);
         }
-        return Status.Failure;
-    }
 
-    protected override Status OnUpdate()
-    {
-        if (Child == null)
+        public string GetActionName()
+        {
+            return Action?.Value != null ? Action.Value.ActionName : "Unnamed Action";
+        }
+
+        protected override Status OnStart()
+        {
+            if (Child != null)
+            {
+                return StartNode(Child);
+            }
             return Status.Failure;
+        }
 
-        return Child.CurrentStatus;
+        protected override Status OnUpdate()
+        {
+            if (Child == null)
+                return Status.Failure;
+
+            return Child.CurrentStatus;
+        }
     }
 }
-
-
-

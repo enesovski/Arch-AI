@@ -1,10 +1,9 @@
-﻿namespace Artifika.AI.Aggro
+namespace Artifika.AI.Aggro
 {
     public enum SuspiciousState
     {
-        None,       
-        Alerted,    
-        Searching 
-
+        None,
+        Alerted,
+        Searching
     }
 }

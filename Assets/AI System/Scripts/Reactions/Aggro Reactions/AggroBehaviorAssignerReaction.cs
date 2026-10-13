@@ -1,4 +1,4 @@
-﻿using Unity.Behavior;
+using Unity.Behavior;
 using UnityEngine;
 
 namespace Artifika.AI.Aggro.Reactions
@@ -54,7 +54,6 @@ namespace Artifika.AI.Aggro.Reactions
         public void OnTargetChanged(TargetChangeEventArgs args) => SetTarget(args.NewTarget);
         public void OnAggroStateChanged(AggroStateChangeEventArgs args) => SetAggroStatus(args.NewState);
         public void OnSuspiciousStateChanged(SuspiciousStateChangeEventArgs args) => SetSuspiciousState(args.NewState);
-        
 
         private void SetTarget(GameEntity target)
         {
@@ -81,7 +80,6 @@ namespace Artifika.AI.Aggro.Reactions
             behaviorGraphAgent.BlackboardReference
                 .SetVariableValue(SuspiciousStateVar, MapSuspiciousStatus(newState));
         }
-
 
         private static AggroStatus MapAggroStatus(AggroState state) => state switch
         {

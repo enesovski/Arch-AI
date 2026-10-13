@@ -1,53 +1,55 @@
 using System;
 using Unity.Behavior;
-using UnityEngine;
-using Action = Unity.Behavior.Action;
 using Unity.Properties;
-
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+using Action = Unity.Behavior.Action;
 using Blackboard = Artifika.AI.Blackboard;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Wander", story: "[Blackboard] wanders around", category: "Action", id: "f4e530ae0e735ce5976221ce18e4c039")]
-public partial class WanderAction : Action
+namespace Artifika.AI
 {
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-
-    private MovementModule _movementModule;
-    protected override Status OnStart()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "Wander", story: "[Blackboard] wanders around", category: "Action", id: "f4e530ae0e735ce5976221ce18e4c039")]
+    public partial class WanderAction : Action
     {
-        _movementModule = Blackboard.Value.movementModule;
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
 
-        MovementProfile movementData = _movementModule.MovementProfile;
-        Transform transform = _movementModule.transform;
+        private MovementModule movementModule;
+        protected override Status OnStart()
+        {
+            movementModule = Blackboard.Value.movementModule;
 
-        Vector3 nest = _movementModule.SpawnPoint;
-        bool ok = MovementPointPicker.TryPickWanderPoint(
-            transform,
-            nest,
-            Blackboard.Value.nestRadius,
-            movementData.MinWanderDistance,
-            movementData.MaxWanderDistance,
-            out Vector3 wanderTarget);
+            MovementProfile movementData = movementModule.MovementProfile;
+            Transform transform = movementModule.transform;
 
-        if (!ok)
-            return Status.Failure;
+            Vector3 nest = movementModule.SpawnPoint;
+            bool ok = MovementPointPicker.TryPickWanderPoint(
+                transform,
+                nest,
+                Blackboard.Value.nestRadius,
+                movementData.MinWanderDistance,
+                movementData.MaxWanderDistance,
+                out Vector3 wanderTarget);
 
-        _movementModule.SetSpeed(_movementModule.MovementProfile.walkMovementSpeed);
-        _movementModule.MoveTo(wanderTarget);
-        return Status.Running;
-    }
+            if (!ok)
+                return Status.Failure;
 
-    protected override Status OnUpdate()
-    {
-        if (_movementModule.HasArrived())
-            return Status.Success;
-        return Status.Running;
+            movementModule.SetSpeed(movementModule.MovementProfile.walkMovementSpeed);
+            movementModule.MoveTo(wanderTarget);
+            return Status.Running;
+        }
 
-    }
+        protected override Status OnUpdate()
+        {
+            if (movementModule.HasArrived())
+                return Status.Success;
+            return Status.Running;
+        }
 
-    protected override void OnEnd()
-    {
-        _movementModule?.Stop();
+        protected override void OnEnd()
+        {
+            movementModule?.Stop();
+        }
     }
 }
-

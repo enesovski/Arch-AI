@@ -9,4 +9,3 @@ namespace Artifika.AI
         Boss,
     }
 }
-

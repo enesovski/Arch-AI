@@ -2,101 +2,106 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.Serialization;
 
-public class EntitySpawnAnchor : NetworkBehaviour
+namespace Artifika.AI
 {
-    [FormerlySerializedAs("bossPrefab")]
-    [SerializeField] private GameObject entityPrefab;
-
-    private readonly NetworkVariable<NetworkObjectReference> spawnedEntityReference = new(
-        default,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server);
-
-    public GameObject SpawnedEntity { get; private set; }
-
-    public override void OnNetworkSpawn()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class EntitySpawnAnchor : NetworkBehaviour
     {
-        base.OnNetworkSpawn();
+        [FormerlySerializedAs("bossPrefab")]
+        [SerializeField] private GameObject entityPrefab;
 
-        spawnedEntityReference.OnValueChanged += HandleSpawnedEntityReferenceChanged;
-        ResolveSpawnedEntity(spawnedEntityReference.Value);
+        private readonly NetworkVariable<NetworkObjectReference> spawnedEntityReference = new(
+            default,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
 
-        if (IsServer)
-            StartCoroutine(ServerSpawnWhenReady());
-    }
+        public GameObject SpawnedEntity { get; private set; }
 
-    public override void OnNetworkDespawn()
-    {
-        spawnedEntityReference.OnValueChanged -= HandleSpawnedEntityReferenceChanged;
-        base.OnNetworkDespawn();
-    }
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
 
-    private IEnumerator ServerSpawnWhenReady()
-    {
-        yield return WaitForSpawnReadiness();
+            spawnedEntityReference.OnValueChanged += HandleSpawnedEntityReferenceChanged;
+            ResolveSpawnedEntity(spawnedEntityReference.Value);
 
-        if (!ShouldSpawnEntity())
+            if (IsServer)
+                StartCoroutine(ServerSpawnWhenReady());
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            spawnedEntityReference.OnValueChanged -= HandleSpawnedEntityReferenceChanged;
+            base.OnNetworkDespawn();
+        }
+
+        private IEnumerator ServerSpawnWhenReady()
+        {
+            yield return WaitForSpawnReadiness();
+
+            if (!ShouldSpawnEntity())
+                yield break;
+
+            SpawnEntity();
+        }
+
+        protected virtual IEnumerator WaitForSpawnReadiness()
+        {
             yield break;
-
-        SpawnEntity();
-    }
-
-    protected virtual IEnumerator WaitForSpawnReadiness()
-    {
-        yield break;
-    }
-
-    protected virtual bool ShouldSpawnEntity() => true;
-
-    private void SpawnEntity()
-    {
-        if (entityPrefab == null)
-        {
-            GameLog.Error($"[{GetType().Name}] No entity prefab assigned on {name}.", this);
-            return;
         }
 
-        Vector3 spawnPos = transform.position;
-        Quaternion spawnRot = transform.rotation;
+        protected virtual bool ShouldSpawnEntity() => true;
 
-        if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 1f, NavMesh.AllAreas))
-            spawnPos = hit.position;
-
-        GameObject entity = Instantiate(entityPrefab, spawnPos, spawnRot);
-
-        if (!entity.TryGetComponent(out NetworkObject netObj))
+        private void SpawnEntity()
         {
-            GameLog.Error($"[{GetType().Name}] Spawned prefab '{entityPrefab.name}' has no NetworkObject.", entity);
-            Destroy(entity);
-            return;
+            if (entityPrefab == null)
+            {
+                GameLog.Error($"[{GetType().Name}] No entity prefab assigned on {name}.", this);
+                return;
+            }
+
+            Vector3 spawnPos = transform.position;
+            Quaternion spawnRot = transform.rotation;
+
+            if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+                spawnPos = hit.position;
+
+            GameObject entity = Instantiate(entityPrefab, spawnPos, spawnRot);
+
+            if (!entity.TryGetComponent(out NetworkObject netObj))
+            {
+                GameLog.Error($"[{GetType().Name}] Spawned prefab '{entityPrefab.name}' has no NetworkObject.", entity);
+                Destroy(entity);
+                return;
+            }
+
+            netObj.Spawn();
+            spawnedEntityReference.Value = netObj;
+            SetSpawnedEntity(entity);
+
+            if (entity.TryGetComponent(out MovementModule movement))
+                movement.SetSpawnPoint(spawnPos);
         }
 
-        netObj.Spawn();
-        spawnedEntityReference.Value = netObj;
-        SetSpawnedEntity(entity);
+        private void HandleSpawnedEntityReferenceChanged(NetworkObjectReference previous, NetworkObjectReference current)
+        {
+            ResolveSpawnedEntity(current);
+        }
 
-        if (entity.TryGetComponent(out MovementModule movement))
-            movement.SetSpawnPoint(spawnPos);
-    }
+        private void ResolveSpawnedEntity(NetworkObjectReference reference)
+        {
+            if (reference.TryGet(out NetworkObject netObj))
+                SetSpawnedEntity(netObj.gameObject);
+        }
 
-    private void HandleSpawnedEntityReferenceChanged(NetworkObjectReference previous, NetworkObjectReference current)
-    {
-        ResolveSpawnedEntity(current);
-    }
+        private void SetSpawnedEntity(GameObject entity)
+        {
+            if (SpawnedEntity == entity)
+                return;
 
-    private void ResolveSpawnedEntity(NetworkObjectReference reference)
-    {
-        if (reference.TryGet(out NetworkObject netObj))
-            SetSpawnedEntity(netObj.gameObject);
-    }
-
-    private void SetSpawnedEntity(GameObject entity)
-    {
-        if (SpawnedEntity == entity)
-            return;
-
-        SpawnedEntity = entity;
+            SpawnedEntity = entity;
+        }
     }
 }

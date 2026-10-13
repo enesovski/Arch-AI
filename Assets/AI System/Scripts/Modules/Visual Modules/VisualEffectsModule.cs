@@ -1,135 +1,133 @@
-using HighlightPlus;
-using MoreMountains.Feedbacks;
-using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HighlightPlus;
+using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-
-public class VisualEffectsModule : NetworkBehaviour
+namespace Artifika.AI
 {
-
-    [Serializable]
-    public struct EffectEntry
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class VisualEffectsModule : NetworkBehaviour
     {
-        public string key;
-        public MMF_Player player;
-    }
-
-    [Title("References")]
-    [SerializeField] private HealthComponent healthComponent;
-
-    [Title("Effects")]
-    [SerializeField] HighlightEffect highlightEffect;
-    [Space]
-    [SerializeField] MMF_Player deathFeedback;
-    [SerializeField] MMF_Player hitFeedback;
-
-
-    [Title("Effect Entries")]
-    [SerializeField] private List<EffectEntry> effectEntries = new();
-
-    private readonly Dictionary<string, MMF_Player> map = new Dictionary<string, MMF_Player>(StringComparer.Ordinal);
-
-
-    private void Start()
-    {
-        if (healthComponent == null)
-            healthComponent = GetComponentInChildren<HealthComponent>();
-
-        if (healthComponent != null)
+        [Serializable]
+        public struct EffectEntry
         {
-            healthComponent.OnDamageTakenArgs += PlayDamagedFX;
-            healthComponent.OnDeath += PlayDeathFX;
+            public string key;
+            public MMF_Player player;
         }
 
-        RebuildMap();
-    }
+        [Title("References")]
+        [SerializeField] private HealthComponent healthComponent;
 
-    private void RebuildMap()
-    {
-        map.Clear();
+        [Title("Effects")]
+        [SerializeField] private HighlightEffect highlightEffect;
+        [Space]
+        [SerializeField] private MMF_Player deathFeedback;
+        [SerializeField] private MMF_Player hitFeedback;
 
-        for (int i = 0; i < effectEntries.Count; i++)
+        [Title("Effect Entries")]
+        [SerializeField] private List<EffectEntry> effectEntries = new();
+
+        private readonly Dictionary<string, MMF_Player> map = new Dictionary<string, MMF_Player>(StringComparer.Ordinal);
+
+        private void Start()
         {
-            EffectEntry effectEntry = effectEntries[i];
-            if (!map.ContainsKey(effectEntry.key))
+            if (healthComponent == null)
+                healthComponent = GetComponentInChildren<HealthComponent>();
+
+            if (healthComponent != null)
             {
-                map.Add(effectEntry.key, effectEntry.player);
+                healthComponent.OnDamageTakenArgs += PlayDamagedFX;
+                healthComponent.OnDeath += PlayDeathFX;
+            }
+
+            RebuildMap();
+        }
+
+        private void RebuildMap()
+        {
+            map.Clear();
+
+            for (int i = 0; i < effectEntries.Count; i++)
+            {
+                EffectEntry effectEntry = effectEntries[i];
+                if (!map.ContainsKey(effectEntry.key))
+                {
+                    map.Add(effectEntry.key, effectEntry.player);
+                }
             }
         }
-    }
 
-    public void PlayEffect(string key)
-    {
-        if (string.IsNullOrWhiteSpace(key))
+        public void PlayEffect(string key)
         {
-            return;
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return;
+            }
+
+            if (!map.TryGetValue(key, out MMF_Player player) || player == null)
+            {
+                return;
+            }
+            player?.PlayFeedbacks();
         }
 
-        if (!map.TryGetValue(key, out MMF_Player player) || player == null)
+        private void PlayDeathFX()
         {
-            return;
-        }
-        player?.PlayFeedbacks();
-
-    }
-
-
-    void PlayDeathFX()
-    {
-        StartDeathFeedback();
-    }
-
-    void StartDeathFeedback()
-    {
-        deathFeedback?.PlayFeedbacks();
-        StartCoroutine(StopFeedbackAfterDuration(deathFeedback, 2));
-    }
-
-    void PlayDamagedFX(DamageInstance damageData, float damageAmount)
-    {
-        StartHitFeedback(damageData.Context.ImpactPoint);
-    }
-
-    void StartHitFeedback(Vector3 impactPoint)
-    {
-        highlightEffect?.HitFX();
-        if (hitFeedback != null)
-            hitFeedback.transform.position = impactPoint;
-        hitFeedback?.PlayFeedbacks();
-    }
-
-    IEnumerator StopFeedbackAfterDuration(MMF_Player feedback, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-
-        feedback?.StopFeedbacks();
-    }
-
-    public void PlayVisualEffect(GameObject effectPrefab, Vector3 position, Quaternion rotation)
-    {
-        GameObject effectInstance = Instantiate(effectPrefab, position, rotation);
-        Destroy(effectInstance, 10);
-    }
-
-    public void PlayRandomClip(AudioClip[] clips)
-    {
-        int index = UnityEngine.Random.Range(0, clips.Length);
-        //AudioPoolManager.Instance.PlaySound(clips[index], transform.position, volume: 0.5f);
-    }
-
-    public override void OnDestroy()
-    {
-        if (healthComponent != null)
-        {
-            healthComponent.OnDamageTakenArgs -= PlayDamagedFX;
-            healthComponent.OnDeath -= PlayDeathFX;
-            healthComponent = null;
+            StartDeathFeedback();
         }
 
-        base.OnDestroy();
+        private void StartDeathFeedback()
+        {
+            deathFeedback?.PlayFeedbacks();
+            StartCoroutine(StopFeedbackAfterDuration(deathFeedback, 2));
+        }
+
+        private void PlayDamagedFX(DamageInstance damageData, float damageAmount)
+        {
+            StartHitFeedback(damageData.Context.ImpactPoint);
+        }
+
+        private void StartHitFeedback(Vector3 impactPoint)
+        {
+            highlightEffect?.HitFX();
+            if (hitFeedback != null)
+                hitFeedback.transform.position = impactPoint;
+            hitFeedback?.PlayFeedbacks();
+        }
+
+        private IEnumerator StopFeedbackAfterDuration(MMF_Player feedback, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+
+            feedback?.StopFeedbacks();
+        }
+
+        public void PlayVisualEffect(GameObject effectPrefab, Vector3 position, Quaternion rotation)
+        {
+            GameObject effectInstance = Instantiate(effectPrefab, position, rotation);
+            Destroy(effectInstance, 10);
+        }
+
+        public void PlayRandomClip(AudioClip[] clips)
+        {
+            int index = UnityEngine.Random.Range(0, clips.Length);
+        }
+
+        public override void OnDestroy()
+        {
+            if (healthComponent != null)
+            {
+                healthComponent.OnDamageTakenArgs -= PlayDamagedFX;
+                healthComponent.OnDeath -= PlayDeathFX;
+                healthComponent = null;
+            }
+
+            base.OnDestroy();
+        }
     }
 }

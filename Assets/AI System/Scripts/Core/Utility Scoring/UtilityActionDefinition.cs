@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Artifika.AI.Utility
 {
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
     [Serializable]
     public class MandatoryCondition
     {
@@ -21,9 +23,8 @@ namespace Artifika.AI.Utility
             => input != null && input.GetNormalizedValue(ctx) >= threshold;
     }
 
-    [CreateAssetMenu(
-        fileName = "UtilityActionDefinition",
-        menuName = "AI/Utility Action Definition")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
+    [CreateAssetMenu(fileName = "UtilityActionDefinition", menuName = "AI/Utility Action Definition")]
     public class UtilityActionDefinition : ScriptableObject
     {
         [HideLabel]

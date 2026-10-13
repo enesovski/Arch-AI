@@ -1,26 +1,30 @@
 using System;
 using Unity.Behavior;
 using UnityEngine;
-
+using UnityEngine.Scripting.APIUpdating;
 using Blackboard = Artifika.AI.Blackboard;
 
-[Serializable, Unity.Properties.GeneratePropertyBag]
-[Condition(name: "Has Line Of Sight", story: "[Blackboard] has line of sight", category: "Conditions", id: "8f0f432d8f584cc88d31b92f95c21b10")]
-public partial class HasLineOfSightCondition : Condition
+namespace Artifika.AI
 {
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-
-    public override bool IsTrue()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, Unity.Properties.GeneratePropertyBag]
+    [Condition(name: "Has Line Of Sight", story: "[Blackboard] has line of sight", category: "Conditions", id: "8f0f432d8f584cc88d31b92f95c21b10")]
+    public partial class HasLineOfSightCondition : Condition
     {
-        var blackboard = Blackboard != null ? Blackboard.Value : null;
-        return blackboard != null && blackboard.GetTacticalContext().HasLineOfSight;
-    }
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
 
-    public override void OnStart()
-    {
-    }
+        public override bool IsTrue()
+        {
+            var blackboard = Blackboard != null ? Blackboard.Value : null;
+            return blackboard != null && blackboard.GetTacticalContext().HasLineOfSight;
+        }
 
-    public override void OnEnd()
-    {
+        public override void OnStart()
+        {
+        }
+
+        public override void OnEnd()
+        {
+        }
     }
 }

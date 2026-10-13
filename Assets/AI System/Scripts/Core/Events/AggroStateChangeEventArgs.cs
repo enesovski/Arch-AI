@@ -1,13 +1,19 @@
-﻿public readonly struct AggroStateChangeEventArgs
-{
-    public AggroState PreviousState { get; }
-    public AggroState NewState { get; }
+using UnityEngine.Scripting.APIUpdating;
 
-    public AggroStateChangeEventArgs(
-        AggroState previousState,
-        AggroState newState)
+namespace Artifika.AI
+{
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public readonly struct AggroStateChangeEventArgs
     {
-        PreviousState = previousState;
-        NewState = newState;
+        public AggroState PreviousState { get; }
+        public AggroState NewState { get; }
+
+        public AggroStateChangeEventArgs(
+            AggroState previousState,
+            AggroState newState)
+        {
+            PreviousState = previousState;
+            NewState = newState;
+        }
     }
 }

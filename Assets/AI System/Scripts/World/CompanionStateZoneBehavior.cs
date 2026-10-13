@@ -1,25 +1,29 @@
-﻿using System;
-using UnityEngine;
+using System;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[Serializable]
-public class SetCompanionStateZoneBehavior : IZoneBehavior
+namespace Artifika.AI
 {
-    [Title("Enter Settings")]
-    [SerializeField]
-    private CompanionState stateOnEnter = CompanionState.Disabled;
-    
-    public void OnEnter(GameObject other)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable]
+    public class SetCompanionStateZoneBehavior : IZoneBehavior
     {
-        var stateModule = other.GetComponentInParent<CompanionStateModule>();
-        if (stateModule != null)
+        [Title("Enter Settings")]
+        [SerializeField]
+        private CompanionState stateOnEnter = CompanionState.Disabled;
+
+        public void OnEnter(GameObject other)
         {
-            stateModule.SetState(stateOnEnter);
+            var stateModule = other.GetComponentInParent<CompanionStateModule>();
+            if (stateModule != null)
+            {
+                stateModule.SetState(stateOnEnter);
+            }
         }
-    }
 
-    public void OnExit(GameObject other)
-    {
-
+        public void OnExit(GameObject other)
+        {
+        }
     }
 }

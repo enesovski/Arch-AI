@@ -1,10 +1,14 @@
-using System;
 using Unity.Behavior;
+using UnityEngine.Scripting.APIUpdating;
 
-[BlackboardEnum]
-public enum SuspiciousStatus
+namespace Artifika.AI
 {
-	Alerted,
-	Searching,
-	None
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [BlackboardEnum]
+    public enum SuspiciousStatus
+    {
+        Alerted,
+        Searching,
+        None
+    }
 }

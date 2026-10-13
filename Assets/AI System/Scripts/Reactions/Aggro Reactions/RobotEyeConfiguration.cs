@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Artifika.AI.Visuals
@@ -9,7 +9,7 @@ namespace Artifika.AI.Visuals
         [Header("Animation Settings")]
         public float fadeDuration = 0.5f;
         public Ease easeMethod;
-    
+
         [Header("Visuals")]
         [Space]
         public float passiveEyeLigthIntensity = 2f;

@@ -20,14 +20,6 @@ MonoBehaviour:
   isTameable: 1
   tamedPrefab: {fileID: 7854299482721162278, guid: 9bd51ae1abe635c4fa78db32603acbaa,
     type: 3}
-  overrideSkillChecks:
-    requiredSuccessfulChecks: 5
-    indicatorDurationSeconds: 1
-    successZoneNormalizedSize: 0.15
-    firstCheckDelaySeconds: 0.5
-    delayBetweenChecksSeconds: 0
-    failedCheckStunTimePenaltySeconds: 1.5
-    continueNeedleImmediatelyAfterCheck: 1
   rangedHitForcesEngage: 1
   bossDisplayName: 
   potentialDrops:

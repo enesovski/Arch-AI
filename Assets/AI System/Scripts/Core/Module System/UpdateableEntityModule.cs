@@ -1,56 +1,62 @@
-public abstract class UpdatableEntityModule : BaseEntityModule, IUpdatableEntityModule
+using UnityEngine.Scripting.APIUpdating;
+
+namespace Artifika.AI
 {
-    private EntityCoordinator _coordinator;
-    private bool _hasLoggedMissingCoordinator;
-
-    protected override void OnEnable()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public abstract class UpdatableEntityModule : BaseEntityModule, IUpdatableEntityModule
     {
-        base.OnEnable();
-        RegisterWithUpdater();
-    }
+        private EntityCoordinator coordinator;
+        private bool hasLoggedMissingCoordinator;
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        UnregisterFromUpdater();
-    }
-
-    public abstract void PerformUpdate(float deltaTime);
-
-    public abstract void DestroyModule();
-
-    private void RegisterWithUpdater()
-    {
-        if (_coordinator == null)
+        protected override void OnEnable()
         {
-            _coordinator = GetComponent<EntityCoordinator>();
+            base.OnEnable();
+            RegisterWithUpdater();
         }
 
-        if (_coordinator == null)
+        protected override void OnDisable()
         {
-            if (!_hasLoggedMissingCoordinator)
+            base.OnDisable();
+            UnregisterFromUpdater();
+        }
+
+        public abstract void PerformUpdate(float deltaTime);
+
+        public abstract void DestroyModule();
+
+        private void RegisterWithUpdater()
+        {
+            if (coordinator == null)
             {
-                UnityEngine.Debug.LogError($"{GetType().Name} requires EntityCoordinator on {gameObject.name} to register updates.", this);
-                _hasLoggedMissingCoordinator = true;
+                coordinator = GetComponent<EntityCoordinator>();
             }
 
-            return;
+            if (coordinator == null)
+            {
+                if (!hasLoggedMissingCoordinator)
+                {
+                    UnityEngine.Debug.LogError($"{GetType().Name} requires EntityCoordinator on {gameObject.name} to register updates.", this);
+                    hasLoggedMissingCoordinator = true;
+                }
+
+                return;
+            }
+
+            coordinator.RegisterModule(this);
         }
 
-        _coordinator.RegisterModule(this);
-    }
-
-    private void UnregisterFromUpdater()
-    {
-        if (_coordinator != null)
+        private void UnregisterFromUpdater()
         {
-            _coordinator.UnregisterModule(this);
+            if (coordinator != null)
+            {
+                coordinator.UnregisterModule(this);
+            }
         }
-    }
 
-    protected virtual void OnDestroy()
-    {
-        DestroyModule();
-        UnregisterFromUpdater();
+        protected virtual void OnDestroy()
+        {
+            DestroyModule();
+            UnregisterFromUpdater();
+        }
     }
 }

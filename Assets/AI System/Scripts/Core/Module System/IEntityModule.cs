@@ -1,16 +1,21 @@
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public interface IEntityModule
+namespace Artifika.AI
 {
-    GameObject GameObject { get; }
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public interface IEntityModule
+    {
+        GameObject GameObject { get; }
 
-    Transform Transform { get; }
+        Transform Transform { get; }
 
-    void Initialize();
+        void Initialize();
 
-    void OnModuleEnabled();
+        void OnModuleEnabled();
 
-    void OnModuleDisabled();
+        void OnModuleDisabled();
 
-    bool IsEnabled { get; }
+        bool IsEnabled { get; }
+    }
 }

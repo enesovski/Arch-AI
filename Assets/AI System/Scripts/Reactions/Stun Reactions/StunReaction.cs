@@ -1,7 +1,7 @@
-using UnityEngine;
-using Sirenix.OdinInspector;
 using Artifika.AI.Attack;
 using MoreMountains.Feedbacks;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Artifika.AI.Stun.Reactions
 {
@@ -14,32 +14,31 @@ namespace Artifika.AI.Stun.Reactions
         [SerializeField] private bool waitForOutAnimationExit = true;
         [SerializeField, Min(0f)] private float maxOutAnimationWaitSeconds = 2f;
 
-        [Title("Feedback")] 
+        [Title("Feedback")]
         [SerializeField] private MMF_Player stunFeedback;
-        
-        private MovementModule _movementModule;
-        private RotationModule _rotationModule;
-        private AttackModule _attackModule;
-        private AnimatorModule _animatorModule;
-        private Animator _animator;
-        private EntityCoordinator _coordinator;
 
+        private MovementModule movementModule;
+        private RotationModule rotationModule;
+        private AttackModule attackModule;
+        private AnimatorModule animatorModule;
+        private Animator animator;
+        private EntityCoordinator coordinator;
 
-        private int _stunAnimHash;
-        private RotationMode _preStunRotationMode = RotationMode.Agent;
-        private Coroutine _releaseCoroutine;
-        private bool _releasePending;
+        private int stunAnimHash;
+        private RotationMode preStunRotationMode = RotationMode.Agent;
+        private Coroutine releaseCoroutine;
+        private bool releasePending;
 
         public void Initialize(Blackboard blackboard)
         {
-            _movementModule = blackboard.movementModule;
-            _rotationModule = blackboard.rotationModule;
-            _attackModule = blackboard.attackModule;
-            _animatorModule = blackboard.animatorModule;
-            _animator = blackboard.animator;
-            _coordinator = blackboard.GetComponent<EntityCoordinator>();
+            movementModule = blackboard.movementModule;
+            rotationModule = blackboard.rotationModule;
+            attackModule = blackboard.attackModule;
+            animatorModule = blackboard.animatorModule;
+            animator = blackboard.animator;
+            coordinator = blackboard.GetComponent<EntityCoordinator>();
 
-            _stunAnimHash = string.IsNullOrWhiteSpace(stunAnimParam) ? 0 : Animator.StringToHash(stunAnimParam);
+            stunAnimHash = string.IsNullOrWhiteSpace(stunAnimParam) ? 0 : Animator.StringToHash(stunAnimParam);
         }
 
         public void OnStunnedChanged(bool isStunned)
@@ -47,43 +46,38 @@ namespace Artifika.AI.Stun.Reactions
             if (isStunned)
             {
                 CancelPendingRelease();
-                _attackModule?.InterruptAttack();
-                _animatorModule?.SetSpeedParam(0f);
+                attackModule?.InterruptAttack();
+                animatorModule?.SetSpeedParam(0f);
 
-                // Stop and disable movement
-                if (_movementModule != null)
+                if (movementModule != null)
                 {
-                    _movementModule.Stop();
-                    _movementModule.SetStopped(true);
+                    movementModule.Stop();
+                    movementModule.SetStopped(true);
                 }
 
-                // Stop rotation
-                if (_rotationModule != null)
+                if (rotationModule != null)
                 {
-                    _preStunRotationMode = _rotationModule.CurrentMode;
-                    _rotationModule.SetMode(RotationMode.None);
+                    preStunRotationMode = rotationModule.CurrentMode;
+                    rotationModule.SetMode(RotationMode.None);
                 }
 
-                // Pause AI updates
-                if (_coordinator != null)
+                if (coordinator != null)
                 {
-                    _coordinator.AddUpdateLock(this);
+                    coordinator.AddUpdateLock(this);
                 }
 
-                // Play animation
-                if (_animator != null && _stunAnimHash != 0)
+                if (animator != null && stunAnimHash != 0)
                 {
-                    _animator.SetBool(_stunAnimHash, true);
-                    
+                    animator.SetBool(stunAnimHash, true);
                 }
 
                 if (stunFeedback != null) stunFeedback.PlayFeedbacks();
             }
             else
             {
-                if (_animator != null && _stunAnimHash != 0)
+                if (animator != null && stunAnimHash != 0)
                 {
-                    _animator.SetBool(_stunAnimHash, false);
+                    animator.SetBool(stunAnimHash, false);
                 }
 
                 if (waitForOutAnimationExit)
@@ -99,7 +93,7 @@ namespace Artifika.AI.Stun.Reactions
 
         public void NotifyStunOutAnimationFinished()
         {
-            if (!_releasePending)
+            if (!releasePending)
                 return;
 
             CancelPendingRelease();
@@ -108,55 +102,55 @@ namespace Artifika.AI.Stun.Reactions
 
         private void BeginPendingRelease()
         {
-            _releasePending = true;
+            releasePending = true;
 
             if (maxOutAnimationWaitSeconds <= 0f)
                 return;
 
-            if (_releaseCoroutine != null)
-                StopCoroutine(_releaseCoroutine);
+            if (releaseCoroutine != null)
+                StopCoroutine(releaseCoroutine);
 
-            _releaseCoroutine = StartCoroutine(ReleaseAfterFallbackDelay());
+            releaseCoroutine = StartCoroutine(ReleaseAfterFallbackDelay());
         }
 
         private System.Collections.IEnumerator ReleaseAfterFallbackDelay()
         {
             yield return new WaitForSeconds(maxOutAnimationWaitSeconds);
 
-            _releaseCoroutine = null;
-            if (_releasePending)
+            releaseCoroutine = null;
+            if (releasePending)
             {
-                _releasePending = false;
+                releasePending = false;
                 ReleaseStunControl();
             }
         }
 
         private void CancelPendingRelease()
         {
-            _releasePending = false;
+            releasePending = false;
 
-            if (_releaseCoroutine == null)
+            if (releaseCoroutine == null)
                 return;
 
-            StopCoroutine(_releaseCoroutine);
-            _releaseCoroutine = null;
+            StopCoroutine(releaseCoroutine);
+            releaseCoroutine = null;
         }
 
         private void ReleaseStunControl()
         {
-            if (_movementModule != null)
+            if (movementModule != null)
             {
-                _movementModule.SetStopped(false);
+                movementModule.SetStopped(false);
             }
 
-            if (_rotationModule != null)
+            if (rotationModule != null)
             {
-                _rotationModule.SetMode(_preStunRotationMode);
+                rotationModule.SetMode(preStunRotationMode);
             }
 
-            if (_coordinator != null)
+            if (coordinator != null)
             {
-                _coordinator.RemoveUpdateLock(this);
+                coordinator.RemoveUpdateLock(this);
             }
         }
     }

@@ -1,173 +1,176 @@
 using System;
 using Unity.Behavior;
-using UnityEngine;
-using Action = Unity.Behavior.Action;
 using Unity.Properties;
-
-using Artifika.AI;
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+using Action = Unity.Behavior.Action;
 using Blackboard = Artifika.AI.Blackboard;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Flee From Target", story: "[Blackboard] flees from [Target]", category: "Action", id: "6c6f1c56738af7ae4cc3699784c17004")]
-public partial class FleeFromTargetAction : Action
+namespace Artifika.AI
 {
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-    [SerializeReference] public BlackboardVariable<GameEntity> Target;
-
-    private const float MinFleeDistance = 30f;
-    private const float FleeDistanceIntervalMultiplier = 10f;
-    private const float FleeSpeedLookaheadSeconds = 3f;
-    private const float RetryCooldown = 0.75f;
-    private const float SafetyReevaluationInterval = 1.5f;
-    private const float DirectionDriftThreshold = 60f;
-
-    private MovementModule _movementModule;
-    private Blackboard _blackboard;
-    private Transform _threat;
-
-    private Vector3 _fleeDestination;
-    private Vector3 _lastFleeDirection;
-    private float _preferredSide;
-    private float _nextRetryTime;
-    private float _nextSafetyCheckTime;
-    private bool _hasDestination;
-    private bool _restoreAutoBraking;
-
-    protected override Status OnStart()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "Flee From Target", story: "[Blackboard] flees from [Target]", category: "Action", id: "6c6f1c56738af7ae4cc3699784c17004")]
+    public partial class FleeFromTargetAction : Action
     {
-        _blackboard = Blackboard?.Value;
-        _movementModule = _blackboard?.movementModule;
-        _threat = Target?.Value ? Target.Value.transform : null;
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
+        [SerializeReference] public BlackboardVariable<GameEntity> Target;
 
-        if (_movementModule == null || _threat == null)
-            return Status.Failure;
+        private const float MinFleeDistance = 30f;
+        private const float FleeDistanceIntervalMultiplier = 10f;
+        private const float FleeSpeedLookaheadSeconds = 3f;
+        private const float RetryCooldown = 0.75f;
+        private const float SafetyReevaluationInterval = 1.5f;
+        private const float DirectionDriftThreshold = 60f;
 
-        _preferredSide = 0f;
-        _hasDestination = false;
-        _restoreAutoBraking = _movementModule.AutoBraking;
-        _movementModule.SetAutoBraking(false);
+        private MovementModule movementModule;
+        private Blackboard blackboard;
+        private Transform threat;
 
-        PickNextFleeDestination();
-        return Status.Running;
-    }
+        private Vector3 fleeDestination;
+        private Vector3 lastFleeDirection;
+        private float preferredSide;
+        private float nextRetryTime;
+        private float nextSafetyCheckTime;
+        private bool hasDestination;
+        private bool restoreAutoBraking;
 
-    protected override Status OnUpdate()
-    {
-        if (_movementModule == null)
-            return Status.Failure;
+        protected override Status OnStart()
+        {
+            blackboard = Blackboard?.Value;
+            movementModule = blackboard?.movementModule;
+            threat = Target?.Value ? Target.Value.transform : null;
 
-        if (_threat == null)
-            return Status.Success;
+            if (movementModule == null || threat == null)
+                return Status.Failure;
 
-        if (NeedsNewDestination())
+            preferredSide = 0f;
+            hasDestination = false;
+            restoreAutoBraking = movementModule.AutoBraking;
+            movementModule.SetAutoBraking(false);
+
             PickNextFleeDestination();
-
-        return Status.Running;
-    }
-
-    protected override void OnEnd()
-    {
-        if (_movementModule == null)
-            return;
-
-        _movementModule.SetAutoBraking(_restoreAutoBraking);
-
-        if (!IsStillFleeing())
-            _movementModule.Stop();
-    }
-
-    private bool NeedsNewDestination()
-    {
-        if (!_hasDestination)
-            return Time.time >= _nextRetryTime;
-
-        if (_movementModule.HasArrived())
-            return true;
-
-        if (_movementModule.HasBlockedPath)
-            return true;
-
-        if (_movementModule.IsStuck())
-            return true;
-
-        return Time.time >= _nextSafetyCheckTime && HasFleeDirectionDrifted();
-    }
-
-    private bool HasFleeDirectionDrifted()
-    {
-        Vector3 currentAwayDir = _movementModule.transform.position - _threat.position;
-        currentAwayDir.y = 0f;
-
-        if (currentAwayDir.sqrMagnitude < 0.01f)
-            return false;
-
-        return Vector3.Angle(_lastFleeDirection, currentAwayDir.normalized) > DirectionDriftThreshold;
-    }
-
-    private void PickNextFleeDestination()
-    {
-        MovementProfile profile = _movementModule.MovementProfile;
-        if (profile == null)
-        {
-            FailPick();
-            return;
+            return Status.Running;
         }
 
-        Vector3 agentPos = _movementModule.transform.position;
-        Vector3 threatPos = _threat.position;
-        float fleeSpeed = CalculateFleeSpeed(profile);
-        float fleeDistance = CalculateFleeDistance(profile, fleeSpeed);
-
-        Vector3 awayDir = agentPos - threatPos;
-        awayDir.y = 0f;
-        _lastFleeDirection = awayDir.sqrMagnitude > 0.01f ? awayDir.normalized : Vector3.forward;
-
-        if (!MovementPointPicker.TryPickFleePoint(agentPos, threatPos, fleeDistance, _preferredSide, out _fleeDestination, out float chosenSide))
+        protected override Status OnUpdate()
         {
-            FailPick();
-            return;
+            if (movementModule == null)
+                return Status.Failure;
+
+            if (threat == null)
+                return Status.Success;
+
+            if (NeedsNewDestination())
+                PickNextFleeDestination();
+
+            return Status.Running;
         }
 
-        _preferredSide = chosenSide;
-        _movementModule.SetSpeed(fleeSpeed);
-
-        if (_movementModule.MoveTo(_fleeDestination))
+        protected override void OnEnd()
         {
-            _hasDestination = true;
-            _nextSafetyCheckTime = Time.time + SafetyReevaluationInterval;
+            if (movementModule == null)
+                return;
+
+            movementModule.SetAutoBraking(restoreAutoBraking);
+
+            if (!IsStillFleeing())
+                movementModule.Stop();
         }
-        else
+
+        private bool NeedsNewDestination()
         {
-            FailPick();
+            if (!hasDestination)
+                return Time.time >= nextRetryTime;
+
+            if (movementModule.HasArrived())
+                return true;
+
+            if (movementModule.HasBlockedPath)
+                return true;
+
+            if (movementModule.IsStuck())
+                return true;
+
+            return Time.time >= nextSafetyCheckTime && HasFleeDirectionDrifted();
         }
-    }
 
-    private void FailPick()
-    {
-        _movementModule.Stop();
-        _hasDestination = false;
-        _nextRetryTime = Time.time + RetryCooldown;
-    }
+        private bool HasFleeDirectionDrifted()
+        {
+            Vector3 currentAwayDir = movementModule.transform.position - threat.position;
+            currentAwayDir.y = 0f;
 
-    private static float CalculateFleeSpeed(MovementProfile profile)
-    {
-        return profile.runMovementSpeed > 0f
-            ? profile.runMovementSpeed
-            : profile.walkMovementSpeed;
-    }
+            if (currentAwayDir.sqrMagnitude < 0.01f)
+                return false;
 
-    private static float CalculateFleeDistance(MovementProfile profile, float fleeSpeed)
-    {
-        float intervalDistance = profile.runDistanceInterval * FleeDistanceIntervalMultiplier;
-        float speedLookaheadDistance = fleeSpeed * FleeSpeedLookaheadSeconds;
-        return Mathf.Max(intervalDistance, speedLookaheadDistance, MinFleeDistance);
-    }
+            return Vector3.Angle(lastFleeDirection, currentAwayDir.normalized) > DirectionDriftThreshold;
+        }
 
-    private bool IsStillFleeing()
-    {
-        return _blackboard != null
-               && _blackboard.aggroModule != null
-               && _blackboard.aggroModule.CurrentAggroState == AggroState.Alerted
-               && Target?.Value != null;
+        private void PickNextFleeDestination()
+        {
+            MovementProfile profile = movementModule.MovementProfile;
+            if (profile == null)
+            {
+                FailPick();
+                return;
+            }
+
+            Vector3 agentPos = movementModule.transform.position;
+            Vector3 threatPos = threat.position;
+            float fleeSpeed = CalculateFleeSpeed(profile);
+            float fleeDistance = CalculateFleeDistance(profile, fleeSpeed);
+
+            Vector3 awayDir = agentPos - threatPos;
+            awayDir.y = 0f;
+            lastFleeDirection = awayDir.sqrMagnitude > 0.01f ? awayDir.normalized : Vector3.forward;
+
+            if (!MovementPointPicker.TryPickFleePoint(agentPos, threatPos, fleeDistance, preferredSide, out fleeDestination, out float chosenSide))
+            {
+                FailPick();
+                return;
+            }
+
+            preferredSide = chosenSide;
+            movementModule.SetSpeed(fleeSpeed);
+
+            if (movementModule.MoveTo(fleeDestination))
+            {
+                hasDestination = true;
+                nextSafetyCheckTime = Time.time + SafetyReevaluationInterval;
+            }
+            else
+            {
+                FailPick();
+            }
+        }
+
+        private void FailPick()
+        {
+            movementModule.Stop();
+            hasDestination = false;
+            nextRetryTime = Time.time + RetryCooldown;
+        }
+
+        private static float CalculateFleeSpeed(MovementProfile profile)
+        {
+            return profile.runMovementSpeed > 0f
+                ? profile.runMovementSpeed
+                : profile.walkMovementSpeed;
+        }
+
+        private static float CalculateFleeDistance(MovementProfile profile, float fleeSpeed)
+        {
+            float intervalDistance = profile.runDistanceInterval * FleeDistanceIntervalMultiplier;
+            float speedLookaheadDistance = fleeSpeed * FleeSpeedLookaheadSeconds;
+            return Mathf.Max(intervalDistance, speedLookaheadDistance, MinFleeDistance);
+        }
+
+        private bool IsStillFleeing()
+        {
+            return blackboard != null
+                   && blackboard.aggroModule != null
+                   && blackboard.aggroModule.CurrentAggroState == AggroState.Alerted
+                   && Target?.Value != null;
+        }
     }
 }

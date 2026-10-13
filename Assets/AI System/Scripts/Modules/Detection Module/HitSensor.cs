@@ -1,6 +1,6 @@
+using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace Artifika.AI.Sensors
 {

@@ -1,10 +1,14 @@
-using System;
 using Unity.Behavior;
+using UnityEngine.Scripting.APIUpdating;
 
-[BlackboardEnum]
-public enum AggroStatus
+namespace Artifika.AI
 {
-    Passive,
-	Suspicious,
-	Aggressive
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [BlackboardEnum]
+    public enum AggroStatus
+    {
+        Passive,
+        Suspicious,
+        Aggressive
+    }
 }

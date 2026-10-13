@@ -1,5 +1,4 @@
 using System;
-using Artifika.AI;
 using UnityEngine;
 
 namespace Artifika.AI.Attack
@@ -13,7 +12,8 @@ namespace Artifika.AI.Attack
         private struct RangedSightSample
         {
             public GameEntity target;
-            public Vector3 origin, aim;
+            public Vector3 origin;
+            public Vector3 aim;
             public float until;
             public int mask;
             public bool clear;
@@ -23,10 +23,14 @@ namespace Artifika.AI.Attack
 
         internal bool IsRangedShotClear(RangedAttackDefinition def, GameEntity shotTarget, bool refresh = false)
         {
-            if (!UsesRangedPositioning) return true;
+            if (!UsesRangedPositioning)
+                return true;
+
             for (int i = 0; i < attackDefinitions.Count; i++)
+            {
                 if (attackDefinitions[i].attackDefinition == def)
                     return HasRangedLineOfFire(i, shotTarget, Vector3.zero, refresh);
+            }
             return false;
         }
 
@@ -43,8 +47,7 @@ namespace Artifika.AI.Attack
                 float distance = Vector3.Distance(origin, shotTarget.AimPosition);
                 // Cooldowns intentionally do not exclude otherwise useful firing positions.
                 if (distance < def.MinRange || distance > def.MaxRange) continue;
-                // Several weapons commonly share the same muzzle. A blocked
-                // ray need not be repeated for every definition at one candidate.
+                // Weapons sharing a muzzle can reuse a blocked candidate query.
                 if (queried && (origin - lastOrigin).sqrMagnitude < 0.0001f) continue;
                 queried = true;
                 lastOrigin = origin;
@@ -65,8 +68,7 @@ namespace Artifika.AI.Attack
             Vector3 facing = shotTarget.AimPosition - (transform.position + offset);
             facing.y = 0f;
             if (forward.sqrMagnitude < 0.001f || facing.sqrMagnitude < 0.001f) return origin + offset;
-            // Repositioning keeps looking at the target: predict the muzzle's
-            // yaw at the candidate, rather than translating an old forward offset.
+            // Predict muzzle yaw at the candidate while facing the target.
             return transform.position + offset + Quaternion.Euler(0f, Vector3.SignedAngle(forward, facing, Vector3.up), 0f) * (origin - transform.position);
         }
 
@@ -113,8 +115,7 @@ namespace Artifika.AI.Attack
                     break;
                 }
             }
-            // Raycasts do not report a solid that contains their origin. The
-            // drone's muzzle extends past its agent radius, so check that too.
+            // Raycasts miss solids containing their origin; check the muzzle volume too.
             if (clear)
             {
                 int count;
@@ -134,7 +135,14 @@ namespace Artifika.AI.Attack
             }
             if (cache)
                 rangedSightSamples[index] = new RangedSightSample
-                { target = shotTarget, origin = origin, aim = aim, mask = mask, clear = clear, until = Time.time + 0.15f };
+                {
+                    target = shotTarget,
+                    origin = origin,
+                    aim = aim,
+                    mask = mask,
+                    clear = clear,
+                    until = Time.time + 0.15f
+                };
             return clear;
         }
     }

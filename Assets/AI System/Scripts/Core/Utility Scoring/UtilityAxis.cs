@@ -1,9 +1,11 @@
-﻿using Sirenix.OdinInspector;
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Artifika.AI.Utility
 {
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
     [Serializable]
     public class UtilityAxis
     {

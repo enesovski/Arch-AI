@@ -1,4 +1,3 @@
-using Artifika.AI;
 using UnityEngine;
 
 namespace Artifika.AI.Attack
@@ -24,11 +23,12 @@ namespace Artifika.AI.Attack
                 ? Mathf.Min(def.MaxRange, melee.AttackRange + melee.AttackRadius)
                 : def.MaxRange;
         }
-
         private bool TryGetAttackDistance(int index, out float distance)
         {
             distance = 0f;
-            if (!target) return false;
+            if (!target)
+                return false;
+
             AttackData attack = attackDefinitions[index];
             if (attack.attackDefinition is RangedAttackDefinition && UsesRangedPositioning)
             {
@@ -70,8 +70,11 @@ namespace Artifika.AI.Attack
         internal bool HasReadyMeleeDefinition()
         {
             foreach (AttackData attack in attackDefinitions)
+            {
                 if (attack.attackDefinition is MeleeAttackDefinition def &&
-                    (!cooldowns.TryGetValue(def, out float remaining) || remaining <= 0f)) return true;
+                    (!cooldowns.TryGetValue(def, out float remaining) || remaining <= 0f))
+                    return true;
+            }
             return false;
         }
 
@@ -81,8 +84,11 @@ namespace Artifika.AI.Attack
             {
                 if (!(attackDefinitions[i].attackDefinition is MeleeAttackDefinition def) ||
                     cooldowns.TryGetValue(def, out float remaining) && remaining > 0f ||
-                    !TryGetAttackDistance(i, out float distance)) continue;
-                if (distance >= def.MinRange && distance <= GetMaximumReach(def)) return true;
+                    !TryGetAttackDistance(i, out float distance))
+                    continue;
+
+                if (distance >= def.MinRange && distance <= GetMaximumReach(def))
+                    return true;
             }
             return false;
         }
@@ -94,8 +100,11 @@ namespace Artifika.AI.Attack
             bool hasReadyAttack = HasReadyMeleeDefinition();
             foreach (AttackData attack in attackDefinitions)
             {
-                if (!(attack.attackDefinition is MeleeAttackDefinition def)) continue;
-                if (hasReadyAttack && cooldowns.TryGetValue(def, out float remaining) && remaining > 0f) continue;
+                if (!(attack.attackDefinition is MeleeAttackDefinition def))
+                    continue;
+                if (hasReadyAttack && cooldowns.TryGetValue(def, out float remaining) && remaining > 0f)
+                    continue;
+
                 float pointOffset = attack.attackPoint
                     ? Vector3.Dot(attack.attackPoint.position - transform.position, forward) : 0f;
                 float desiredRange = Mathf.Lerp(def.MinRange, GetMaximumReach(def), Mathf.Clamp(rangeFraction, 0.5f, 0.95f));
@@ -111,14 +120,17 @@ namespace Artifika.AI.Attack
             {
                 if (!(attackDefinitions[i].attackDefinition is MeleeAttackDefinition def) ||
                     cooldowns.TryGetValue(def, out float remaining) && remaining > 0f ||
-                    !TryGetAttackDistance(i, out float distance)) continue;
+                    !TryGetAttackDistance(i, out float distance))
+                    continue;
+
                 float maximum = GetMaximumReach(def);
-                // Facing can still be catching up; do not close further if a
-                // ready attack already has valid range.
-                if (distance >= def.MinRange && distance <= maximum) return 0f;
+                // Wait for facing without closing an already valid attack range.
+                if (distance >= def.MinRange && distance <= maximum)
+                    return 0f;
                 float desired = Mathf.Lerp(def.MinRange, maximum, Mathf.Clamp(rangeFraction, 0.5f, 0.95f));
                 float candidate = distance - desired;
-                if (Mathf.Abs(candidate) < Mathf.Abs(correction)) correction = candidate;
+                if (Mathf.Abs(candidate) < Mathf.Abs(correction))
+                    correction = candidate;
             }
             return float.IsPositiveInfinity(correction) ? 0f : Mathf.Clamp(correction, -0.5f, 0.5f);
         }

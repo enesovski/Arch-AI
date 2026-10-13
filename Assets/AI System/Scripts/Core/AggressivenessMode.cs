@@ -1,4 +1,4 @@
-﻿namespace Artifika.AI.Aggro
+namespace Artifika.AI.Aggro
 {
     public enum AggressivenessMode
     {

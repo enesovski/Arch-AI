@@ -1,5 +1,5 @@
-﻿using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Artifika.AI.Aggro.Reactions
 {

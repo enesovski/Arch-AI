@@ -1,4 +1,4 @@
-﻿namespace Artifika.AI
+namespace Artifika.AI
 {
     public interface IReactionBus
     {

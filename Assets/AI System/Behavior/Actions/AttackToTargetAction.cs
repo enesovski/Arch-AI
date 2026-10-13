@@ -1,63 +1,67 @@
 using System;
 using Artifika.AI.Attack;
 using Unity.Behavior;
-using UnityEngine;
-using Action = Unity.Behavior.Action;
 using Unity.Properties;
-
+using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+using Action = Unity.Behavior.Action;
 using Blackboard = Artifika.AI.Blackboard;
 
-[Serializable, GeneratePropertyBag]
-[NodeDescription(name: "AttackToTarget", story: "[Blackboard] attacks to Target", category: "AI", id: "12f0e122f0a182b5eb420fad6d5802fe")]
-public partial class AttackToTargetAction : Action
+namespace Artifika.AI
 {
-    [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
-
-    private AttackModule _attackModule;
-    private bool _attackStarted;
-
-    protected override Status OnStart()
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [Serializable, GeneratePropertyBag]
+    [NodeDescription(name: "AttackToTarget", story: "[Blackboard] attacks to Target", category: "AI", id: "12f0e122f0a182b5eb420fad6d5802fe")]
+    public partial class AttackToTargetAction : Action
     {
-        var blackboard = Blackboard != null ? Blackboard.Value : null;
-        _attackModule = blackboard != null ? blackboard.attackModule : null;
-        _attackStarted = false;
-        
-        if (!_attackModule)
-            return Status.Failure;
+        [SerializeReference] public BlackboardVariable<Blackboard> Blackboard;
 
-        if (_attackModule.IsAttackCommitted)
+        private AttackModule attackModule;
+        private bool attackStarted;
+
+        protected override Status OnStart()
         {
-            _attackStarted = true;
+            var blackboard = Blackboard != null ? Blackboard.Value : null;
+            attackModule = blackboard != null ? blackboard.attackModule : null;
+            attackStarted = false;
+
+            if (!attackModule)
+                return Status.Failure;
+
+            if (attackModule.IsAttackCommitted)
+            {
+                attackStarted = true;
+                return Status.Running;
+            }
+
+            if (!attackModule.CanStartAttack())
+                return Status.Failure;
+
+            if (!attackModule.Attack())
+                return Status.Failure;
+
+            attackStarted = true;
+
             return Status.Running;
         }
 
-        if (!_attackModule.CanStartAttack())
-            return Status.Failure;
+        protected override Status OnUpdate()
+        {
+            if (!attackModule)
+                return Status.Failure;
 
-        if (!_attackModule.Attack())
-            return Status.Failure;
+            if (!attackStarted)
+                return Status.Failure;
 
-        _attackStarted = true;
+            if (!attackModule.IsAttackCommitted)
+                return Status.Success;
 
-        return Status.Running;
-    }
+            return Status.Running;
+        }
 
-    protected override Status OnUpdate()
-    {
-        if (!_attackModule)
-            return Status.Failure;
-
-        if (!_attackStarted)
-            return Status.Failure;
-        
-        if (!_attackModule.IsAttackCommitted)
-            return Status.Success;
-
-        return Status.Running;
-    }
-
-    protected override void OnEnd()
-    {
-        _attackStarted = false;
+        protected override void OnEnd()
+        {
+            attackStarted = false;
+        }
     }
 }

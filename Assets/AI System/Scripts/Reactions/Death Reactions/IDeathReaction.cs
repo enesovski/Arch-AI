@@ -1,4 +1,4 @@
-﻿namespace Artifika.AI.Death.Reactions
+namespace Artifika.AI.Death.Reactions
 {
     public interface IDeathReaction
     {

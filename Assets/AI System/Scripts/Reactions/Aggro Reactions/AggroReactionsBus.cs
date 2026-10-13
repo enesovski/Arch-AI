@@ -7,8 +7,8 @@ namespace Artifika.AI.Aggro.Reactions
     [DisallowMultipleComponent]
     public class AggroReactionsBus : ReactionBusBase
     {
-        private AggroModule _aggroModule;
-        private Blackboard _blackboard;
+        private AggroModule aggroModule;
+        private Blackboard blackboard;
         private RotationModule rotationModule;
         private bool hasExplicitRotationReaction;
 
@@ -16,24 +16,24 @@ namespace Artifika.AI.Aggro.Reactions
 
         public override void Initialize(Blackboard blackboard)
         {
-            _blackboard = blackboard;
-            _aggroModule = _blackboard.aggroModule;
-            rotationModule = _blackboard.rotationModule;
+            this.blackboard = blackboard;
+            aggroModule = this.blackboard.aggroModule;
+            rotationModule = this.blackboard.rotationModule;
 
-            if (_aggroModule)
-                _aggroModule.OnStateChanged += HandleStateChanged;
+            if (aggroModule)
+                aggroModule.OnStateChanged += HandleStateChanged;
 
             reactions = GetComponents<IAggroReaction>();
             hasExplicitRotationReaction = reactions.Any(r => r is AggroRotationReaction);
 
             foreach (var reaction in reactions)
-                reaction.Initialize(_blackboard);
+                reaction.Initialize(this.blackboard);
         }
 
         private void OnDisable()
         {
-            if (_aggroModule != null)
-                _aggroModule.OnStateChanged -= HandleStateChanged;
+            if (aggroModule != null)
+                aggroModule.OnStateChanged -= HandleStateChanged;
         }
 
         private void HandleStateChanged(AggroStateChangeEventArgs args)

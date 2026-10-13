@@ -1,121 +1,121 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-[CreateAssetMenu(
-    fileName = "FactionRelations",
-    menuName = "AI/Factions/Faction Relations")]
-public sealed class FactionRelationsSO : ScriptableObject
+namespace Artifika.AI
 {
-    private const string ResourcePath = "FactionRelations";
-
-    private static FactionRelationsSO instance;
-    private static bool hasLoggedMissingAsset;
-
-    [SerializeField, HideInInspector]
-    private FactionMask[] damagePermissions = Array.Empty<FactionMask>();
-
-    public static FactionRelationsSO Instance
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [CreateAssetMenu(fileName = "FactionRelations", menuName = "AI/Factions/Faction Relations")]
+    public sealed class FactionRelationsSO : ScriptableObject
     {
-        get
+        private const string ResourcePath = "FactionRelations";
+
+        private static FactionRelationsSO instance;
+        private static bool hasLoggedMissingAsset;
+
+        [SerializeField, HideInInspector]
+        private FactionMask[] damagePermissions = Array.Empty<FactionMask>();
+
+        public static FactionRelationsSO Instance
         {
-            if (instance != null)
-                return instance;
-
-            instance = Resources.Load<FactionRelationsSO>(ResourcePath);
-
-            if (instance == null && !hasLoggedMissingAsset)
+            get
             {
-                Debug.LogError(
-                    $"Missing {nameof(FactionRelationsSO)} Resources asset at " +
-                    $"'{ResourcePath}'. Entity-to-entity damage will be rejected.");
-                hasLoggedMissingAsset = true;
+                if (instance != null)
+                    return instance;
+
+                instance = Resources.Load<FactionRelationsSO>(ResourcePath);
+
+                if (instance == null && !hasLoggedMissingAsset)
+                {
+                    Debug.LogError(
+                        $"Missing {nameof(FactionRelationsSO)} Resources asset at " +
+                        $"'{ResourcePath}'. Entity-to-entity damage will be rejected.");
+                    hasLoggedMissingAsset = true;
+                }
+
+                return instance;
+            }
+        }
+
+        public static bool AllowsDamage(GameEntity attacker, GameEntity target)
+        {
+            FactionRelationsSO relations = Instance;
+            return relations != null && relations.CanDamage(attacker, target);
+        }
+
+        public static bool AllowsDamage(FactionType attackerFaction, GameEntity target)
+        {
+            FactionRelationsSO relations = Instance;
+            return relations != null && target != null &&
+                relations.CanDamage(attackerFaction, target.Faction);
+        }
+
+        public bool CanDamage(GameEntity attacker, GameEntity target)
+        {
+            if (attacker == null || target == null)
+                return false;
+
+            if (attacker == target)
+                return false;
+
+            if (attacker.NetworkObject != null &&
+                attacker.NetworkObject == target.NetworkObject)
+            {
+                return false;
             }
 
-            return instance;
+            return CanDamage(attacker.Faction, target.Faction);
         }
-    }
 
-    public static bool AllowsDamage(GameEntity attacker, GameEntity target)
-    {
-        FactionRelationsSO relations = Instance;
-        return relations != null && relations.CanDamage(attacker, target);
-    }
-
-    public static bool AllowsDamage(FactionType attackerFaction, GameEntity target)
-    {
-        FactionRelationsSO relations = Instance;
-        return relations != null && target != null &&
-            relations.CanDamage(attackerFaction, target.Faction);
-    }
-
-    public bool CanDamage(GameEntity attacker, GameEntity target)
-    {
-        if (attacker == null || target == null)
-            return false;
-
-        if (attacker == target)
-            return false;
-
-        if (attacker.NetworkObject != null &&
-            attacker.NetworkObject == target.NetworkObject)
+        public bool CanDamage(FactionType attackerFaction, FactionType targetFaction)
         {
-            return false;
+            int attackerIndex = (int)attackerFaction;
+            int targetIndex = (int)targetFaction;
+            if (damagePermissions == null ||
+                attackerIndex < 0 || attackerIndex >= damagePermissions.Length ||
+                targetIndex < 0 || targetIndex >= sizeof(int) * 8)
+            {
+                return false;
+            }
+
+            FactionMask targetFlag = (FactionMask)(1 << targetIndex);
+            return (damagePermissions[attackerIndex] & targetFlag) != 0;
         }
 
-        return CanDamage(attacker.Faction, target.Faction);
-    }
-
-    public bool CanDamage(FactionType attackerFaction, FactionType targetFaction)
-    {
-        int attackerIndex = (int)attackerFaction;
-        int targetIndex = (int)targetFaction;
-        if (damagePermissions == null ||
-            attackerIndex < 0 || attackerIndex >= damagePermissions.Length ||
-            targetIndex < 0 || targetIndex >= sizeof(int) * 8)
+        private void OnValidate()
         {
-            return false;
+            EnsureMatrixSize();
         }
 
-        FactionMask targetFlag = (FactionMask)(1 << targetIndex);
-        return (damagePermissions[attackerIndex] & targetFlag) != 0;
-    }
-
-    private void OnValidate()
-    {
-        EnsureMatrixSize();
-    }
-
-    public void EnsureMatrixSize()
-    {
-        int requiredSize = GetRequiredMatrixSize();
-        if (damagePermissions != null && damagePermissions.Length == requiredSize)
-            return;
-
-        var resized = new FactionMask[requiredSize];
-        if (damagePermissions != null)
+        public void EnsureMatrixSize()
         {
-            Array.Copy(
-                damagePermissions,
-                resized,
-                Mathf.Min(damagePermissions.Length, requiredSize));
+            int requiredSize = GetRequiredMatrixSize();
+            if (damagePermissions != null && damagePermissions.Length == requiredSize)
+                return;
+
+            var resized = new FactionMask[requiredSize];
+            if (damagePermissions != null)
+            {
+                Array.Copy(damagePermissions, resized, Mathf.Min(damagePermissions.Length, requiredSize));
+            }
+
+            damagePermissions = resized;
         }
 
-        damagePermissions = resized;
-    }
+        private static int GetRequiredMatrixSize()
+        {
+            int highestValue = -1;
+            foreach (FactionType faction in Enum.GetValues(typeof(FactionType)))
+                highestValue = Mathf.Max(highestValue, (int)faction);
 
-    private static int GetRequiredMatrixSize()
-    {
-        int highestValue = -1;
-        foreach (FactionType faction in Enum.GetValues(typeof(FactionType)))
-            highestValue = Mathf.Max(highestValue, (int)faction);
+            return highestValue + 1;
+        }
 
-        return highestValue + 1;
-    }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetCachedInstance()
-    {
-        instance = null;
-        hasLoggedMissingAsset = false;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetCachedInstance()
+        {
+            instance = null;
+            hasLoggedMissingAsset = false;
+        }
     }
 }

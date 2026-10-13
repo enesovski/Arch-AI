@@ -1,7 +1,12 @@
-﻿//High level state for engagement state.
-public enum AggroState 
+using UnityEngine.Scripting.APIUpdating;
+
+namespace Artifika.AI
 {
-    Passive,
-    Suspicious,
-    Alerted
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public enum AggroState
+    {
+        Passive,
+        Suspicious,
+        Alerted
+    }
 }

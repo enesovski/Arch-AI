@@ -1,36 +1,40 @@
-using Artifika.AI.Death.Reactions;
-using Artifika.AI;
 using Artifika.AI.Attack;
+using Artifika.AI.Death.Reactions;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-public class HandleRootMotionReaction : MonoBehaviour, IDeathReaction, IDeathReactionInitializable
+namespace Artifika.AI
 {
-    [SerializeField] private AIGroundFitter groundFitter;
-    [SerializeField] private Animator animator;
-    [SerializeField] private MovementModule movementModule;
-    [SerializeField] private AttackModule attackModule;
-
-    public void Initialize(Blackboard blackboard)
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    public class HandleRootMotionReaction : MonoBehaviour, IDeathReaction, IDeathReactionInitializable
     {
-        if (blackboard == null)
-            return;
+        [SerializeField] private AIGroundFitter groundFitter;
+        [SerializeField] private Animator animator;
+        [SerializeField] private MovementModule movementModule;
+        [SerializeField] private AttackModule attackModule;
 
-        groundFitter = groundFitter != null ? groundFitter : blackboard.fitter;
-        animator = animator != null ? animator : blackboard.animator;
-        movementModule = movementModule != null ? movementModule : blackboard.movementModule;
-        attackModule = attackModule != null ? attackModule : blackboard.attackModule;
-    }
-    
-    public void Execute()
-    {
-        attackModule?.InterruptAttackForDeath();
-        movementModule?.Stop();
-        movementModule?.SetStopped(true);
+        public void Initialize(Blackboard blackboard)
+        {
+            if (blackboard == null)
+                return;
 
-        if (groundFitter != null)
-            groundFitter.HandleRootMotion = false;
+            groundFitter = groundFitter != null ? groundFitter : blackboard.fitter;
+            animator = animator != null ? animator : blackboard.animator;
+            movementModule = movementModule != null ? movementModule : blackboard.movementModule;
+            attackModule = attackModule != null ? attackModule : blackboard.attackModule;
+        }
 
-        if (animator != null)
-            animator.applyRootMotion = false;
+        public void Execute()
+        {
+            attackModule?.InterruptAttackForDeath();
+            movementModule?.Stop();
+            movementModule?.SetStopped(true);
+
+            if (groundFitter != null)
+                groundFitter.HandleRootMotion = false;
+
+            if (animator != null)
+                animator.applyRootMotion = false;
+        }
     }
 }

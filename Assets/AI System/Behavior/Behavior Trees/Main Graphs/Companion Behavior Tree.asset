@@ -38,7 +38,7 @@ MonoBehaviour:
         Name: Self
         m_Value: {fileID: 0}
     - rid: 8305281319523058077
-      type: {class: 'BlackboardVariable`1[[CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -47,7 +47,7 @@ MonoBehaviour:
         Name: Companion Status
         m_Value: 0
     - rid: 8305281319523058110
-      type: {class: 'BlackboardVariable`1[[AutonomousCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -56,7 +56,7 @@ MonoBehaviour:
         Name: Autonomous Command
         m_Value: {fileID: 0}
     - rid: 8305281319523058120
-      type: {class: 'BlackboardVariable`1[[ActionCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.ActionCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -123,7 +123,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 8305281319523058076
-      type: {class: 'TypedVariableModel`1[[CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -134,7 +134,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 0
     - rid: 8305281319523058109
-      type: {class: 'TypedVariableModel`1[[AutonomousCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -145,7 +145,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 8305281319523058119
-      type: {class: 'TypedVariableModel`1[[ActionCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.ActionCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -269,7 +269,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: RunAutonomousCommand
     Story: '[Blackboard] selects [Subgraph] from [AutonomousCommand]'
-    RuntimeTypeString: RunAutonomousCommandAction, Assembly-CSharp, Version=0.0.0.0,
+    RuntimeTypeString: Artifika.AI.RunAutonomousCommandAction, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 8933473618044685495
@@ -282,7 +282,7 @@ MonoBehaviour:
       Tooltip: 
     - Name: AutonomousCommand
       Type:
-        m_SerializableType: AutonomousCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     - Name: Subgraph
@@ -294,7 +294,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: SetActionCommand
     Story: '[Blackboard] selects [Subgraph] from [ActionCommand]'
-    RuntimeTypeString: SetActionCommandAction, Assembly-CSharp, Version=0.0.0.0,
+    RuntimeTypeString: Artifika.AI.SetActionCommandAction, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13380634993854539844
@@ -307,7 +307,7 @@ MonoBehaviour:
       Tooltip: 
     - Name: ActionCommand
       Type:
-        m_SerializableType: ActionCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Artifika.AI.ActionCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     - Name: Subgraph
@@ -334,7 +334,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: ReturnToAutonomous
     Story: '[Blackboard] returns to autonomous state'
-    RuntimeTypeString: ReturnToAutonomousAction, Assembly-CSharp, Version=0.0.0.0,
+    RuntimeTypeString: Artifika.AI.ReturnToAutonomousAction, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 5056088153731979370
@@ -452,7 +452,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 8305281319523058089
-      type: {class: 'TypedVariableModel`1[[CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -719,7 +719,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 8305281319523058182
-      type: {class: 'TypedVariableModel`1[[ActionCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.ActionCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -808,7 +808,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 8305281319523058198
-      type: {class: 'TypedVariableModel`1[[AutonomousCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -866,7 +866,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 1695467670847834556
@@ -999,7 +999,7 @@ MonoBehaviour:
         - rid: 8305281319523058259
         - rid: 8305281319523058260
         NodeType:
-          m_SerializableType: RunAutonomousCommandAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.RunAutonomousCommandAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 8933473618044685495
@@ -1042,7 +1042,7 @@ MonoBehaviour:
       data:
         FieldName: AutonomousCommand
         Type:
-          m_SerializableType: AutonomousCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 8305281319523058265
@@ -1069,7 +1069,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 8305281319523058265
-      type: {class: 'BlackboardVariable`1[[AutonomousCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1099,7 +1099,7 @@ MonoBehaviour:
         - rid: 8305281319523058278
         - rid: 8305281319523058279
         NodeType:
-          m_SerializableType: SetActionCommandAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.SetActionCommandAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13380634993854539844
@@ -1142,7 +1142,7 @@ MonoBehaviour:
       data:
         FieldName: ActionCommand
         Type:
-          m_SerializableType: ActionCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ActionCommandDefinition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 8305281319523058284
@@ -1169,7 +1169,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 8305281319523058284
-      type: {class: 'BlackboardVariable`1[[ActionCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.ActionCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1360,7 +1360,7 @@ MonoBehaviour:
         - rid: 8305281319523058450
         - rid: 8305281319523058451
         NodeType:
-          m_SerializableType: ReturnToAutonomousAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.ReturnToAutonomousAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 5056088153731979370
@@ -1609,7 +1609,7 @@ MonoBehaviour:
         m_RequiresAllConditions: 0
         m_ObserverType: 0
     - rid: 755774692322967742
-      type: {class: IsDeadCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsDeadCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 8305281319523058071
@@ -1729,7 +1729,7 @@ MonoBehaviour:
         Variable:
           rid: 8305281321656910020
     - rid: 755774692322967752
-      type: {class: SetActionCommandAction, ns: , asm: Assembly-CSharp}
+      type: {class: SetActionCommandAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 17003265257708370974
@@ -1761,7 +1761,7 @@ MonoBehaviour:
         - rid: 755774692322967757
         m_IsInitialized: 0
     - rid: 755774692322967754
-      type: {class: ReturnToAutonomousAction, ns: , asm: Assembly-CSharp}
+      type: {class: ReturnToAutonomousAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 7531095625712979852
@@ -1773,7 +1773,7 @@ MonoBehaviour:
         Blackboard:
           rid: 8305281321656910018
     - rid: 755774692322967755
-      type: {class: RunAutonomousCommandAction, ns: , asm: Assembly-CSharp}
+      type: {class: RunAutonomousCommandAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 396170516056550794
@@ -1864,7 +1864,7 @@ MonoBehaviour:
         Name: Blackboard
         m_Value: {fileID: 0}
     - rid: 8305281321656910019
-      type: {class: 'BlackboardVariable`1[[CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.CompanionStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1873,7 +1873,7 @@ MonoBehaviour:
         Name: Companion Status
         m_Value: 0
     - rid: 8305281321656910020
-      type: {class: 'BlackboardVariable`1[[AutonomousCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AutonomousCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1882,7 +1882,7 @@ MonoBehaviour:
         Name: Autonomous Command
         m_Value: {fileID: 0}
     - rid: 8305281321656910021
-      type: {class: 'BlackboardVariable`1[[ActionCommandDefinition, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.ActionCommandDefinition, Assembly-CSharp]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:

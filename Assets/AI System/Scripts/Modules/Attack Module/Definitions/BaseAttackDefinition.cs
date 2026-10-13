@@ -9,7 +9,7 @@ namespace Artifika.AI.Attack
     {
         [TabGroup("Attack", "General")]
         [Title("General", TitleAlignment = TitleAlignments.Centered)]
-        
+
         [PropertyOrder(1)]
         [LabelText("Type")]
         [EnumToggleButtons]
@@ -26,7 +26,7 @@ namespace Artifika.AI.Attack
         [LabelText("Max")]
         [MinValue(0)]
         [SerializeField] private float maxRange;
-        
+
         [PropertyOrder(4)]
         [BoxGroup("Attack/General/Cooldown", ShowLabel = true)]
         [MinValue(0)]
@@ -55,11 +55,10 @@ namespace Artifika.AI.Attack
         [MinValue(0)]
         [SerializeField] private int animationIndex;
 
-        
         [SerializeField, HideInInspector] private float telegraphTime;
         [SerializeField, HideInInspector] private float executeTime;
         [SerializeField, HideInInspector] private float recoveryTime;
-        
+
         [TabGroup("Attack", "Animation")]
         [PropertyOrder(1)]
         [BoxGroup("Attack/Animation/Duration", ShowLabel = true)]
@@ -89,14 +88,13 @@ namespace Artifika.AI.Attack
         [MinValue(0)]
         [SerializeField] private float additionalUtilityVariance = 0f;
 
-
 #if UNITY_EDITOR
         [TabGroup("Attack", "General")]
         [InfoBox("Min Range should be <= Max Range.", InfoMessageType.Warning, nameof(IsRangeInvalid))]
         private bool IsRangeInvalid => minRange > maxRange;
-        
+
 #endif
-        
+
         public int AnimationIndex => animationIndex;
 
         public AttackType AttackType => attackType;

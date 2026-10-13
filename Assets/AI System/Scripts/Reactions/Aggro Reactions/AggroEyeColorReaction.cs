@@ -1,11 +1,11 @@
 using Artifika.AI.Aggro.Reactions;
 using Artifika.AI.Attack;
 using Artifika.AI.Stun.Reactions;
-using UnityEngine;
 using DG.Tweening;
-using Unity.Netcode;
-using UnityEngine.Rendering;
 using Sirenix.OdinInspector;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Artifika.AI.Visuals
 {
@@ -20,39 +20,39 @@ namespace Artifika.AI.Visuals
             Stunned
         }
 
-        private static readonly int EmissionColor = Shader.PropertyToID(EmissionProperty);
+        private static readonly int emissionColor = Shader.PropertyToID(EmissionProperty);
 
-        [Title("References")] 
-        [SerializeField] private Light eyeLight;             
+        [Title("References")]
+        [SerializeField] private Light eyeLight;
         [SerializeField] private LensFlareComponentSRP srpLensFlare;
         [SerializeField] private Renderer eyeRenderer;
         [SerializeField] private int materialIndex;
-    
+
         [Title("Configuration")]
         [SerializeField] [LabelText("Robot Eye Configuration")] private RobotEyeConfiguration config;
         [SerializeField] [LabelText("Enable Attack Telegraph")] private bool attackTelegraphEnabled;
-        
-        private readonly NetworkVariable<RobotEyeVisualState> _syncedVisualState = new(
+
+        private readonly NetworkVariable<RobotEyeVisualState> syncedVisualState = new(
             RobotEyeVisualState.Passive,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
 
-        private Material _eyeMat;
-        private AttackModule _attackModule;
-        private AggroState _aggroState = AggroState.Passive;
-        private bool _isStunned;
-        private bool _isAttackTelegraphing;
-        private bool _attackEventsSubscribed;
-        private bool _visualsInitialized;
-        private bool _hasAppliedVisualState;
-        private RobotEyeVisualState _appliedVisualState;
+        private Material eyeMat;
+        private AttackModule attackModule;
+        private AggroState aggroState = AggroState.Passive;
+        private bool isStunned;
+        private bool isAttackTelegraphing;
+        private bool attackEventsSubscribed;
+        private bool visualsInitialized;
+        private bool hasAppliedVisualState;
+        private RobotEyeVisualState appliedVisualState;
 
         private const string EmissionProperty = "_EmissionColor";
 
         public void Initialize(Blackboard blackboard)
         {
             if (blackboard != null && blackboard.aggroModule != null)
-                _aggroState = blackboard.aggroModule.CurrentAggroState;
+                aggroState = blackboard.aggroModule.CurrentAggroState;
 
             if (attackTelegraphEnabled)
                 SubscribeToAttackEvents(blackboard != null ? blackboard.attackModule : null);
@@ -63,33 +63,33 @@ namespace Artifika.AI.Visuals
 
         public override void OnNetworkSpawn()
         {
-            _syncedVisualState.OnValueChanged += HandleSyncedVisualStateChanged;
+            syncedVisualState.OnValueChanged += HandleSyncedVisualStateChanged;
             EnsureVisualsInitialized();
 
             if (IsServer)
                 RefreshVisualState();
             else
-                ApplyVisualState(_syncedVisualState.Value);
+                ApplyVisualState(syncedVisualState.Value);
         }
 
         public override void OnNetworkDespawn()
         {
-            _syncedVisualState.OnValueChanged -= HandleSyncedVisualStateChanged;
+            syncedVisualState.OnValueChanged -= HandleSyncedVisualStateChanged;
             UnsubscribeFromAttackEvents();
-            _isAttackTelegraphing = false;
-            _hasAppliedVisualState = false;
+            isAttackTelegraphing = false;
+            hasAppliedVisualState = false;
             KillTweens();
         }
 
         public void OnAggroStateChanged(AggroStateChangeEventArgs args)
         {
-            _aggroState = args.NewState;
+            aggroState = args.NewState;
             RefreshVisualState();
         }
 
         public void OnStunnedChanged(bool isStunned)
         {
-            _isStunned = isStunned;
+            this.isStunned = isStunned;
             RefreshVisualState();
         }
 
@@ -104,14 +104,14 @@ namespace Artifika.AI.Visuals
         private void RefreshVisualState()
         {
             // Temporary overrides keep the underlying aggro state intact.
-            RobotEyeVisualState visualState = _isStunned
+            RobotEyeVisualState visualState = isStunned
                 ? RobotEyeVisualState.Stunned
-                : _isAttackTelegraphing
+                : isAttackTelegraphing
                     ? RobotEyeVisualState.Telegraphing
-                    : ToVisualState(_aggroState);
+                    : ToVisualState(aggroState);
 
             if (IsServer && IsSpawned)
-                _syncedVisualState.Value = visualState;
+                syncedVisualState.Value = visualState;
 
             ApplyVisualState(visualState);
         }
@@ -126,17 +126,17 @@ namespace Artifika.AI.Visuals
 
             EnsureVisualsInitialized();
 
-            if (_hasAppliedVisualState && _appliedVisualState == state)
+            if (hasAppliedVisualState && appliedVisualState == state)
                 return;
 
             bool leavingTelegraph =
-                _hasAppliedVisualState &&
-                _appliedVisualState == RobotEyeVisualState.Telegraphing;
+                hasAppliedVisualState &&
+                appliedVisualState == RobotEyeVisualState.Telegraphing;
 
             if (state == RobotEyeVisualState.Telegraphing)
             {
-                _hasAppliedVisualState = true;
-                _appliedVisualState = state;
+                hasAppliedVisualState = true;
+                appliedVisualState = state;
                 ApplyTelegraphVisualState();
                 return;
             }
@@ -178,21 +178,21 @@ namespace Artifika.AI.Visuals
                     return;
             }
 
-            _hasAppliedVisualState = true;
-            _appliedVisualState = state;
+            hasAppliedVisualState = true;
+            appliedVisualState = state;
             float transitionDuration = leavingTelegraph
                 ? config.telegraphReturnDuration
                 : config.fadeDuration;
 
-            if (_eyeMat != null)
+            if (eyeMat != null)
             {
-                DOTween.Kill(_eyeMat);
+                DOTween.Kill(eyeMat);
                 DOTween.To(
-                    () => _eyeMat.GetColor(EmissionColor).maxColorComponent,
-                    v => _eyeMat.SetColor(EmissionColor, col * v),
+                    () => eyeMat.GetColor(emissionColor).maxColorComponent,
+                    v => eyeMat.SetColor(emissionColor, col * v),
                     eyeInt,
                     transitionDuration
-                ).SetTarget(_eyeMat).SetEase(config.easeMethod);
+                ).SetTarget(eyeMat).SetEase(config.easeMethod);
             }
 
             if (eyeLight != null)
@@ -219,15 +219,15 @@ namespace Artifika.AI.Visuals
             Color color = config.aggressiveColor;
             float pulseHalfDuration = Mathf.Max(0.01f, config.telegraphPulseHalfDuration);
 
-            if (_eyeMat != null)
+            if (eyeMat != null)
             {
-                _eyeMat.SetColor(EmissionColor, color * config.aggressiveEyeLightIntensity);
+                eyeMat.SetColor(emissionColor, color * config.aggressiveEyeLightIntensity);
                 DOTween.To(
-                        () => _eyeMat.GetColor(EmissionColor).maxColorComponent,
-                        value => _eyeMat.SetColor(EmissionColor, color * value),
+                        () => eyeMat.GetColor(emissionColor).maxColorComponent,
+                        value => eyeMat.SetColor(emissionColor, color * value),
                         config.telegraphEyeLightIntensity,
                         pulseHalfDuration)
-                    .SetTarget(_eyeMat)
+                    .SetTarget(eyeMat)
                     .SetEase(Ease.InOutSine)
                     .SetLoops(-1, LoopType.Yoyo);
             }
@@ -269,41 +269,41 @@ namespace Artifika.AI.Visuals
 
         private void SubscribeToAttackEvents(AttackModule attackModule)
         {
-            if (_attackEventsSubscribed && _attackModule == attackModule)
+            if (attackEventsSubscribed && this.attackModule == attackModule)
                 return;
 
             UnsubscribeFromAttackEvents();
-            _attackModule = attackModule;
+            this.attackModule = attackModule;
 
-            if (_attackModule == null)
+            if (this.attackModule == null)
                 return;
 
-            _attackModule.OnAttackCommittedStarted += HandleAttackCommittedStarted;
-            _attackModule.OnAttackPerformed += HandleAttackPerformed;
-            _attackModule.OnAttackCommittedEnded += HandleAttackCommittedEnded;
-            _attackEventsSubscribed = true;
+            this.attackModule.OnAttackCommittedStarted += HandleAttackCommittedStarted;
+            this.attackModule.OnAttackPerformed += HandleAttackPerformed;
+            this.attackModule.OnAttackCommittedEnded += HandleAttackCommittedEnded;
+            attackEventsSubscribed = true;
         }
 
         private void UnsubscribeFromAttackEvents()
         {
-            if (_attackModule != null && _attackEventsSubscribed)
+            if (attackModule != null && attackEventsSubscribed)
             {
-                _attackModule.OnAttackCommittedStarted -= HandleAttackCommittedStarted;
-                _attackModule.OnAttackPerformed -= HandleAttackPerformed;
-                _attackModule.OnAttackCommittedEnded -= HandleAttackCommittedEnded;
+                attackModule.OnAttackCommittedStarted -= HandleAttackCommittedStarted;
+                attackModule.OnAttackPerformed -= HandleAttackPerformed;
+                attackModule.OnAttackCommittedEnded -= HandleAttackCommittedEnded;
             }
 
-            _attackEventsSubscribed = false;
-            _attackModule = null;
+            attackEventsSubscribed = false;
+            attackModule = null;
         }
 
         private void HandleAttackCommittedStarted()
         {
-            _isAttackTelegraphing = true;
+            isAttackTelegraphing = true;
             RefreshVisualState();
         }
 
-        private void HandleAttackPerformed(BaseAttackDefinition _)
+        private void HandleAttackPerformed(BaseAttackDefinition unused)
         {
             StopAttackTelegraph();
         }
@@ -315,19 +315,19 @@ namespace Artifika.AI.Visuals
 
         private void StopAttackTelegraph()
         {
-            if (!_isAttackTelegraphing)
+            if (!isAttackTelegraphing)
                 return;
 
-            _isAttackTelegraphing = false;
+            isAttackTelegraphing = false;
             RefreshVisualState();
         }
 
         private void EnsureVisualsInitialized()
         {
-            if (_visualsInitialized)
+            if (visualsInitialized)
                 return;
 
-            _visualsInitialized = true;
+            visualsInitialized = true;
 
             if (eyeRenderer == null)
                 return;
@@ -339,14 +339,14 @@ namespace Artifika.AI.Visuals
                 return;
             }
 
-            _eyeMat = materials[materialIndex];
-            _eyeMat.EnableKeyword("_EMISSION");
+            eyeMat = materials[materialIndex];
+            eyeMat.EnableKeyword("_EMISSION");
         }
 
         private void KillTweens()
         {
-            if (_eyeMat != null)
-                DOTween.Kill(_eyeMat);
+            if (eyeMat != null)
+                DOTween.Kill(eyeMat);
 
             if (eyeLight != null)
                 DOTween.Kill(eyeLight);

@@ -5,7 +5,7 @@ namespace Artifika.AI
 {
     public enum RangedMovementPhase { Approach, Retreat, Reposition, Aim, Attack }
 
-    // Optional controller owned by MovementModule; the existing ranged graph ticks it.
+    // Owned by MovementModule and ticked by the ranged graph.
     internal sealed class RangedCombatMovement
     {
         private readonly MovementModule movement;
@@ -17,14 +17,24 @@ namespace Artifika.AI
         public RangedMovementPhase Phase { get; private set; } = RangedMovementPhase.Aim;
 
         private GameEntity target;
-        private bool active, hasDestination;
+        private bool active;
+        private bool hasDestination;
         private bool savedBraking;
         private float savedStoppingDistance;
         private RotationMode savedRotation;
-        private Vector3 destination, plannedTargetPosition, retreatStart, retreatDirection;
-        private float nextPlanAt, phaseDeadline, aimUntil, retreatRetryAt, approachRetryAt, rejectUntil;
+        private Vector3 destination;
+        private Vector3 plannedTargetPosition;
+        private Vector3 retreatStart;
+        private Vector3 retreatDirection;
+        private float nextPlanAt;
+        private float phaseDeadline;
+        private float aimUntil;
+        private float retreatRetryAt;
+        private float approachRetryAt;
+        private float rejectUntil;
         private Vector3 rejectedDestination;
-        private float bestDistance, progressAt;
+        private float bestDistance;
+        private float progressAt;
         private float side = 1f;
 
         public RangedCombatMovement(MovementModule movement, Blackboard blackboard)
@@ -52,7 +62,11 @@ namespace Artifika.AI
             savedRotation = blackboard.rotationModule ? blackboard.rotationModule.CurrentMode : RotationMode.Agent;
             movement.SetAutoBraking(true);
             movement.SetStoppingDistance(Mathf.Clamp(navigation.combatWaypointTolerance, 0.05f, 0.5f));
-            if (Phase == RangedMovementPhase.Aim) { movement.Stop(); movement.SetStopped(true); }
+            if (Phase == RangedMovementPhase.Aim)
+            {
+                movement.Stop();
+                movement.SetStopped(true);
+            }
             active = true;
         }
 
@@ -97,16 +111,28 @@ namespace Artifika.AI
 
         public void BeginAttack(GameEntity newTarget)
         {
-            if (SetTarget(newTarget)) { Phase = RangedMovementPhase.Attack; hasDestination = false; }
+            if (SetTarget(newTarget))
+            {
+                Phase = RangedMovementPhase.Attack;
+                hasDestination = false;
+            }
         }
 
         public bool Update(GameEntity newTarget)
         {
             if (!movement.IsServer || !SetTarget(newTarget)) return false;
-            if (blackboard.healthComponent && !blackboard.healthComponent.IsAlive) { Reset(); return true; }
+            if (blackboard.healthComponent && !blackboard.healthComponent.IsAlive)
+            {
+                Reset();
+                return true;
+            }
             if (!movement.CanNavigate) return true;
             Begin();
-            if (attack.IsAttackCommitted) { Phase = RangedMovementPhase.Attack; return true; }
+            if (attack.IsAttackCommitted)
+            {
+                Phase = RangedMovementPhase.Attack;
+                return true;
+            }
             if (Phase == RangedMovementPhase.Attack) EnterAim();
             if (blackboard.rotationModule)
             {
@@ -150,7 +176,10 @@ namespace Artifika.AI
                 if (movement.HasArrived())
                 {
                     if (Phase != RangedMovementPhase.Approach || distance <= profile.MaximumDistance + 0.5f)
-                    { FinishMotion(); return true; }
+                    {
+                        FinishMotion();
+                        return true;
+                    }
                     hasDestination = false;
                     nextPlanAt = 0f;
                 }
@@ -162,9 +191,16 @@ namespace Artifika.AI
                 else if (Time.time - progressAt >= 1.2f)
                 {
                     // Local avoidance can stall even a complete path.
-                    if (Phase == RangedMovementPhase.Retreat) { FinishMotion(); return true; }
+                    if (Phase == RangedMovementPhase.Retreat)
+                    {
+                        FinishMotion();
+                        return true;
+                    }
                     if (Phase == RangedMovementPhase.Approach && attack.HasRangedShotAt(transform.position, target))
-                    { YieldApproach(); return true; }
+                    {
+                        YieldApproach();
+                        return true;
+                    }
                     rejectedDestination = destination;
                     rejectUntil = Time.time + PlanInterval * 2f;
                     hasDestination = false;
@@ -174,7 +210,10 @@ namespace Artifika.AI
             }
 
             if (Phase != RangedMovementPhase.Approach && Time.time >= phaseDeadline)
-            { FinishMotion(); return true; }
+            {
+                FinishMotion();
+                return true;
+            }
 
             bool targetMoved = Phase == RangedMovementPhase.Approach &&
                 FlatDistance(plannedTargetPosition, target.transform.position) >=
@@ -200,7 +239,7 @@ namespace Artifika.AI
 
         private void YieldApproach()
         {
-            // Preferred spacing is a preference, not another weapon range limit.
+            // Allow a usable shot while preferred spacing is unreachable.
             approachRetryAt = Time.time + 2f;
             EnterAim();
         }
@@ -233,8 +272,7 @@ namespace Artifika.AI
 
         private bool TryPlan()
         {
-            // Prefer a usable shooting position. If all lines are blocked, allow
-            // a reachable search step so a wall does not cause permanent waiting.
+            // A second pass permits a search step when every shooting position is blocked.
             int passes = Phase == RangedMovementPhase.Retreat ? 1 : 2;
             for (int pass = 0; pass < passes; pass++)
             for (int i = 0; i < 6; i++)
@@ -253,10 +291,15 @@ namespace Artifika.AI
                 else if (pass == 0 && !attack.HasRangedShotAt(sampled, target)) continue;
 
                 movement.SetStopped(false);
-                movement.SetSpeed(Phase == RangedMovementPhase.Approach ? navigation.runMovementSpeed :
-                    Phase == RangedMovementPhase.Retreat ?
-                        (navigation.rangedRetreatSpeed > 0f ? navigation.rangedRetreatSpeed : navigation.runMovementSpeed) :
-                        (navigation.rangedRepositionSpeed > 0f ? navigation.rangedRepositionSpeed : navigation.walkMovementSpeed));
+                float speed = Phase switch
+                {
+                    RangedMovementPhase.Approach => navigation.runMovementSpeed,
+                    RangedMovementPhase.Retreat => navigation.rangedRetreatSpeed > 0f
+                        ? navigation.rangedRetreatSpeed : navigation.runMovementSpeed,
+                    _ => navigation.rangedRepositionSpeed > 0f
+                        ? navigation.rangedRepositionSpeed : navigation.walkMovementSpeed
+                };
+                movement.SetSpeed(speed);
                 if (!movement.MoveToCompletePath(sampled)) continue;
                 destination = sampled;
                 plannedTargetPosition = target.transform.position;
@@ -272,8 +315,14 @@ namespace Artifika.AI
         {
             if (Phase == RangedMovementPhase.Retreat)
             {
-                float retreatAngle = index == 0 ? 0f : index == 1 ? 45f * side : index == 2 ? -45f * side :
-                    index == 3 ? 75f * side : index == 4 ? -75f * side : 0f;
+                float retreatAngle = index switch
+                {
+                    1 => 45f * side,
+                    2 => -45f * side,
+                    3 => 75f * side,
+                    4 => -75f * side,
+                    _ => 0f
+                };
                 float step = Mathf.Max(0.1f, navigation.rangedRetreatStepDistance) * (index == 5 ? 0.5f : 1f);
                 return retreatStart + Quaternion.Euler(0f, retreatAngle, 0f) * retreatDirection * step;
             }
@@ -283,18 +332,36 @@ namespace Artifika.AI
             float radius = Phase == RangedMovementPhase.Approach ? (profile.MinimumDistance + profile.MaximumDistance) * 0.5f :
                 Mathf.Clamp(FlatDistance(transform.position, center), profile.MinimumDistance, profile.MaximumDistance);
             float angleStep = Mathf.Atan2(Mathf.Max(0.1f, navigation.rangedRepositionStepDistance), radius) * Mathf.Rad2Deg;
-            float angle = Phase == RangedMovementPhase.Approach ?
-                (index == 0 ? 0f : index == 1 ? angleStep * side : index == 2 ? -angleStep * side :
-                 index == 3 ? 45f * side : index == 4 ? -45f * side : 90f * side) :
-                (index == 0 ? angleStep * side : index == 1 ? -angleStep * side : index == 2 ? 2f * angleStep * side :
-                 index == 3 ? -2f * angleStep * side : index == 4 ? angleStep * 0.5f * side : -angleStep * 0.5f * side);
+            float angle = Phase == RangedMovementPhase.Approach
+                ? index switch
+                {
+                    0 => 0f,
+                    1 => angleStep * side,
+                    2 => -angleStep * side,
+                    3 => 45f * side,
+                    4 => -45f * side,
+                    _ => 90f * side
+                }
+                : index switch
+                {
+                    0 => angleStep * side,
+                    1 => -angleStep * side,
+                    2 => 2f * angleStep * side,
+                    3 => -2f * angleStep * side,
+                    4 => angleStep * 0.5f * side,
+                    _ => -angleStep * 0.5f * side
+                };
             Vector3 result = center + Quaternion.Euler(0f, angle, 0f) * radial * radius;
             result.y = transform.position.y;
             return result;
         }
 
         private static float FlatDistance(Vector3 a, Vector3 b)
-        { Vector3 d = a - b; d.y = 0f; return d.magnitude; }
+        {
+            Vector3 delta = a - b;
+            delta.y = 0f;
+            return delta.magnitude;
+        }
         private Vector3 FlatDirection(Vector3 direction)
         {
             direction.y = 0f;

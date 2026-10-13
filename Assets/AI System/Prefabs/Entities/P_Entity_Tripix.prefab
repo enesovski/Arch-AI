@@ -5004,7 +5004,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 021bba296a5285d48a44fedd695bc4b5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackDefinitionDebug
+  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.AttackDefinitionDebug
   attackPoint: {fileID: 8045901768078092478}
   attackDef: {fileID: 11400000, guid: 51ddafd20d3bdea4e80fc719016b6ccf, type: 2}
 --- !u!1 &7994611906717195027

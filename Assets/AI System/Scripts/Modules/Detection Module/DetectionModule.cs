@@ -1,9 +1,9 @@
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Artifika.AI.Aggro;
 using Artifika.AI.Sensors;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;

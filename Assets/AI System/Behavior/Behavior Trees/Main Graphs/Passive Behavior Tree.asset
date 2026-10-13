@@ -68,7 +68,7 @@ MonoBehaviour:
         m_RequiresAllConditions: 1
         m_ObserverType: 0
     - rid: 247634564740546594
-      type: {class: IsDeadCondition, ns: , asm: Assembly-CSharp}
+      type: {class: IsDeadCondition, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         Graph:
           rid: 1220832118827123213
@@ -113,7 +113,7 @@ MonoBehaviour:
         - rid: 247634564740546601
         m_RegisteredObservers: []
     - rid: 247634564740546598
-      type: {class: SetSpeedAction, ns: , asm: Assembly-CSharp}
+      type: {class: SetSpeedAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 14175490760020493907
@@ -127,7 +127,7 @@ MonoBehaviour:
         Float:
           rid: 247634564740546602
     - rid: 247634564740546599
-      type: {class: FleeFromTargetAction, ns: , asm: Assembly-CSharp}
+      type: {class: FleeFromTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 9413375311518284009
@@ -141,7 +141,7 @@ MonoBehaviour:
         Target:
           rid: 1220832118827123221
     - rid: 247634564740546600
-      type: {class: WanderAction, ns: , asm: Assembly-CSharp}
+      type: {class: WanderAction, ns: Artifika.AI, asm: Assembly-CSharp}
       data:
         ID:
           m_Value0: 4464098697083589283
@@ -211,7 +211,7 @@ MonoBehaviour:
         Name: Self
         m_Value: {fileID: 0}
     - rid: 1220832118827123221
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -229,7 +229,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 1220832118827123223
-      type: {class: 'BlackboardVariable`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -312,7 +312,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: Wander
     Story: '[Blackboard] wanders around'
-    RuntimeTypeString: WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 16527211239432054260
@@ -367,7 +367,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: Flee From Target
     Story: '[Blackboard] flees from [Target]'
-    RuntimeTypeString: FleeFromTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.FleeFromTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 12607697909817569132
@@ -380,14 +380,14 @@ MonoBehaviour:
       Tooltip: 
     - Name: Target
       Type:
-        m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Set Speed
     Story: 'Set [Blackboard] movement speed to [Float]'
-    RuntimeTypeString: SetSpeedAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.SetSpeedAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 5855906132453394007
@@ -417,7 +417,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: Face Target
     Story: '[Blackboard] faces [Target]'
-    RuntimeTypeString: FaceTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Artifika.AI.FaceTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13305875091066958497
@@ -430,7 +430,7 @@ MonoBehaviour:
       Tooltip: 
     - Name: Target
       Type:
-        m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
@@ -461,7 +461,7 @@ MonoBehaviour:
         - rid: 755774692322968400
         - rid: 755774692322968401
         NodeType:
-          m_SerializableType: FaceTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.FaceTargetAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13305875091066958497
@@ -503,7 +503,7 @@ MonoBehaviour:
       data:
         FieldName: Target
         Type:
-          m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         LocalValue:
           rid: 755774692322968405
@@ -519,7 +519,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 755774692322968405
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -572,7 +572,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 755774692322968457
-      type: {class: 'TypedVariableModel`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -702,7 +702,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 1695467670847834556
@@ -745,7 +745,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 2633661402117832988
-      type: {class: 'TypedVariableModel`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -767,7 +767,7 @@ MonoBehaviour:
         - rid: 2633661402117833097
         - rid: 2633661402117833098
         NodeType:
-          m_SerializableType: FleeFromTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.FleeFromTargetAction, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 12607697909817569132
@@ -799,14 +799,14 @@ MonoBehaviour:
       data:
         FieldName: Target
         Type:
-          m_SerializableType: GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         LocalValue:
           rid: 2633661402117833102
         LinkedVariable:
           rid: 2633661402117832988
     - rid: 2633661402117833102
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -851,7 +851,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: IsStunnedCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Artifika.AI.IsStunnedCondition, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 14781363890115984801
@@ -935,7 +935,7 @@ MonoBehaviour:
         - rid: 5478665581963771910
         - rid: 5478665581963771911
         NodeType:
-          m_SerializableType: WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         NodeTypeID:
           m_Value0: 16527211239432054260
@@ -1081,7 +1081,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665787085947262
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1305,7 +1305,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665855455986274
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1328,7 +1328,7 @@ MonoBehaviour:
         - rid: 6465612458099474735
         - rid: 6465612458099474736
         NodeType:
-          m_SerializableType: SetSpeedAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Artifika.AI.SetSpeedAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         NodeTypeID:
           m_Value0: 5855906132453394007
@@ -1420,7 +1420,7 @@ MonoBehaviour:
         Name: Self
         m_Value: {fileID: 0}
     - rid: 5478665580825280760
-      type: {class: 'BlackboardVariable`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1438,7 +1438,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 5478665787085947106
-      type: {class: 'BlackboardVariable`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1497,7 +1497,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 5478665580825280746
-      type: {class: 'TypedVariableModel`1[[GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1519,7 +1519,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 3
     - rid: 5478665787085947072
-      type: {class: 'TypedVariableModel`1[[AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:

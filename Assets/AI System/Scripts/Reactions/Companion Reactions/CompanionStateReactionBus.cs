@@ -1,54 +1,58 @@
-﻿using System;
+using System;
 using UnityEngine;
-using Artifika.AI;
+using UnityEngine.Scripting.APIUpdating;
 
-[DisallowMultipleComponent]
-public class CompanionStateReactionsBus : ReactionBusBase
+namespace Artifika.AI
 {
-    private CompanionStateModule _companionStateModule;
-    private Blackboard _blackboard;
-        
-    private ICompanionReaction[] reactions;
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [DisallowMultipleComponent]
+    public class CompanionStateReactionsBus : ReactionBusBase
+    {
+        private CompanionStateModule companionStateModule;
+        private Blackboard blackboard;
 
-    public void Initialize(Blackboard blackboard)
-    {
-        this._blackboard = blackboard;
-        
-        this._companionStateModule = _blackboard.companionStateModule; 
-        
-        if (_companionStateModule)
-        {
-            _companionStateModule.OnStateChanged += HandleStateChanged;
-        }
+        private ICompanionReaction[] reactions;
 
-        reactions = GetComponents<ICompanionReaction>();
-        foreach (var reaction in reactions)
+        public void Initialize(Blackboard blackboard)
         {
-            reaction.Initialize(_blackboard);
-        }
-    }
-        
-    private void OnDisable()
-    {
-        if (_companionStateModule != null)
-        {
-            _companionStateModule.OnStateChanged -= HandleStateChanged;
-        }
-    }
-        
-    private void HandleStateChanged(CompanionState previousState, CompanionState nextState)
-    {
-        if (reactions == null) return;
-        
-        foreach (var reaction in reactions)
-        {
-            try
+            this.blackboard = blackboard;
+
+            this.companionStateModule = this.blackboard.companionStateModule;
+
+            if (companionStateModule)
             {
-                reaction.OnCompanionStateChanged(previousState, nextState);
+                companionStateModule.OnStateChanged += HandleStateChanged;
             }
-            catch (Exception e)
+
+            reactions = GetComponents<ICompanionReaction>();
+            foreach (var reaction in reactions)
             {
-                Debug.LogException(e, this);
+                reaction.Initialize(this.blackboard);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (companionStateModule != null)
+            {
+                companionStateModule.OnStateChanged -= HandleStateChanged;
+            }
+        }
+
+        private void HandleStateChanged(CompanionState previousState, CompanionState nextState)
+        {
+            if (reactions == null) return;
+
+            foreach (var reaction in reactions)
+            {
+                try
+                {
+                    reaction.OnCompanionStateChanged(previousState, nextState);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e, this);
+                }
             }
         }
     }

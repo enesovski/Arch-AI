@@ -8,25 +8,23 @@ namespace Artifika.AI.Death.Reactions
     public class DeathReactionsBus : ReactionBusBase
     {
         private HealthComponent healthComponent;
-        private Blackboard _blackboard;
-        
+
         [Title("Reactions")]
         [SerializeField] private Transform onDeathReactionsParent;
         [SerializeField] private Transform onDespawnReactionsParent;
-        
+
         private IDeathReaction[] onDeathReactions;
         private IDeathReaction[] onDespawnReactions;
-        
+
         public override void Initialize(Blackboard blackboard)
         {
-            this._blackboard = blackboard;
             healthComponent = blackboard != null ? blackboard.healthComponent : null;
-            
+
             onDeathReactions = onDeathReactionsParent != null
                 ? onDeathReactionsParent.GetComponents<IDeathReaction>()
                 : Array.Empty<IDeathReaction>();
             InitializeReactions(onDeathReactions, blackboard);
-            
+
             if (healthComponent != null)
                 healthComponent.OnDeath += ExecuteOnDeathReactions;
 
@@ -41,7 +39,6 @@ namespace Artifika.AI.Death.Reactions
             if (healthComponent != null)
                 healthComponent.OnDeath -= ExecuteOnDeathReactions;
         }
-        
 
         private void ExecuteOnDeathReactions()
         {

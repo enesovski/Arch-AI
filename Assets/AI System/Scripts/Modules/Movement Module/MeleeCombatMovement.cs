@@ -5,8 +5,7 @@ namespace Artifika.AI
 {
     public enum MeleeMovementPhase { Approach, Withdraw, Circle, Rush }
 
-    // Owned and ticked by MovementModule through the chase graph action.
-    // AttackModule supplies attack readiness/reach; this controller owns positioning.
+    // Owned by MovementModule and ticked by the chase graph.
     internal sealed partial class MeleeCombatMovement
     {
         private readonly MovementModule movementModule;
@@ -34,14 +33,19 @@ namespace Artifika.AI
 
         private GameEntity movementTarget;
         private bool meleeMovementActive;
-        private float phaseStartedAt, circleUntil, nextMeleePlanAt, lastMeleePlanAt;
-        private float sectorYaw, circleDirection;
+        private float phaseStartedAt;
+        private float circleUntil;
+        private float nextMeleePlanAt;
+        private float lastMeleePlanAt;
+        private float sectorYaw;
+        private float circleDirection;
         private float flankSide = 1f;
         private float rushRangeAdjustment;
         private bool rushEndpointReached;
         private bool circlePaused;
         private float circlePauseUntil;
-        private float circleStepProgressAt, bestCircleStepDistance;
+        private float circleStepProgressAt;
+        private float bestCircleStepDistance;
         private float blockedSince = -1f;
         private float sectorRecoverySince = -1f;
         private float bestSectorError = float.PositiveInfinity;
@@ -49,7 +53,8 @@ namespace Artifika.AI
         private Vector3 meleeDestination;
         private bool hasMeleeDestination;
         private float savedStoppingDistance;
-        private bool savedAutoBraking, savedRootMotionSuppression;
+        private bool savedAutoBraking;
+        private bool savedRootMotionSuppression;
         private RotationMode savedMovementRotation;
 
         public bool IsPositionReady(GameEntity target)
@@ -75,7 +80,7 @@ namespace Artifika.AI
 
             savedStoppingDistance = movementModule.StoppingDistance;
             savedAutoBraking = movementModule.AutoBraking;
-            movementModule.SetStoppingDistance((navigation ? navigation.combatWaypointTolerance : 0.3f));
+            movementModule.SetStoppingDistance(navigation ? navigation.combatWaypointTolerance : 0.3f);
             movementModule.SetAutoBraking(true);
             movementModule.SetStopped(false);
             if (rotationModule) savedMovementRotation = rotationModule.CurrentMode;
@@ -162,8 +167,6 @@ namespace Artifika.AI
             }
         }
 
-        // Called only by the graph's chase action. Planning is cadence-limited;
-        // no Physics overlap query or hierarchy traversal runs here each frame.
         public bool UpdateMeleeMovement(GameEntity chaseTarget)
         {
             if (!UsesMeleeCombatMovement) return false;
@@ -172,22 +175,18 @@ namespace Artifika.AI
 
             BeginMeleeMovement();
             if (movementTarget != chaseTarget) InitializeMeleeTarget(chaseTarget);
-            // Rush does not brake on the way in. Stop at its endpoint every frame,
-            // rather than waiting for the next (cadence-limited) path decision.
+            // Rush must stop at its endpoint between planning ticks.
             if (meleePhase == MeleeMovementPhase.Rush && hasMeleeDestination && movementModule.HasArrived())
             {
                 movementModule.SetStopped(true);
                 movementModule.SetSpeed(0f);
-                // SetStopped resets the agent path. Retaining this destination
-                // would incorrectly reuse an arrived path with speed still zero.
+                // SetStopped resets the path; an arrived destination cannot be reused.
                 hasMeleeDestination = false;
                 rushEndpointReached = true;
             }
             if (!HoldsGround && meleePhase == MeleeMovementPhase.Circle && UsesCirclingSteps &&
                 hasMeleeDestination && !movementModule.HasBlockedPath && movementModule.HasArrived())
             {
-                // Finish the fixed short step before starting its pause. Never
-                // pause just because no reachable circle destination was found.
                 float minimum = Mathf.Max(0f, navigation.combatCirclePauseRange.x);
                 float maximum = Mathf.Max(minimum, navigation.combatCirclePauseRange.y);
                 circlePauseUntil = Time.time + Random.Range(minimum, maximum);
@@ -226,8 +225,7 @@ namespace Artifika.AI
                 navigation ? navigation.combatApproachRangeFraction : 0.75f);
             if (meleePhase == MeleeMovementPhase.Rush && rushEndpointReached)
             {
-                // Animation bones, height and conservative target bounds can put
-                // the endpoint outside the actual ready attack's surface range.
+                // Animated bones and bounds can leave an arrived endpoint outside strike range.
                 rushRangeAdjustment = Mathf.Max(0.2f - approachGap, rushRangeAdjustment -
                     attackModule.GetReadyMeleeRangeCorrection(
                         navigation ? navigation.combatApproachRangeFraction : 0.75f));
@@ -247,8 +245,7 @@ namespace Artifika.AI
             if (meleePhase == MeleeMovementPhase.Circle && Time.time >= circleUntil && attackModule.HasReadyMeleeDefinition())
                 SetMeleePhase(MeleeMovementPhase.Approach);
 
-            // Keep sector recovery separate from the final run into strike range.
-            // Check the live target facing as well as the smoothed orbit sector.
+            // Check live facing as well as the smoothed orbit sector before rushing.
             float liveAngle = Vector3.SignedAngle(liveForward,
                 FlatDirection(transform.position - chaseTarget.transform.position), Vector3.up);
             bool readyToRush = attackModule.HasReadyMeleeDefinition();
@@ -263,8 +260,7 @@ namespace Artifika.AI
 
             movementModule.SetAutoBraking(meleePhase != MeleeMovementPhase.Rush &&
                                           (meleePhase != MeleeMovementPhase.Circle || UsesCirclingSteps));
-            // A larger attack stand-off leaves less range headroom. Avoid stopping
-            // a full navigation tolerance before the strike endpoint during Rush.
+            // Rush needs a tighter arrival tolerance to reach strike range.
             movementModule.SetStoppingDistance(meleePhase == MeleeMovementPhase.Rush
                 ? Mathf.Min(waypointTolerance, 0.05f) : waypointTolerance);
 
@@ -276,14 +272,12 @@ namespace Artifika.AI
             float gap;
             if (meleePhase == MeleeMovementPhase.Rush)
             {
-                // Close directly from our current side. Following the target's
-                // rotating sector here would keep moving the attack endpoint sideways.
+                // Close from the current side so target rotation cannot move the endpoint sideways.
                 desiredAngle = currentAngle;
                 gap = approachGap;
             }
             else if (meleePhase == MeleeMovementPhase.Withdraw)
             {
-                // First create space on our current side, then recover the preferred sector.
                 desiredAngle = currentAngle;
                 gap = holdingGap;
             }
@@ -291,8 +285,7 @@ namespace Artifika.AI
             {
                 if (meleePhase == MeleeMovementPhase.Circle)
                 {
-                    // Lead the moving robot rather than advancing a short-lived
-                    // waypoint that can turn back before the robot reaches it.
+                    // Lead the robot so the waypoint cannot reverse before arrival.
                     desiredAngle = UsesCirclingSteps ? currentAngle :
                         GetCirclingAngle(currentAngle, sectorMargin, holdingRadius, waypointTolerance);
                 }
@@ -324,9 +317,7 @@ namespace Artifika.AI
             }
             if (meleePhase == MeleeMovementPhase.Circle && UsesCirclingSteps)
             {
-                // Continue checking recovery/attack timing and target facing even
-                // while stopped. Significant spacing or sector changes cancel
-                // both a pause and an outdated fixed step.
+                // Spacing or sector changes interrupt both pauses and fixed steps.
                 if (!circleNeedsReposition && circlePaused && Time.time < circlePauseUntil)
                 {
                     nextMeleePlanAt = Mathf.Min(nextMeleePlanAt, circlePauseUntil);
@@ -343,8 +334,7 @@ namespace Artifika.AI
                         circleStepProgressAt = Time.time;
                     }
                     if (Time.time - circleStepProgressAt < meleeCombatProfile.blockedSectorGrace) return true;
-                    // A complete path can still stall on local avoidance. Release
-                    // that fixed step and try a fresh local goal after the grace.
+                    // Local avoidance can stall a complete path; release the step after the grace.
                     hasMeleeDestination = false;
                 }
                 desiredAngle = GetCirclingAngle(currentAngle, sectorMargin, holdingRadius, waypointTolerance);
@@ -360,8 +350,6 @@ namespace Artifika.AI
                 Mathf.Abs(attackModule.GetReadyMeleeRangeCorrection(
                     navigation ? navigation.combatApproachRangeFraction : 0.75f)) > 0.001f;
 
-            // Try at most three nearby alternatives per planning tick. The movement
-            // module calculates each path once using this agent's type/area costs.
             for (int attempt = 0; attempt < 3; attempt++)
             {
                 bool fallback = allowFallbackAttack && attempt == 2;
@@ -369,16 +357,14 @@ namespace Artifika.AI
                 float angle;
                 if (!fallback && meleePhase == MeleeMovementPhase.Circle && UsesCirclingSteps)
                 {
-                    // Keep alternative goals local too; the normal +/-15 degree
-                    // alternatives can turn a small step into a long sidestep.
+                    // Fixed angular alternatives could turn a short step into a long sidestep.
                     float stepAngle = Mathf.DeltaAngle(currentAngle, desiredAngle);
                     angle = attempt == 1 ? currentAngle - stepAngle :
                         attempt == 2 ? currentAngle + stepAngle * 0.5f : desiredAngle;
                 }
                 else angle = fallback ? currentAngle :
                     desiredAngle + (attempt == 1 ? 15f : attempt == 2 ? -15f : 0f);
-                // Intermediate arc steps can be outside the sector; the final
-                // step and circling goals must land comfortably inside it.
+                // Intermediate arc steps may leave the sector; final goals need an interior margin.
                 bool interiorGoal = !fallback && IsInPreferredSector(angle, 0f) &&
                     (meleePhase == MeleeMovementPhase.Approach || meleePhase == MeleeMovementPhase.Circle);
                 if (interiorGoal)
@@ -411,11 +397,7 @@ namespace Artifika.AI
 
                 bool arrived = hasMeleeDestination && movementModule.HasArrived();
                 bool needsSectorRecovery = meleePhase == MeleeMovementPhase.Approach && readyToRush && !sectorReady;
-                // Sampling can project an out-of-range Rush goal back onto the
-                // current position. A complete zero-length path cannot close
-                // that range gap; try the other candidates instead of accepting
-                // the same arrived endpoint forever. Valid range can still wait
-                // in place for facing to catch up.
+                // Sampling can collapse a Rush goal onto the current position without closing range.
                 float rushTolerance = Mathf.Min(waypointTolerance, 0.05f);
                 Vector3 horizontalStep = point - transform.position;
                 horizontalStep.y = 0f;
@@ -428,8 +410,7 @@ namespace Artifika.AI
                     IsInPreferredSector(liveAngle, 0f) &&
                     horizontalStep.magnitude > Mathf.Max(navigation.combatCircleStepDistance,
                         waypointTolerance * 2f) + waypointTolerance) continue;
-                // Never reuse an arrived boundary waypoint while Rush is still
-                // disallowed. A sampled replacement must actually move us.
+                // Sector recovery must move beyond an arrived boundary waypoint.
                 if (arrived && needsSectorRecovery &&
                     (point - transform.position).sqrMagnitude <= waypointTolerance * waypointTolerance) continue;
                 if (hasMeleeDestination && !(arrived && (needsSectorRecovery || meleePhase == MeleeMovementPhase.Circle)) && !movementModule.HasBlockedPath &&
@@ -462,8 +443,7 @@ namespace Artifika.AI
 
             if (blockedSince < 0f) blockedSince = Time.time;
             allowFallbackAttack |= Time.time - blockedSince >= meleeCombatProfile.blockedSectorGrace;
-            // A blocked preferred position must not make a nearby target invulnerable.
-            // AllowFallbackAttack relaxes only the sector; range/facing still apply.
+            // Fallback relaxes the sector only; attack range and facing still apply.
             movementModule.Stop();
             hasMeleeDestination = false;
             return true;
@@ -483,8 +463,7 @@ namespace Artifika.AI
                 ResetSectorRecovery();
                 return;
             }
-            // Accepting a complete path is not proof of progress: it may end at
-            // the same boundary forever. Measure improvement in sector error.
+            // Complete paths can repeat a boundary endpoint; measure actual sector progress.
             if (sectorRecoverySince < 0f || error < bestSectorError - 0.5f)
             {
                 sectorRecoverySince = now;

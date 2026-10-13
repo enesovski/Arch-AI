@@ -1,6 +1,5 @@
-using Sirenix.OdinInspector;
 using System;
-using Unity.Behavior;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 

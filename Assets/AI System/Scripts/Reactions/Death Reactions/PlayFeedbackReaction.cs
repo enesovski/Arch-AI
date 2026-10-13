@@ -1,5 +1,5 @@
-﻿using System;
-using MoreMountains.Feedbacks; 
+using System;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 namespace Artifika.AI.Death.Reactions
@@ -8,7 +8,7 @@ namespace Artifika.AI.Death.Reactions
     public sealed class PlayFeedbackReaction : IDeathReaction
     {
         [SerializeField] private MMF_Player feedback;
-        
+
         public void Execute()
         {
             feedback?.PlayFeedbacks();
