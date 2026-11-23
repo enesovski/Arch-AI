@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Artifika.AI.Aggro;
-using Artifika.AI.Sensors;
+using Archura.Aggro;
+using Archura.Sensors;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Artifika.AI
+namespace Archura
 {
     public class DetectionModule : UpdatableEntityModule
     {

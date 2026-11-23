@@ -1,4 +1,4 @@
-namespace Artifika.AI
+namespace Archura
 {
     public interface IReaction
     {

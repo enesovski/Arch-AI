@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Artifika.AI.Sensors
+namespace Archura.Sensors
 {
     public abstract class BaseSensor : MonoBehaviour, ISensor
     {

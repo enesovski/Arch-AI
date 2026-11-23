@@ -1,9 +1,9 @@
 using Unity.Behavior;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [BlackboardEnum]
     public enum SuspiciousStatus
     {

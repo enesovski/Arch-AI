@@ -2733,7 +2733,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 1220831909989056788
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -3460,7 +3460,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b04f3fc0e6827ae4898bd2f6905c6c13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Blackboard
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Blackboard
   attackModule: {fileID: 5840585021893281622}
   detectionModule: {fileID: 6912644094623657438}
   movementModule: {fileID: 4183289319885948431}
@@ -5004,7 +5004,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 021bba296a5285d48a44fedd695bc4b5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.AttackDefinitionDebug
+  m_EditorClassIdentifier: Archura.Runtime::Archura.AttackDefinitionDebug
   attackPoint: {fileID: 8045901768078092478}
   attackDef: {fileID: 11400000, guid: 51ddafd20d3bdea4e80fc719016b6ccf, type: 2}
 --- !u!1 &7994611906717195027

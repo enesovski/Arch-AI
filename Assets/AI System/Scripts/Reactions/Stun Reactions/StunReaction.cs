@@ -1,9 +1,9 @@
-using Artifika.AI.Attack;
+using Archura.Attack;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Stun.Reactions
+namespace Archura.Stun.Reactions
 {
     [DisallowMultipleComponent]
     [Title("Stun Reaction")]

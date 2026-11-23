@@ -11,6 +11,6 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96f51e7d9c8a43db8cc47e44bfe7a6f1, type: 3}
   m_Name: Luminex Combat Configuration
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Attack.CombatConfiguration
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Attack.CombatConfiguration
   combatRadius: 23
   closeCombatRadius: 4

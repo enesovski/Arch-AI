@@ -2,9 +2,9 @@ using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [RequireComponent(typeof(BehaviorGraphAgent))]
     [RequireComponent(typeof(CommandModule))]
     public class BehaviorCommandLinker : MonoBehaviour

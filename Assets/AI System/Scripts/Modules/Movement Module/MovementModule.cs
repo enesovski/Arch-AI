@@ -10,9 +10,9 @@ using UnityEngine.Scripting.APIUpdating;
 using UnityEditor;
 #endif
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [RequireComponent(typeof(NavMeshAgent), typeof(NetworkObject), typeof(NetworkTransform))]
     public class MovementModule : NetworkBehaviour
     {
@@ -55,7 +55,7 @@ namespace Artifika.AI
         private NavMeshAgent agent;
         private Vector3 spawnPoint;
         private AnimatorModule animatorModule;
-        private HealthComponent healthComponent;
+        private IEntityHealth healthComponent;
 
         private NavMeshPath cachedPath;
         private bool hasDestination;
@@ -83,7 +83,7 @@ namespace Artifika.AI
             agent.updateRotation = false;
             agent.updateUpAxis = false;
 
-            SubscribeToDeath(blackboard.healthComponent);
+            SubscribeToDeath(blackboard.Health);
 
             movementLockedByDeath = healthComponent != null && !healthComponent.IsAlive;
             if (movementLockedByDeath)
@@ -248,8 +248,9 @@ namespace Artifika.AI
             float upper = Mathf.Max(plannedHeight, navigationHeight);
             float lower = Mathf.Min(plannedHeight, navigationHeight);
             position.y = upper + padding;
-            int groundMask = blackboard && blackboard.fitter
-                ? blackboard.fitter.GroundLayerMask.value : Physics.DefaultRaycastLayers;
+            IGroundFitter fitter = blackboard ? blackboard.Fitter : null;
+            int groundMask = !UnityNull.IsNull(fitter)
+                ? fitter.GroundLayerMask.value : Physics.DefaultRaycastLayers;
             if (!Physics.Raycast(position, Vector3.down, out RaycastHit ground,
                     upper - lower + padding * 2f, groundMask, QueryTriggerInteraction.Ignore)) return false;
             return TrySampleNavigationPosition(ground.point, maxDistance, out sampled);
@@ -456,7 +457,7 @@ namespace Artifika.AI
             return agent != null && agent.enabled && agent.isOnNavMesh;
         }
 
-        private void SubscribeToDeath(HealthComponent newHealthComponent)
+        private void SubscribeToDeath(IEntityHealth newHealthComponent)
         {
             if (healthComponent == newHealthComponent)
                 return;
@@ -465,7 +466,7 @@ namespace Artifika.AI
             healthComponent = newHealthComponent;
 
             if (healthComponent != null)
-                healthComponent.OnServerDeathArgs += HandleServerDeath;
+                healthComponent.OnServerDeath += HandleServerDeath;
         }
 
         private void UnsubscribeFromDeath()
@@ -473,11 +474,11 @@ namespace Artifika.AI
             if (healthComponent == null)
                 return;
 
-            healthComponent.OnServerDeathArgs -= HandleServerDeath;
+            healthComponent.OnServerDeath -= HandleServerDeath;
             healthComponent = null;
         }
 
-        private void HandleServerDeath(DamageInstance killingBlow)
+        private void HandleServerDeath()
         {
             if (!IsServer) return;
             StopAndLockForDeath();

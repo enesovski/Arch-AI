@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public enum MeleePositioning { Front, Flank, Unrestricted }
     public enum MeleeRecoveryMode { MaintainDistance, HoldGround }

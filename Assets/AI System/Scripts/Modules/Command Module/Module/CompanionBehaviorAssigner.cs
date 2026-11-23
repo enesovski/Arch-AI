@@ -2,11 +2,11 @@ using Sirenix.OdinInspector;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [DisallowMultipleComponent]
     public class CompanionBehaviorAssigner : MonoBehaviour
     {

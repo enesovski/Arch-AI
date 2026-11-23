@@ -1,4 +1,4 @@
-namespace Artifika.AI.Stun.Reactions
+namespace Archura.Stun.Reactions
 {
     public interface IStunReaction
     {

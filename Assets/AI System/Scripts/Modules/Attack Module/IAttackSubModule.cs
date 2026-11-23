@@ -1,6 +1,6 @@
 using System;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     public interface IAttackSubModule
     {

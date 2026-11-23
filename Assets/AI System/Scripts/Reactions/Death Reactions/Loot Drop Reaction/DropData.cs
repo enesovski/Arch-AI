@@ -2,15 +2,16 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [System.Serializable]
     public class DropData
     {
         [TableColumnWidth(0, Width = 220)]
         [LabelText("Item")]
-        public ItemSO item;
+        [Tooltip("Host item asset. Loot is resolved by the host's own death reaction.")]
+        public ScriptableObject item;
 
         [TableColumnWidth(1, Width = 130)]
         [LabelText("Drop Range")]

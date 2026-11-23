@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Artifika.AI.Aggro.Reactions
+namespace Archura.Aggro.Reactions
 {
     [DisallowMultipleComponent]
     public class AggroReactionsBus : ReactionBusBase

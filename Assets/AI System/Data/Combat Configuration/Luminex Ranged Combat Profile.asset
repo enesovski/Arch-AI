@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21f45ab9e2cf2e14395b1855214c7f3f, type: 3}
   m_Name: Luminex Ranged Combat Profile
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.RangedCombatProfile
+  m_EditorClassIdentifier: Archura.Runtime::Archura.RangedCombatProfile
   preferredDistanceRange: {x: 12, y: 20}
   retreatTriggerDistance: 8
   aimPause: 0.35

@@ -1,16 +1,16 @@
 using System;
-using Artifika.AI.Aggro;
+using Archura.Aggro;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "SearchForTarget", story: "[Blackboard] searches area", category: "Action", id: "a3bd44c8dee8aab5311894dcf77d8888")]
     public partial class SearchForTargetAction : Action

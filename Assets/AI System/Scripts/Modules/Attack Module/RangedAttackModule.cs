@@ -1,12 +1,12 @@
-using Artifika.AI.Attack;
+using Archura.Attack;
 using MoreMountains.Feedbacks;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class RangedAttackModule : AttackSubModule
     {
         public override void Attack(BaseAttackDefinition def)
@@ -54,10 +54,10 @@ namespace Artifika.AI
 
                     GameObject projectileObject = Instantiate(rangedDef.ProjectilePrefab, spawnPos, spreadRotation);
 
-                    if (projectileObject.TryGetComponent<ProjectileBase>(out var proj))
+                    if (projectileObject.TryGetComponent<IProjectile>(out var proj))
                     {
                         proj.Initialize(targetPos, selfNetworkObject);
-                        proj.GetComponent<NetworkObject>().Spawn();
+                        projectileObject.GetComponent<NetworkObject>().Spawn();
                     }
                 }
                 else if (rangedDef.projectileMovementType == ProjectileMovementType.Parabolic)
@@ -66,9 +66,9 @@ namespace Artifika.AI
                     Vector3 randomDest = targetPos + new Vector3(rnd.x, 0f, rnd.y);
 
                     GameObject go = Instantiate(rangedDef.ProjectilePrefab, spawnPos, baseRot);
-                    if (go.TryGetComponent<ProjectileBase>(out var proj))
+                    if (go.TryGetComponent<IProjectile>(out var proj))
                     {
-                        proj.GetComponent<NetworkObject>().Spawn();
+                        go.GetComponent<NetworkObject>().Spawn();
                         proj.Initialize(randomDest, selfNetworkObject);
                     }
                 }

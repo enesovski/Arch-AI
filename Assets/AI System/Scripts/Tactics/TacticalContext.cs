@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Artifika.AI.Utility")]
     public struct TacticalContext
     {
         public Vector3 SelfPosition;

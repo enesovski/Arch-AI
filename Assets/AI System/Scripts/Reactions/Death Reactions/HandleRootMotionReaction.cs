@@ -1,24 +1,29 @@
-using Artifika.AI.Attack;
-using Artifika.AI.Death.Reactions;
+using Archura.Attack;
+using Archura.Death.Reactions;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class HandleRootMotionReaction : MonoBehaviour, IDeathReaction, IDeathReactionInitializable
     {
-        [SerializeField] private AIGroundFitter groundFitter;
+        [Tooltip("Optional component implementing " + nameof(IGroundFitter) + ". Defaults to the Blackboard's fitter.")]
+        [FormerlySerializedAs("groundFitter")]
+        [SerializeField] private MonoBehaviour groundFitterSource;
         [SerializeField] private Animator animator;
         [SerializeField] private MovementModule movementModule;
         [SerializeField] private AttackModule attackModule;
+
+        private IGroundFitter groundFitter;
 
         public void Initialize(Blackboard blackboard)
         {
             if (blackboard == null)
                 return;
 
-            groundFitter = groundFitter != null ? groundFitter : blackboard.fitter;
+            groundFitter = groundFitterSource as IGroundFitter ?? blackboard.Fitter;
             animator = animator != null ? animator : blackboard.animator;
             movementModule = movementModule != null ? movementModule : blackboard.movementModule;
             attackModule = attackModule != null ? attackModule : blackboard.attackModule;
@@ -30,7 +35,7 @@ namespace Artifika.AI
             movementModule?.Stop();
             movementModule?.SetStopped(true);
 
-            if (groundFitter != null)
+            if (!UnityNull.IsNull(groundFitter))
                 groundFitter.HandleRootMotion = false;
 
             if (animator != null)

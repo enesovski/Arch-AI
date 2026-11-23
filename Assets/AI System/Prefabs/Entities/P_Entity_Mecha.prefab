@@ -350,7 +350,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7391cc9d7927fb41812bd1626390313, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Stun.Reactions.StunReactionsBus
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Stun.Reactions.StunReactionsBus
 --- !u!114 &3743377636923326374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,7 +362,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffc4bedb782bd0d43aa903d9f5d7e12a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Stun.Reactions.StunComponentReaction
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Stun.Reactions.StunComponentReaction
   stunAnimParam: IsStunned
   waitForOutAnimationExit: 1
   maxOutAnimationWaitSeconds: 2
@@ -5944,8 +5944,8 @@ MonoBehaviour:
           m_PersistentCalls:
             m_Calls:
             - m_Target: {fileID: 7984256070770890161}
-              m_TargetAssemblyTypeName: Artifika.AI.Death.Reactions.DeathReactionsBus,
-                Assembly-CSharp
+              m_TargetAssemblyTypeName: Archura.Death.Reactions.DeathReactionsBus,
+                Archura.Runtime
               m_MethodName: ExecuteOnDespawnReactions
               m_Mode: 1
               m_Arguments:
@@ -7267,7 +7267,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 1220832118827123240
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
           m_Value0: 473671883154168503
@@ -7899,7 +7899,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b04f3fc0e6827ae4898bd2f6905c6c13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Blackboard
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Blackboard
   attackModule: {fileID: 5840585021893281622}
   detectionModule: {fileID: 6912644094623657438}
   movementModule: {fileID: 4183289319885948431}
@@ -7964,7 +7964,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 157bb9ef701c47afaf2182269e25aba8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.EntityStatsController
+  m_EditorClassIdentifier: Assembly-CSharp::Archura.EntityStatsController
   ShowTopMostFoldoutHeaderGroup: 1
   stunStatusEffectDefinition: {fileID: 11400000, guid: 4fd934763cead8c468708b365f430760, type: 2}
   tamingEnabled: 0

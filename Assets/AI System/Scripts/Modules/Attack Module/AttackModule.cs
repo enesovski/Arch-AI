@@ -5,7 +5,7 @@ using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     public partial class AttackModule : UpdatableEntityModule
     {
@@ -42,8 +42,8 @@ namespace Artifika.AI.Attack
         private AnimatorModule animatorModule;
         private MovementModule movementModule;
         private RotationModule rotationModule;
-        private HealthComponent healthComponent;
-        private AnimatorEventHandler eventHandler;
+        private IEntityHealth healthComponent;
+        private IAttackAnimationEventSource eventHandler;
 
         private GameEntity target;
 
@@ -62,8 +62,8 @@ namespace Artifika.AI.Attack
 
         protected override void OnInitialize()
         {
-            healthComponent = blackboard.healthComponent;
-            eventHandler = GetComponentInChildren<AnimatorEventHandler>();
+            healthComponent = blackboard.Health;
+            eventHandler = GetComponentInChildren<IAttackAnimationEventSource>();
 
             stateModule = blackboard.GetStateModule();
             animatorModule = blackboard.animatorModule;
@@ -87,12 +87,12 @@ namespace Artifika.AI.Attack
 
             if (eventHandler != null)
             {
-                eventHandler.OnAttackAnimation += PerformAttack;
+                eventHandler.AttackAnimationTriggered += PerformAttack;
             }
 
             if (healthComponent != null)
             {
-                healthComponent.OnServerDeathArgs += HandleServerDeath;
+                healthComponent.OnServerDeath += HandleServerDeath;
             }
         }
 
@@ -161,7 +161,7 @@ namespace Artifika.AI.Attack
         {
             // Matching events may each hit; late or interrupted events must not deal damage.
             if (!IsEnabled || !IsAttackCommitted || !def || def != currentAttackDefinition ||
-                (healthComponent && !healthComponent.IsAlive))
+                (!UnityNull.IsNull(healthComponent) && !healthComponent.IsAlive))
                 return;
 
             switch (def.AttackType)
@@ -525,7 +525,7 @@ namespace Artifika.AI.Attack
             movementModule?.ResetRangedCombat();
             if (healthComponent != null)
             {
-                healthComponent.OnServerDeathArgs -= HandleServerDeath;
+                healthComponent.OnServerDeath -= HandleServerDeath;
             }
 
             if (stateModule != null)
@@ -535,11 +535,11 @@ namespace Artifika.AI.Attack
 
             if (eventHandler != null)
             {
-                eventHandler.OnAttackAnimation -= PerformAttack;
+                eventHandler.AttackAnimationTriggered -= PerformAttack;
             }
         }
 
-        private void HandleServerDeath(DamageInstance killingBlow)
+        private void HandleServerDeath()
         {
             InterruptAttackForDeath();
         }

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     [CreateAssetMenu(fileName = "Combat Configuration", menuName = "AI/Combat/Combat Configuration")]
     public sealed class CombatConfiguration : ScriptableObject

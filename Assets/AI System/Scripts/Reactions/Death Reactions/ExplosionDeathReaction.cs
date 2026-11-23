@@ -1,12 +1,12 @@
-using Artifika.AI.Death.Reactions;
+using Archura.Death.Reactions;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class ExplosionDeathReaction : NetworkBehaviour, IDeathReaction
     {
         [Title("Body Parts Parent")]

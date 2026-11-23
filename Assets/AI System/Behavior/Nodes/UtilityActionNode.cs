@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 
-namespace Artifika.AI.Utility
+namespace Archura.Utility
 {
     public interface IUtilityActionNode
     {

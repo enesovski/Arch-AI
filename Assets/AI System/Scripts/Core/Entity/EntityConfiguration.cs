@@ -2,9 +2,9 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [CreateAssetMenu(fileName = "New Entity Configuration", menuName = "AI/Entity Configuration")]
     public class EntityConfiguration : ScriptableObject
     {
@@ -27,7 +27,7 @@ namespace Artifika.AI
         public bool isTameable;
 
         [BoxGroup("Attributes/Taming")]
-        [ShowIf("@this.isTameable && this.baseEntityType != Artifika.AI.EntityType.Boss")]
+        [ShowIf("@this.isTameable && this.baseEntityType != Archura.EntityType.Boss")]
         public GameObject tamedPrefab;
 
         [BoxGroup("Attributes/Combat Response")]

@@ -1,15 +1,15 @@
 using System;
-using Artifika.AI.Attack;
+using Archura.Attack;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "AttackToTarget", story: "[Blackboard] attacks to Target", category: "AI", id: "12f0e122f0a182b5eb420fad6d5802fe")]
     public partial class AttackToTargetAction : Action

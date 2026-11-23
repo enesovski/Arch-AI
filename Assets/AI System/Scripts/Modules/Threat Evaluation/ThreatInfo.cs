@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public class ThreatInfo
     {

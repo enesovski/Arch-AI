@@ -4,12 +4,12 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 using Random = UnityEngine.Random;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "StrafeTarget", story: "[Blackboard] strafes around [Target] at distance [StrafeDistance]", category: "Action", id: "s5d1c3c1a2bd18e861799e0cd868ae24")]
     public partial class StrafeTargetAction : Action

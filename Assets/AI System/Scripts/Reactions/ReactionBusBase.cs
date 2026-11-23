@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public abstract class ReactionBusBase : MonoBehaviour, IReactionBus
     {

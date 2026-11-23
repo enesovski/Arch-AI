@@ -2,7 +2,7 @@ using System;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-namespace Artifika.AI.Death.Reactions
+namespace Archura.Death.Reactions
 {
     [Serializable]
     public sealed class PlayFeedbackReaction : IDeathReaction

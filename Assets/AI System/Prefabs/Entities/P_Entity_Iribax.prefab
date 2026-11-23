@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7391cc9d7927fb41812bd1626390313, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Stun.Reactions.StunReactionsBus
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Stun.Reactions.StunReactionsBus
 --- !u!114 &4604533039979131331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffc4bedb782bd0d43aa903d9f5d7e12a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Stun.Reactions.StunComponentReaction
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Stun.Reactions.StunComponentReaction
   stunAnimParam: IsStunned
   waitForOutAnimationExit: 1
   maxOutAnimationWaitSeconds: 2
@@ -846,7 +846,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0b82dd094725c84b90406aa924670a4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.HandleRootMotionReaction
+  m_EditorClassIdentifier: Archura.Runtime::Archura.HandleRootMotionReaction
   groundFitter: {fileID: 3004011051922097543}
   animator: {fileID: 5548589205216963301}
   movementModule: {fileID: 4183289319885948431}
@@ -965,7 +965,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 1220832116501119099
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1726,7 +1726,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 157bb9ef701c47afaf2182269e25aba8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.EntityStatsController
+  m_EditorClassIdentifier: Assembly-CSharp::Archura.EntityStatsController
   ShowTopMostFoldoutHeaderGroup: 1
   stunStatusEffectDefinition: {fileID: 11400000, guid: 4fd934763cead8c468708b365f430760,
     type: 2}
@@ -1744,7 +1744,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b04f3fc0e6827ae4898bd2f6905c6c13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Blackboard
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Blackboard
   attackModule: {fileID: 5840585021893281622}
   detectionModule: {fileID: 6912644094623657438}
   movementModule: {fileID: 4183289319885948431}
@@ -1979,7 +1979,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0956aa0bc00efa46873797bdb875a8d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.TameableEntityInteractable
+  m_EditorClassIdentifier: Assembly-CSharp::Archura.TameableEntityInteractable
   interactionText: Tame
   interactionLocKey: Interact_Tame
   target: {fileID: 929053412135983732}

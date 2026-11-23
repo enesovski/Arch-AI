@@ -60,7 +60,7 @@ MonoBehaviour:
         Name: Self
         m_Value: {fileID: 0}
     - rid: 3737962887140606891
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -78,7 +78,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 3737962887140606893
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -87,7 +87,7 @@ MonoBehaviour:
         Name: Aggro Status
         m_Value: 0
     - rid: 3737962887140606894
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -96,7 +96,7 @@ MonoBehaviour:
         Name: Target
         m_Value: {fileID: 0}
     - rid: 3737962887140606895
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -152,14 +152,14 @@ MonoBehaviour:
         m_RequiresAllConditions: 1
         m_ObserverType: 0
     - rid: 3737962888551203204
-      type: {class: IsDeadCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: IsDeadCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203205
-      type: {class: IsStunnedCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: IsStunnedCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
@@ -265,7 +265,7 @@ MonoBehaviour:
         - rid: 3737962888551203222
         m_RegisteredObservers: []
     - rid: 3737962888551203213
-      type: {class: ApproachSuspiciousSourceAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: ApproachSuspiciousSourceAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 17946398262464275347
@@ -277,7 +277,7 @@ MonoBehaviour:
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203214
-      type: {class: SearchForTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: SearchForTargetAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 14833358609511259032
@@ -337,7 +337,7 @@ MonoBehaviour:
         m_RequiresAllConditions: 1
         m_ObserverType: 0
     - rid: 3737962888551203218
-      type: {class: ChaseTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: ChaseTargetAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 12857874874496449204
@@ -364,7 +364,7 @@ MonoBehaviour:
         - rid: 3737962888551203228
         m_RequiresAllConditions: 0
     - rid: 3737962888551203220
-      type: {class: ReturnToNestAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: ReturnToNestAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 9178992133312183770
@@ -376,7 +376,7 @@ MonoBehaviour:
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203221
-      type: {class: WanderAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: WanderAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 4464098697083589283
@@ -400,14 +400,14 @@ MonoBehaviour:
         SecondsToWait:
           rid: 3737962887140606892
     - rid: 3737962888551203223
-      type: {class: IsAttackCommittedCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: IsAttackCommittedCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203224
-      type: {class: AttackToTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: AttackToTargetAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 2907706907679168716
@@ -419,14 +419,14 @@ MonoBehaviour:
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203225
-      type: {class: ShouldUseAttackBranchCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: ShouldUseAttackBranchCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203226
-      type: {class: FaceTargetAction, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: FaceTargetAction, ns: Archura, asm: Archura.Runtime}
       data:
         ID:
           m_Value0: 5338228295695107866
@@ -440,14 +440,14 @@ MonoBehaviour:
         Target:
           rid: 3737962887140606894
     - rid: 3737962888551203227
-      type: {class: IsWithinCombatRadiusCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: IsWithinCombatRadiusCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
         Blackboard:
           rid: 3737962887140606891
     - rid: 3737962888551203228
-      type: {class: IsOutOfNestCondition, ns: Artifika.AI, asm: Assembly-CSharp}
+      type: {class: IsOutOfNestCondition, ns: Archura, asm: Archura.Runtime}
       data:
         Graph:
           rid: 1220832118827123153
@@ -533,7 +533,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: ChaseTarget
     Story: '[Blackboard] chases [Target]'
-    RuntimeTypeString: Artifika.AI.ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.ChaseTargetAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 9695917030829202506
@@ -541,19 +541,19 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     - Name: Target
       Type:
-        m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        m_SerializableType: Archura.GameEntity, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Wander
     Story: '[Blackboard] wanders around'
-    RuntimeTypeString: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.WanderAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 16527211239432054260
@@ -561,7 +561,7 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
@@ -618,7 +618,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: SearchForTarget
     Story: '[Blackboard] searches area'
-    RuntimeTypeString: Artifika.AI.SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.SearchForTargetAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13090531310446099875
@@ -626,14 +626,14 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: ReturnToNest
     Story: '[Blackboard] returns to nest'
-    RuntimeTypeString: Artifika.AI.ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.ReturnToNestAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 6622046479453434197
@@ -641,7 +641,7 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
@@ -678,7 +678,7 @@ MonoBehaviour:
     IsPlaceholder: 0
   - Name: AttackToTarget
     Story: '[Blackboard] attacks to Target'
-    RuntimeTypeString: Artifika.AI.AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.AttackToTargetAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13079194320586797074
@@ -686,14 +686,14 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Approach Suspicious Source
     Story: '[Blackboard] approaches suspicious source'
-    RuntimeTypeString: Artifika.AI.ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
+    RuntimeTypeString: Archura.ApproachSuspiciousSourceAction, Archura.Runtime, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 1822923824073403591
@@ -701,14 +701,14 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
   - Name: Face Target
     Story: '[Blackboard] faces [Target]'
-    RuntimeTypeString: Artifika.AI.FaceTargetAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    RuntimeTypeString: Archura.FaceTargetAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     RuntimeTypeID:
       m_Value0: 13305875091066958497
@@ -716,12 +716,12 @@ MonoBehaviour:
     Variables:
     - Name: Blackboard
       Type:
-        m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+        m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       Tooltip: 
     - Name: Target
       Type:
-        m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        m_SerializableType: Archura.GameEntity, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
           PublicKeyToken=null
       Tooltip: 
     NamedChildren: []
@@ -791,7 +791,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 755774692322967959
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -947,7 +947,7 @@ MonoBehaviour:
         - rid: 755774693303124133
         - rid: 755774693303124134
         NodeType:
-          m_SerializableType: Artifika.AI.ApproachSuspiciousSourceAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.ApproachSuspiciousSourceAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 1822923824073403591
@@ -978,14 +978,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 755774693303124136
         LinkedVariable:
           rid: 755774693303124193
     - rid: 755774693303124136
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -994,7 +994,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 755774693303124193
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1156,7 +1156,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.IsOutOfNestCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.IsOutOfNestCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 10888007914771151430
@@ -1172,7 +1172,7 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832001267073331
@@ -1183,7 +1183,7 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832001267073332
@@ -1194,7 +1194,7 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832001267073333
@@ -1205,14 +1205,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832001267073334
         LinkedVariable:
           rid: 1220832001267073573
     - rid: 1220832001267073331
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1221,7 +1221,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 1220832001267073332
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1230,7 +1230,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 1220832001267073333
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1239,7 +1239,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 1220832001267073334
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1252,14 +1252,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832001267073336
         LinkedVariable:
           rid: 1220832001267073573
     - rid: 1220832001267073336
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1268,7 +1268,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 1220832001267073573
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1279,7 +1279,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 1220832001267073701
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1338,7 +1338,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.IsDeadCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.IsDeadCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 1695467670847834556
@@ -1354,14 +1354,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 1220832118827123117
         LinkedVariable:
           rid: 1220832118827123152
     - rid: 1220832118827123117
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1370,7 +1370,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 1220832118827123152
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1384,7 +1384,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.IsStunnedCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.IsStunnedCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 14781363890115984801
@@ -1400,14 +1400,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3036305948512616888
         LinkedVariable:
           rid: 3036305948512616914
     - rid: 3036305948512616888
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1416,7 +1416,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 3036305948512616914
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1473,7 +1473,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.IsAttackCommittedCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.IsAttackCommittedCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 378572368579608746
@@ -1489,14 +1489,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3036306313047179446
         LinkedVariable:
           rid: 3036306313047179471
     - rid: 3036306313047179446
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1505,7 +1505,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 3036306313047179471
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1563,7 +1563,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.ShouldUseAttackBranchCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.ShouldUseAttackBranchCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 4486767059619655151
@@ -1579,14 +1579,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3036306313047179584
         LinkedVariable:
           rid: 3036306313047179471
     - rid: 3036306313047179584
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1595,7 +1595,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 3036306316220695492
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1617,7 +1617,7 @@ MonoBehaviour:
         - rid: 3036306316220695523
         - rid: 3036306316220695524
         NodeType:
-          m_SerializableType: Artifika.AI.AttackToTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.AttackToTargetAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13079194320586797074
@@ -1648,14 +1648,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3036306316220695526
         LinkedVariable:
           rid: 3036306316220695492
     - rid: 3036306316220695526
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1711,7 +1711,7 @@ MonoBehaviour:
       type: {class: ConditionModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
         ConditionType:
-          m_SerializableType: Artifika.AI.IsWithinCombatRadiusCondition, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.IsWithinCombatRadiusCondition, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         ConditionTypeID:
           m_Value0: 9461766927184113064
@@ -1727,14 +1727,14 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3737962887140606139
         LinkedVariable:
           rid: 3737962887140606299
     - rid: 3737962887140606139
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1754,7 +1754,7 @@ MonoBehaviour:
         - rid: 3737962887140606230
         - rid: 3737962887140606231
         NodeType:
-          m_SerializableType: Artifika.AI.FaceTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.FaceTargetAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13305875091066958497
@@ -1786,7 +1786,7 @@ MonoBehaviour:
       data:
         FieldName: Blackboard
         Type:
-          m_SerializableType: Artifika.AI.Blackboard, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.Blackboard, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         LocalValue:
           rid: 3737962887140606234
@@ -1797,14 +1797,14 @@ MonoBehaviour:
       data:
         FieldName: Target
         Type:
-          m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Archura.GameEntity, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         LocalValue:
           rid: 3737962887140606235
         LinkedVariable:
           rid: 3737962887140606374
     - rid: 3737962887140606234
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -1813,7 +1813,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 3737962887140606235
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1822,7 +1822,7 @@ MonoBehaviour:
         Name: 
         m_Value: {fileID: 0}
     - rid: 3737962887140606299
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1833,7 +1833,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 3737962887140606374
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -1894,7 +1894,7 @@ MonoBehaviour:
         - rid: 5478665580825281350
         - rid: 5478665580825281351
         NodeType:
-          m_SerializableType: Artifika.AI.ChaseTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.ChaseTargetAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 9695917030829202506
@@ -1926,14 +1926,14 @@ MonoBehaviour:
       data:
         FieldName: Target
         Type:
-          m_SerializableType: Artifika.AI.GameEntity, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Archura.GameEntity, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         LocalValue:
           rid: 5478665580825281355
         LinkedVariable:
           rid: 1220832001267073701
     - rid: 5478665580825281355
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -1954,7 +1954,7 @@ MonoBehaviour:
         - rid: 5478665581963771910
         - rid: 5478665581963771911
         NodeType:
-          m_SerializableType: Artifika.AI.WanderAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          m_SerializableType: Archura.WanderAction, Archura.Runtime, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
         NodeTypeID:
           m_Value0: 16527211239432054260
@@ -2100,7 +2100,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665787085947262
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2365,7 +2365,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665855455986274
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2387,7 +2387,7 @@ MonoBehaviour:
         - rid: 7360397157645156512
         - rid: 7360397157645156513
         NodeType:
-          m_SerializableType: Artifika.AI.SearchForTargetAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.SearchForTargetAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 13090531310446099875
@@ -2426,7 +2426,7 @@ MonoBehaviour:
         - rid: 7360397471485264088
         - rid: 7360397471485264089
         NodeType:
-          m_SerializableType: Artifika.AI.ReturnToNestAction, Assembly-CSharp, Version=0.0.0.0,
+          m_SerializableType: Archura.ReturnToNestAction, Archura.Runtime, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         NodeTypeID:
           m_Value0: 6622046479453434197
@@ -2480,7 +2480,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 755774692322967835
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2489,7 +2489,7 @@ MonoBehaviour:
         Name: Suspicious State
         m_Value: 0
     - rid: 1220831909989056680
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -2498,7 +2498,7 @@ MonoBehaviour:
         Name: Blackboard
         m_Value: {fileID: 0}
     - rid: 1220832001267073674
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2525,7 +2525,7 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 5478665787085947106
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
@@ -2563,7 +2563,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 755774692322967833
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.SuspiciousStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2574,7 +2574,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 0
     - rid: 1220831909989056630
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.Blackboard, Assembly-CSharp]]',
+      type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2585,7 +2585,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: {fileID: 0}
     - rid: 1220832001267073667
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.GameEntity, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
@@ -2618,7 +2618,7 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 3
     - rid: 5478665787085947072
-      type: {class: 'TypedVariableModel`1[[Artifika.AI.AggroStatus, Assembly-CSharp]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:

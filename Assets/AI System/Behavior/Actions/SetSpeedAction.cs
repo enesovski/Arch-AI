@@ -4,11 +4,11 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "Set Speed", story: "Set [Blackboard] movement speed to [Float]", category: "Action", id: "5786eafe995b4451915d661f8b6bb9ef")]
     public partial class SetSpeedAction : Action

@@ -1,7 +1,7 @@
-using Artifika.AI.Attack;
+using Archura.Attack;
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public enum MeleeMovementPhase { Approach, Withdraw, Circle, Rush }
 
@@ -13,7 +13,7 @@ namespace Artifika.AI
         private Transform transform => movementModule.transform;
         private AttackModule attackModule => blackboard.attackModule;
         private RotationModule rotationModule => blackboard.rotationModule;
-        private HealthComponent healthComponent => blackboard.healthComponent;
+        private IEntityHealth healthComponent => blackboard.Health;
         private MeleeCombatProfile meleeCombatProfile => movementModule.MeleeCombatProfile;
         private MovementProfile navigation => movementModule.MovementProfile;
         private bool UsesMeleeCombatMovement => movementModule.UsesMeleeCombatMovement;
@@ -84,10 +84,11 @@ namespace Artifika.AI
             movementModule.SetAutoBraking(true);
             movementModule.SetStopped(false);
             if (rotationModule) savedMovementRotation = rotationModule.CurrentMode;
-            if (blackboard.fitter)
+            IGroundFitter fitter = blackboard.Fitter;
+            if (!UnityNull.IsNull(fitter))
             {
-                savedRootMotionSuppression = blackboard.fitter.SuppressRootMotionTranslation;
-                blackboard.fitter.SuppressRootMotionTranslation = true;
+                savedRootMotionSuppression = fitter.SuppressRootMotionTranslation;
+                fitter.SuppressRootMotionTranslation = true;
             }
             meleeMovementActive = true;
             hasMeleeDestination = false;
@@ -99,8 +100,9 @@ namespace Artifika.AI
             if (!meleeMovementActive) return;
             movementModule?.SetStoppingDistance(savedStoppingDistance);
             movementModule?.SetAutoBraking(savedAutoBraking);
-            if (blackboard && blackboard.fitter)
-                blackboard.fitter.SuppressRootMotionTranslation = savedRootMotionSuppression;
+            IGroundFitter fitter = blackboard ? blackboard.Fitter : null;
+            if (!UnityNull.IsNull(fitter))
+                fitter.SuppressRootMotionTranslation = savedRootMotionSuppression;
             if (rotationModule && !IsAttackCommitted)
             {
                 rotationModule.ClearLookTarget();
@@ -171,7 +173,7 @@ namespace Artifika.AI
         {
             if (!UsesMeleeCombatMovement) return false;
             if (!movementModule || !movementModule.IsServer || !chaseTarget || IsAttackCommitted ||
-                (healthComponent && !healthComponent.IsAlive)) return true;
+                (!UnityNull.IsNull(healthComponent) && !healthComponent.IsAlive)) return true;
 
             BeginMeleeMovement();
             if (movementTarget != chaseTarget) InitializeMeleeTarget(chaseTarget);

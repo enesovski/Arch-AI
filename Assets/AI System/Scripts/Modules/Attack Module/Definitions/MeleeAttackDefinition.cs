@@ -1,14 +1,15 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     [CreateAssetMenu(fileName = "MeleeAttackDefinition", menuName = "AI/Attacks/MeleeAttackDefinition")]
     public class MeleeAttackDefinition : BaseAttackDefinition
     {
         [Title("Damage")]
-        [Tooltip("Damage config for this attack. Contains physical, elysiorite, and stun damage values.")]
-        [SerializeField] private DamageConfig damageConfig;
+        [Tooltip("Host-defined damage data for this attack (damage types, stun, etc.). " +
+                 "The AI passes it through untouched in MeleeHit.Definition; the host's IAttackReceiver interprets it.")]
+        [SerializeField] private ScriptableObject damageConfig;
 
         [Title("Variance")]
         [SerializeField] private float damageVariancePercent = 0.2f;
@@ -32,7 +33,7 @@ namespace Artifika.AI.Attack
         [Tooltip("Yatay savrulma hızının saniyede ne kadar azalacağı (m/s²). Yüksek değer daha kısa savrulma üretir. Dikey hareketi yerçekimi yönetir.")]
         private float knockbackDeceleration = 14f;
 
-        public DamageConfig DamageConfig => damageConfig;
+        public ScriptableObject DamageConfig => damageConfig;
         public float DamageVariancePercent => damageVariancePercent;
         public LayerMask AttackableLayers => attackableLayers;
         public float AttackRadius => attackRadius;
@@ -41,9 +42,5 @@ namespace Artifika.AI.Attack
         public float KnockbackHorizontalSpeed => Mathf.Clamp(knockbackHorizontalSpeed, 0f, 20f);
         public float KnockbackUpwardSpeed => Mathf.Clamp(knockbackUpwardSpeed, 0f, 12f);
         public float KnockbackDeceleration => Mathf.Clamp(knockbackDeceleration, 1f, 80f);
-
-        public float PhysicalDamage => damageConfig != null ? damageConfig.physicalDamage : 0f;
-        public float ElysioriteDamage => damageConfig != null ? damageConfig.elysioriteDamage : 0f;
-        public float StunDamage => damageConfig != null ? damageConfig.stunDamage : 0f;
     }
 }

@@ -1,19 +1,19 @@
 using System;
 using UnityEngine;
 
-namespace Artifika.AI.Stun.Reactions
+namespace Archura.Stun.Reactions
 {
     [DisallowMultipleComponent]
     public class StunReactionsBus : ReactionBusBase
     {
-        private EntityStatsController entityStatsController;
+        private IStunState entityStatsController;
         private Blackboard blackboard;
         private IStunReaction[] reactions;
 
         public override void Initialize(Blackboard blackboard)
         {
             this.blackboard = blackboard;
-            entityStatsController = this.blackboard.entityStatsController;
+            entityStatsController = this.blackboard.Stun;
 
             reactions = this.blackboard.GetComponentsInChildren<IStunReaction>(true);
             foreach (var reaction in reactions)

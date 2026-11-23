@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     public enum AttackType { Melee, Ranged, Dash }
 

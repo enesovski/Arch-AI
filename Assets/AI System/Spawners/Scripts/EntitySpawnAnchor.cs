@@ -5,9 +5,9 @@ using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class EntitySpawnAnchor : NetworkBehaviour
     {
         [FormerlySerializedAs("bossPrefab")]
@@ -58,7 +58,7 @@ namespace Artifika.AI
         {
             if (entityPrefab == null)
             {
-                GameLog.Error($"[{GetType().Name}] No entity prefab assigned on {name}.", this);
+                ArchuraLog.Error($"[{GetType().Name}] No entity prefab assigned on {name}.", this);
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace Artifika.AI
 
             if (!entity.TryGetComponent(out NetworkObject netObj))
             {
-                GameLog.Error($"[{GetType().Name}] Spawned prefab '{entityPrefab.name}' has no NetworkObject.", entity);
+                ArchuraLog.Error($"[{GetType().Name}] Spawned prefab '{entityPrefab.name}' has no NetworkObject.", entity);
                 Destroy(entity);
                 return;
             }

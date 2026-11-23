@@ -2,11 +2,11 @@ using System;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, Unity.Properties.GeneratePropertyBag]
     [Condition(name: "Should Use Attack Branch", story: "[Blackboard] should use attack branch", category: "Conditions", id: "efad8d6ade32443ea10282fdf687d580")]
     public partial class ShouldUseAttackBranchCondition : Condition

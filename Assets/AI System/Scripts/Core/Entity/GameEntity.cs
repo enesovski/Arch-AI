@@ -3,9 +3,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [DisallowMultipleComponent]
     public class GameEntity : MonoBehaviour
     {
@@ -37,13 +37,13 @@ namespace Artifika.AI
 
         public Vector3 CombatForward => (combatFacing ? combatFacing : transform).forward;
 
-        public HealthComponent HealthComponent { get; private set; }
+        public IEntityHealth Health { get; private set; }
         public NetworkObject NetworkObject { get; private set; }
         public AggroTracker AggroTracker { get; private set; }
 
         protected virtual void Awake()
         {
-            HealthComponent = GetComponent<HealthComponent>();
+            Health = GetComponent<IEntityHealth>();
             NetworkObject = GetComponent<NetworkObject>();
             AggroTracker = GetComponent<AggroTracker>() ?? GetComponentInChildren<AggroTracker>(true);
 

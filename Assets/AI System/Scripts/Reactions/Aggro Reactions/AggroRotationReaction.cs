@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Aggro.Reactions
+namespace Archura.Aggro.Reactions
 {
     [DisallowMultipleComponent]
     [Title("Aggro Rotation Reaction")]

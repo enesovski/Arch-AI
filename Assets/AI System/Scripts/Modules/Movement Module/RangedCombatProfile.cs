@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     [CreateAssetMenu(fileName = "Ranged Combat Profile", menuName = "AI/Combat/Ranged Combat Profile")]
     public sealed class RangedCombatProfile : ScriptableObject

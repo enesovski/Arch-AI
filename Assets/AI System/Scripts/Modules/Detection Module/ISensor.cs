@@ -1,6 +1,6 @@
 using System;
 
-namespace Artifika.AI.Sensors
+namespace Archura.Sensors
 {
     public interface ISensor
     {

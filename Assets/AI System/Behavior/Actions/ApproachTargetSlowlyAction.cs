@@ -4,11 +4,11 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(
         name: "Approach Target Slowly",

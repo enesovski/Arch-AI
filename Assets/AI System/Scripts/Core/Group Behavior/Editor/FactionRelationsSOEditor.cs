@@ -3,9 +3,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI.Editor
+namespace Archura.Editor
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp-Editor")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Editor", sourceAssembly: "Assembly-CSharp-Editor")]
     [CustomEditor(typeof(FactionRelationsSO))]
     public sealed class FactionRelationsSOEditor : UnityEditor.Editor
     {

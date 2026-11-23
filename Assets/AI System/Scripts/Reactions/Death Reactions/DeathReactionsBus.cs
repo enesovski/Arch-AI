@@ -2,12 +2,12 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Death.Reactions
+namespace Archura.Death.Reactions
 {
     [DisallowMultipleComponent]
     public class DeathReactionsBus : ReactionBusBase
     {
-        private HealthComponent healthComponent;
+        private IEntityHealth healthComponent;
 
         [Title("Reactions")]
         [SerializeField] private Transform onDeathReactionsParent;
@@ -18,7 +18,7 @@ namespace Artifika.AI.Death.Reactions
 
         public override void Initialize(Blackboard blackboard)
         {
-            healthComponent = blackboard != null ? blackboard.healthComponent : null;
+            healthComponent = blackboard != null ? blackboard.Health : null;
 
             onDeathReactions = onDeathReactionsParent != null
                 ? onDeathReactionsParent.GetComponents<IDeathReaction>()

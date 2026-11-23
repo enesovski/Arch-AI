@@ -2573,7 +2573,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 1220832116501119102
-      type: {class: 'BlackboardVariable`1[[Artifika.AI.Blackboard, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
           m_Value0: 17808092169695396951
@@ -3109,7 +3109,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b04f3fc0e6827ae4898bd2f6905c6c13, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Artifika.AI.Blackboard
+  m_EditorClassIdentifier: Archura.Runtime::Archura.Blackboard
   attackModule: {fileID: 0}
   detectionModule: {fileID: 1143679155544200516}
   movementModule: {fileID: 7434102923851626105}

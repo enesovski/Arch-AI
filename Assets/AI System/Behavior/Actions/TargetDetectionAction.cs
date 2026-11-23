@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "TargetDetection", story: "[AggroModule] sets [AggroStatus] and [Target]", category: "Action", id: "65e8b136de28e7593d55e7e0e788791f")]
     public partial class TargetDetectionAction : Action
@@ -32,17 +32,17 @@ namespace Artifika.AI
             {
                 case AggroState.Passive:
                     Target.Value = null;
-                    AggroStatus.Value = global::Artifika.AI.AggroStatus.Passive;
+                    AggroStatus.Value = global::Archura.AggroStatus.Passive;
                     break;
 
                 case AggroState.Suspicious:
                     Target.Value = null;
-                    AggroStatus.Value = global::Artifika.AI.AggroStatus.Suspicious;
+                    AggroStatus.Value = global::Archura.AggroStatus.Suspicious;
                     break;
 
                 case AggroState.Alerted:
                     Target.Value = aggroModule.CurrentTarget;
-                    AggroStatus.Value = global::Artifika.AI.AggroStatus.Aggressive;
+                    AggroStatus.Value = global::Archura.AggroStatus.Aggressive;
                     break;
             }
 

@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using Artifika.AI.Attack;
+using Archura.Attack;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class MeleeAttackModule : AttackSubModule
     {
         [Title("Attack Detection")]
         [SerializeField] private LayerMask attackableLayers;
 
-        private readonly HashSet<HealthComponent> hitList = new HashSet<HealthComponent>();
+        private readonly HashSet<IEntityHealth> hitList = new HashSet<IEntityHealth>();
         public int AttackableLayerMask => attackableLayers.value;
 
         public override void Attack(BaseAttackDefinition def)
@@ -41,63 +41,49 @@ namespace Artifika.AI
 
             foreach (Collider col in hits)
             {
-                HealthComponent coreHealth = col.GetComponentInParent<HealthComponent>() ?? col.GetComponentInChildren<HealthComponent>();
+                IEntityHealth coreHealth = col.GetComponentInParent<IEntityHealth>() ?? col.GetComponentInChildren<IEntityHealth>();
+                Component healthOwner = coreHealth as Component;
 
-                if (coreHealth == null ||
-                    coreHealth.NetworkObject == selfNetworkObject ||
+                if (healthOwner == null ||
+                    healthOwner.GetComponentInParent<Unity.Netcode.NetworkObject>() == selfNetworkObject ||
                     !hitList.Add(coreHealth))
                     continue;
 
-                GameEntity targetEntity = coreHealth.GetComponent<GameEntity>();
+                GameEntity targetEntity = healthOwner.GetComponent<GameEntity>();
                 if (targetEntity != null &&
                     !FactionRelationsSO.AllowsDamage(gameEntity, targetEntity))
                     continue;
 
-                IDamageable damageable = col.GetComponent<IDamageable>() ?? (IDamageable)coreHealth;
+                // A hitbox may handle its own hits (weak points); otherwise the health owner does.
+                IAttackReceiver receiver = col.GetComponent<IAttackReceiver>() ?? coreHealth as IAttackReceiver;
 
                 Vector3 impactPoint = col.ClosestPoint(transform.position);
                 Vector3 dir = (col.transform.position - transform.position).normalized;
 
-                DamagePayload payload = DamagePayload.Builder()
-                    .Add(DamageType.Physical, meleeDef.PhysicalDamage)
-                    .Add(DamageType.Elysiorite, meleeDef.ElysioriteDamage)
-                    .Build();
-
-                DamageContext context = new DamageContext(
-                    impactPoint: impactPoint,
-                    direction: dir,
-                    deliveryType: DamageDeliveryType.Melee
-                );
-
-                DamageSource source = DamageSourceFactory.FromEnemy(gameEntity, selfNetworkObject);
-
-                DamageModifiers modifiers = DamageModifiers.Builder().Build();
-
-                DamageInstance instance = new DamageInstance(
-                    source: source,
-                    payload: payload,
-                    context: context,
-                    modifiers: modifiers,
-                    stanceDamage: meleeDef.StunDamage
-                );
-
-                float healthBeforeHit = coreHealth.Health;
-                damageable.TakeDamage(instance);
-                if (meleeDef.KnockbackEnabled && coreHealth.Health < healthBeforeHit &&
-                    coreHealth is Artifika.Player.PlayerHealthComponent playerHealth)
+                Vector3 impulse = Vector3.zero;
+                if (meleeDef.KnockbackEnabled)
                 {
-                    Vector3 away = playerHealth.transform.position - transform.position;
+                    Vector3 away = healthOwner.transform.position - transform.position;
                     away.y = 0f;
                     if (away.sqrMagnitude < 0.0001f)
                         away = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
-                    Vector3 impulse = away.normalized * meleeDef.KnockbackHorizontalSpeed +
-                                      Vector3.up * meleeDef.KnockbackUpwardSpeed;
-                    playerHealth.ApplyKnockbackServer(impulse, meleeDef.KnockbackDeceleration);
+                    impulse = away.normalized * meleeDef.KnockbackHorizontalSpeed +
+                              Vector3.up * meleeDef.KnockbackUpwardSpeed;
                 }
+
+                receiver?.ReceiveMeleeHit(new MeleeHit(
+                    attacker: gameEntity,
+                    attackerNetworkObject: selfNetworkObject,
+                    definition: meleeDef,
+                    hitCollider: col,
+                    impactPoint: impactPoint,
+                    direction: dir,
+                    knockbackImpulse: impulse,
+                    knockbackDeceleration: meleeDef.KnockbackDeceleration));
                 InvokeOnAttack();
 
-                IHittableSurface hittableSurface = col.GetComponent<IHittableSurface>();
-                hittableSurface?.PlayHitEffect(impactPoint, dir);
+                IHitSurface hitSurface = col.GetComponent<IHitSurface>();
+                hitSurface?.PlayHitEffect(impactPoint, dir);
             }
 
             feedbackPlayer?.PlayFeedbacks();

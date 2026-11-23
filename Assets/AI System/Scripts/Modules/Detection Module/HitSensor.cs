@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Artifika.AI.Sensors
+namespace Archura.Sensors
 {
     [Title("Hit Sensor")]
     public class HitSensor : BaseSensor
@@ -12,14 +12,14 @@ namespace Artifika.AI.Sensors
         [SerializeField, Min(0f)]
         private float referenceDamageValue = 10f;
 
-        private HealthComponent healthComponent;
+        private IEntityHealth healthComponent;
         private bool healthSubscribed;
 
         public override void Initialize(GameEntity owner)
         {
             base.Initialize(owner);
             UnsubscribeFromHealth();
-            healthComponent = owner.GetComponent<HealthComponent>();
+            healthComponent = owner.GetComponent<IEntityHealth>();
             SubscribeToHealth();
         }
 
@@ -27,10 +27,10 @@ namespace Artifika.AI.Sensors
 
         private void SubscribeToHealth()
         {
-            if (!isActiveAndEnabled || !healthComponent || healthSubscribed)
+            if (!isActiveAndEnabled || UnityNull.IsNull(healthComponent) || healthSubscribed)
                 return;
 
-            healthComponent.OnDamageTakenArgs += OnHitTaken;
+            healthComponent.OnDamageReceived += OnHitTaken;
             healthSubscribed = true;
         }
 
@@ -39,24 +39,24 @@ namespace Artifika.AI.Sensors
             if (!healthSubscribed)
                 return;
 
-            if (healthComponent)
-                healthComponent.OnDamageTakenArgs -= OnHitTaken;
+            if (!UnityNull.IsNull(healthComponent))
+                healthComponent.OnDamageReceived -= OnHitTaken;
             healthSubscribed = false;
         }
 
         public override void Detect() { }
 
-        private void OnHitTaken(DamageInstance data, float damageAmount)
+        private void OnHitTaken(DamageReport report)
         {
-            GameEntity attacker = ResolveAttackerEntity(data.Source);
+            GameEntity attacker = ResolveAttackerEntity(report);
             if (!attacker)
                 return;
 
-            float rawStrength = Mathf.Clamp01(damageAmount / referenceDamageValue);
-            OnHitDetected?.Invoke(attacker, rawStrength * strengthMultiplier, data.Context.DeliveryType);
+            float rawStrength = Mathf.Clamp01(report.Amount / referenceDamageValue);
+            OnHitDetected?.Invoke(attacker, rawStrength * strengthMultiplier, report.DeliveryType);
         }
 
-        private GameEntity ResolveAttackerEntity(DamageSource source)
+        private GameEntity ResolveAttackerEntity(DamageReport source)
         {
             if (source.SourceObject != null)
             {

@@ -1,14 +1,14 @@
 using System;
-using Artifika.AI.Utility;
+using Archura.Utility;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Modifier = Unity.Behavior.Modifier;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "Utility Action", story: "Scores [Action]", category: "Flow", id: "a6819e0bcb65dd0dd212b9e26150060a")]
     public partial class UtilityActionModifier : Modifier, IUtilityActionNode

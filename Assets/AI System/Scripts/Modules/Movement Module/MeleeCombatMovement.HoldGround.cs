@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     internal sealed partial class MeleeCombatMovement
     {

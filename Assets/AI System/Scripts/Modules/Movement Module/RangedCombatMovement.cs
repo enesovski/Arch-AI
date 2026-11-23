@@ -1,7 +1,7 @@
-using Artifika.AI.Attack;
+using Archura.Attack;
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public enum RangedMovementPhase { Approach, Retreat, Reposition, Aim, Attack }
 
@@ -121,7 +121,8 @@ namespace Artifika.AI
         public bool Update(GameEntity newTarget)
         {
             if (!movement.IsServer || !SetTarget(newTarget)) return false;
-            if (blackboard.healthComponent && !blackboard.healthComponent.IsAlive)
+            IEntityHealth health = blackboard.Health;
+            if (!UnityNull.IsNull(health) && !health.IsAlive)
             {
                 Reset();
                 return true;

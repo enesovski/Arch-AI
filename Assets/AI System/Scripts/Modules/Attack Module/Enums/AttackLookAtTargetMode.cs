@@ -1,4 +1,4 @@
-﻿namespace Artifika.AI.Attack
+﻿namespace Archura.Attack
 {
     public enum AttackLookAtTargetMode
     {

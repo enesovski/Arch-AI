@@ -2,11 +2,11 @@ using System;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, Unity.Properties.GeneratePropertyBag]
     [Condition(name: "Is Within Combat Radius", story: "[Blackboard] is within combat radius", category: "Conditions", id: "a82d59c2e3f24e839ca3e2f2168d6a42")]
     public partial class IsWithinCombatRadiusCondition : Condition

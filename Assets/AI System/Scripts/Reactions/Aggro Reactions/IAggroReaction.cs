@@ -1,4 +1,4 @@
-namespace Artifika.AI.Aggro.Reactions
+namespace Archura.Aggro.Reactions
 {
     public interface IAggroReaction : IReaction
     {

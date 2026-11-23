@@ -1,7 +1,7 @@
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-namespace Artifika.AI.Stun.Reactions
+namespace Archura.Stun.Reactions
 {
     [DisallowMultipleComponent]
     public sealed class StunFeedbackReaction : MonoBehaviour, IStunReaction

@@ -1,17 +1,21 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [DisallowMultipleComponent]
     public sealed class DeathAnimatorTrigger : MonoBehaviour
     {
-        [SerializeField] private HealthComponent healthComponent;
+        [Tooltip("Component implementing " + nameof(IEntityHealth) + ". Resolved from the hierarchy when empty.")]
+        [FormerlySerializedAs("healthComponent")]
+        [SerializeField] private MonoBehaviour healthSource;
         [SerializeField] private Animator animator;
         [SerializeField] private string deathTrigger = "Death";
 
+        private IEntityHealth healthComponent;
         private int deathTriggerHash;
         private bool subscribed;
 
@@ -35,7 +39,8 @@ namespace Artifika.AI
         private void ResolveTargets()
         {
             if (healthComponent == null)
-                healthComponent = GetComponent<HealthComponent>() ?? GetComponentInChildren<HealthComponent>(true);
+                healthComponent = healthSource as IEntityHealth
+                                  ?? GetComponent<IEntityHealth>() ?? GetComponentInChildren<IEntityHealth>(true);
 
             if (animator == null)
                 animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>(true);

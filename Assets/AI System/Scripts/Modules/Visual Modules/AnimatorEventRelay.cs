@@ -1,19 +1,32 @@
-using Artifika.AI.Attack;
-using Artifika.AI.Death.Reactions;
+using Archura.Attack;
+using Archura.Death.Reactions;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [DisallowMultipleComponent]
     public sealed class AnimatorEventRelay : MonoBehaviour
     {
-        [SerializeField] private AnimatorEventHandler animatorEventHandler;
+        private const string HarvestInstantEvent = "AE_HarvestInstant";
+
+        [Tooltip("Component implementing " + nameof(IAttackAnimationEventSource) + ". Resolved from parents when empty.")]
+        [FormerlySerializedAs("animatorEventHandler")]
+        [SerializeField] private MonoBehaviour attackEventSource;
         [SerializeField] private VisualEffectsModule visualEffectsModule;
-        [SerializeField] private AnimatorEffectPlayer animatorEffectPlayer;
+        [Tooltip("Optional extra component implementing " + nameof(IAnimationEffectPlayer) + ".")]
+        [FormerlySerializedAs("animatorEffectPlayer")]
+        [SerializeField] private MonoBehaviour effectPlayer;
         [SerializeField] private DeathReactionsBus deathReactionsBus;
-        [SerializeField] private HarvestAnimRelay harvestAnimRelay;
+        [Tooltip("Optional component implementing " + nameof(IAnimationEventReceiver) + " for host-specific events.")]
+        [FormerlySerializedAs("harvestAnimRelay")]
+        [SerializeField] private MonoBehaviour eventReceiver;
+
+        private IAttackAnimationEventSource AttackEvents => attackEventSource as IAttackAnimationEventSource;
+        private IAnimationEffectPlayer EffectPlayer => effectPlayer as IAnimationEffectPlayer;
+        private IAnimationEventReceiver EventReceiver => eventReceiver as IAnimationEventReceiver;
 
         private void Awake()
         {
@@ -28,20 +41,20 @@ namespace Artifika.AI
         public void onAttackAnimationInvoke(BaseAttackDefinition attackDefinition)
         {
             ResolveTargets();
-            animatorEventHandler?.onAttackAnimationInvoke(attackDefinition);
+            AttackEvents?.TriggerAttackAnimation(attackDefinition);
         }
 
         public void PlayEffect(string key)
         {
             ResolveTargets();
             visualEffectsModule?.PlayEffect(key);
-            animatorEffectPlayer?.PlayEffect(key);
+            EffectPlayer?.PlayEffect(key);
         }
 
         public void AE_HarvestInstant()
         {
             ResolveTargets();
-            harvestAnimRelay?.AE_HarvestInstant();
+            EventReceiver?.OnAnimationEvent(HarvestInstantEvent);
         }
 
         public void AE_ExecuteOnDespawnReactions()
@@ -55,19 +68,30 @@ namespace Artifika.AI
 
         private void ResolveTargets()
         {
-            if (animatorEventHandler == null)
-                animatorEventHandler = GetComponentInParent<AnimatorEventHandler>(true);
+            if (AttackEvents == null)
+                attackEventSource = GetComponentInParent<IAttackAnimationEventSource>(true) as MonoBehaviour;
 
             if (visualEffectsModule == null)
                 visualEffectsModule = GetComponentInParent<VisualEffectsModule>(true);
 
-            if (animatorEffectPlayer == null)
-                animatorEffectPlayer = GetComponentInParent<AnimatorEffectPlayer>(true);
+            if (EffectPlayer == null)
+                effectPlayer = FindInParents<IAnimationEffectPlayer>(visualEffectsModule);
 
             if (deathReactionsBus == null)
                 deathReactionsBus = GetComponentInParent<DeathReactionsBus>(true);
-            if (harvestAnimRelay == null)
-                harvestAnimRelay = GetComponentInParent<HarvestAnimRelay>(true);
+            if (EventReceiver == null)
+                eventReceiver = GetComponentInParent<IAnimationEventReceiver>(true) as MonoBehaviour;
+        }
+
+        // First parent component of type T other than the one already handled explicitly.
+        private MonoBehaviour FindInParents<T>(Object exclude) where T : class
+        {
+            foreach (T candidate in GetComponentsInParent<T>(true))
+            {
+                if (candidate is MonoBehaviour behaviour && behaviour != exclude)
+                    return behaviour;
+            }
+            return null;
         }
     }
 }

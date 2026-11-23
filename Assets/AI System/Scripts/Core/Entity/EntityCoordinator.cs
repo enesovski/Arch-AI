@@ -5,9 +5,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [DisallowMultipleComponent]
     public class EntityCoordinator : NetworkBehaviour
     {
@@ -16,7 +16,7 @@ namespace Artifika.AI
         [SerializeField] protected Blackboard blackboard;
         public float GetUpdateInterval() => updateInterval;
 
-        private HealthComponent healthComponent;
+        private IEntityHealth healthComponent;
         private readonly List<IUpdatableEntityModule> registeredModules = new();
         private Coroutine updateCoroutine;
 
@@ -51,7 +51,7 @@ namespace Artifika.AI
             foreach (var module in GetComponents<IEntityModule>())
                 module?.Initialize();
 
-            healthComponent = blackboard?.healthComponent;
+            healthComponent = blackboard?.Health;
 
             waitForSeconds = new WaitForSeconds(ScaledInterval);
             updateCoroutine = StartCoroutine(UpdateCycle());
@@ -87,7 +87,7 @@ namespace Artifika.AI
                 return;
 
             SetBehaviourEnabled(blackboard.behaviorGraphAgent, false);
-            SetBehaviourEnabled(blackboard.fitter, false);
+            SetBehaviourEnabled(blackboard.FitterBehaviour, false);
             SetBehaviourEnabled(blackboard.agent, false);
             SetBehaviourEnabled(blackboard.movementModule, false);
             SetBehaviourEnabled(blackboard.rotationModule, false);
@@ -110,7 +110,7 @@ namespace Artifika.AI
             if (updateLocks.Count > 0)
                 return;
 
-            if (healthComponent && !healthComponent.IsAlive)
+            if (!UnityNull.IsNull(healthComponent) && !healthComponent.IsAlive)
                 return;
 
             if (waitForSeconds == null)

@@ -4,9 +4,9 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI.Utility
+namespace Archura.Utility
 {
-    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Artifika.AI.Utility")]
     [Serializable]
     public class MandatoryCondition
     {
@@ -23,7 +23,7 @@ namespace Artifika.AI.Utility
             => input != null && input.GetNormalizedValue(ctx) >= threshold;
     }
 
-    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Artifika.AI.Utility")]
     [CreateAssetMenu(fileName = "UtilityActionDefinition", menuName = "AI/Utility Action Definition")]
     public class UtilityActionDefinition : ScriptableObject
     {

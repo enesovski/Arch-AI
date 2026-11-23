@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class AnimatorModule : MonoBehaviour
     {
         public const string ATTACKING_PARAMETER = "IsAttacking";

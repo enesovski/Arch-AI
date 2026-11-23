@@ -1,0 +1,18 @@
+{
+    "name": "Archura.Editor",
+    "rootNamespace": "Archura.Editor",
+    "references": [
+        "Archura.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Artifika.AI.Aggro;
+using Archura.Aggro;
 using UnityEngine;
 
-namespace Artifika.AI
+namespace Archura
 {
     public class ThreatEvaluator
     {
@@ -120,8 +120,8 @@ namespace Artifika.AI
             if (!entity)
                 return false;
 
-            HealthComponent health = entity.HealthComponent;
-            return !health || health.IsAlive;
+            IEntityHealth health = entity.Health;
+            return UnityNull.IsNull(health) || health.IsAlive;
         }
 
         public void Clear()

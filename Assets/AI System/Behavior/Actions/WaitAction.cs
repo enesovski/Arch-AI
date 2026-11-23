@@ -4,11 +4,11 @@ using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Action = Unity.Behavior.Action;
-using Blackboard  = Artifika.AI.Blackboard;
+using Blackboard  = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(name: "WaitAction", story: "[Blackboard] waits in place", category: "Action", id: "69ea848b87ba4b0fe2ef52b2ac48e43e")]
     public partial class WaitAction : Action

@@ -1,4 +1,4 @@
-using Artifika.AI.Attack;
+using Archura.Attack;
 using Sirenix.OdinInspector;
 using Unity.Behavior;
 
@@ -8,10 +8,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
     [DisallowMultipleComponent]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class Blackboard : MonoBehaviour
     {
         #region Inspector Properties
@@ -29,11 +31,21 @@ namespace Artifika.AI
 
         [TitleGroup("Components")] public GameEntity gameEntity;
         public BehaviorGraphAgent behaviorGraphAgent;
-        public HealthComponent healthComponent;
-        public AIGroundFitter fitter;
+
+        [Tooltip("Component implementing " + nameof(IEntityHealth) + ". Resolved from the hierarchy when empty.")]
+        [FormerlySerializedAs("healthComponent")]
+        [SerializeField] private MonoBehaviour healthSource;
+
+        [Tooltip("Optional component implementing " + nameof(IGroundFitter) + ".")]
+        [FormerlySerializedAs("fitter")]
+        [SerializeField] private MonoBehaviour groundFitterSource;
+
         public NavMeshAgent agent;
         public Animator animator;
-        public EntityStatsController entityStatsController;
+
+        [Tooltip("Optional component implementing " + nameof(IStunState) + ". Resolved from the hierarchy when empty.")]
+        [FormerlySerializedAs("entityStatsController")]
+        [SerializeField] private MonoBehaviour stunSource;
 
         [Title("Busses")] public ReactionBusBase[] reactions;
 
@@ -61,14 +73,41 @@ namespace Artifika.AI
 
         #endregion
 
+        #region Host Integration
+
+        public IEntityHealth Health
+        {
+            get
+            {
+                if (UnityNull.IsNull(healthSource as IEntityHealth))
+                    healthSource = GetReferenceInParentOrChildren<IEntityHealth>() as MonoBehaviour;
+                return healthSource as IEntityHealth;
+            }
+        }
+
+        public IStunState Stun
+        {
+            get
+            {
+                if (UnityNull.IsNull(stunSource as IStunState))
+                    stunSource = GetReferenceInParentOrChildren<IStunState>() as MonoBehaviour;
+                return stunSource as IStunState;
+            }
+        }
+
+        public IGroundFitter Fitter => groundFitterSource as IGroundFitter;
+        public Behaviour FitterBehaviour => groundFitterSource;
+
+        #endregion
+
         public void Initialize()
         {
             attackModule?.SetBlackboard(this);
             detectionModule?.SetBlackboard(this);
             movementModule?.SetBlackboard(this);
             aggroModule?.SetBlackboard(this);
-            rotationModule?.Initialize(agent, fitter);
-            fitter?.Initialize(this);
+            rotationModule?.Initialize(agent, Fitter);
+            Fitter?.Initialize(this);
 
             foreach (var reactionBus in reactions)
                 reactionBus.Initialize(this);
@@ -83,19 +122,15 @@ namespace Artifika.AI
 
         public bool IsAlive()
         {
-            if (healthComponent == null)
-                healthComponent = GetReferenceInParentOrChildren<HealthComponent>();
-
-            if (!healthComponent) return true;
-            return healthComponent.IsAlive;
+            IEntityHealth health = Health;
+            if (UnityNull.IsNull(health)) return true;
+            return health.IsAlive;
         }
 
         public bool IsStunned()
         {
-            if (entityStatsController == null)
-                entityStatsController = GetReferenceInParentOrChildren<EntityStatsController>();
-
-            return entityStatsController != null && entityStatsController.IsStunned;
+            IStunState stun = Stun;
+            return !UnityNull.IsNull(stun) && stun.IsStunned;
         }
 
         public bool CanBeTamed()
@@ -131,11 +166,12 @@ namespace Artifika.AI
             Vector3 targetPos = hasTarget ? target.transform.position : selfPos;
             float distance = hasTarget ? Vector3.Distance(selfPos, targetPos) : 0f;
 
-            float ownHealth = healthComponent != null
-                ? Mathf.Clamp01(healthComponent.Health / healthComponent.MaxHealth)
+            IEntityHealth ownHp = Health;
+            float ownHealth = !UnityNull.IsNull(ownHp)
+                ? Mathf.Clamp01(ownHp.Health / ownHp.MaxHealth)
                 : 1f;
 
-            float targetHealth = hasTarget && target.TryGetComponent<HealthComponent>(out var targetHp)
+            float targetHealth = hasTarget && target.TryGetComponent<IEntityHealth>(out var targetHp)
                 ? Mathf.Clamp01(targetHp.Health / targetHp.MaxHealth)
                 : 1f;
 
@@ -172,7 +208,7 @@ namespace Artifika.AI
 
         #endregion
 
-        private T GetReferenceInParentOrChildren<T>() where T : Component
+        private T GetReferenceInParentOrChildren<T>() where T : class
         {
             T component = GetComponent<T>();
 
@@ -204,11 +240,11 @@ namespace Artifika.AI
 
             gameEntity = GetReferenceInParentOrChildren<GameEntity>();
             behaviorGraphAgent = GetReferenceInChildren<BehaviorGraphAgent>();
-            healthComponent = GetReferenceInParentOrChildren<HealthComponent>();
-            fitter = GetReferenceInChildren<AIGroundFitter>();
+            healthSource = GetReferenceInParentOrChildren<IEntityHealth>() as MonoBehaviour;
+            groundFitterSource = GetReferenceInChildren<IGroundFitter>() as MonoBehaviour;
             agent = GetReferenceInChildren<NavMeshAgent>();
             animator = GetReferenceInChildren<Animator>();
-            entityStatsController = GetReferenceInParentOrChildren<EntityStatsController>();
+            stunSource = GetReferenceInParentOrChildren<IStunState>() as MonoBehaviour;
 
             companionStateModule = GetReferenceInChildren<CompanionStateModule>();
             commandModule = GetReferenceInChildren<CommandModule>();
@@ -218,9 +254,23 @@ namespace Artifika.AI
             EditorUtility.SetDirty(this);
         }
 
-        private T GetReferenceInChildren<T>() where T : Component
+        private T GetReferenceInChildren<T>() where T : class
         {
             return GetComponentInChildren<T>(true);
+        }
+
+        private void OnValidate()
+        {
+            WarnIfMissingContract<IEntityHealth>(healthSource, nameof(healthSource));
+            WarnIfMissingContract<IGroundFitter>(groundFitterSource, nameof(groundFitterSource));
+            WarnIfMissingContract<IStunState>(stunSource, nameof(stunSource));
+        }
+
+        private void WarnIfMissingContract<T>(MonoBehaviour source, string field) where T : class
+        {
+            if (source != null && source is not T)
+                Debug.LogWarning($"[{nameof(Blackboard)}] '{field}' on {name} must implement {typeof(T).Name}; " +
+                                 $"{source.GetType().Name} does not.", this);
         }
 
 #endif

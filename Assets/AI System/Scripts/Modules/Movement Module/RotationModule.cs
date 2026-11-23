@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Artifika.AI
+namespace Archura
 {
     public enum RotationMode
     {
@@ -23,7 +23,7 @@ namespace Artifika.AI
         [SerializeField, ReadOnly] private float targetYaw;
 
         private NavMeshAgent agent;
-        private AIGroundFitter fitter;
+        private IGroundFitter fitter;
 
         private float activeRotationSpeed;
         private Transform lookTarget;
@@ -32,7 +32,7 @@ namespace Artifika.AI
         public RotationMode CurrentMode => currentMode;
         public float CurrentYaw => currentYaw;
 
-        public void Initialize(NavMeshAgent agent, AIGroundFitter fitter)
+        public void Initialize(NavMeshAgent agent, IGroundFitter fitter)
         {
             this.agent = agent;
             this.fitter = fitter;
@@ -45,7 +45,7 @@ namespace Artifika.AI
             activeRotationSpeed = defaultRotationSpeed;
             currentMode = RotationMode.Agent;
 
-            if (fitter)
+            if (!UnityNull.IsNull(fitter))
             {
                 fitter.UseExternalYaw = true;
                 fitter.ExternalYaw    = currentYaw;
@@ -169,7 +169,7 @@ namespace Artifika.AI
 
         private void ApplyYaw()
         {
-            if (fitter)
+            if (!UnityNull.IsNull(fitter))
             {
                 fitter.ExternalYaw = currentYaw;
                 fitter.UpAxisRotation = 0f;

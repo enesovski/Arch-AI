@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Artifika.AI.Aggro
+namespace Archura.Aggro
 {
     [CreateAssetMenu(fileName = "Aggro Configuration", menuName = "AI/Aggro/Aggro Config")]
     public sealed class AggroConfiguration : ScriptableObject

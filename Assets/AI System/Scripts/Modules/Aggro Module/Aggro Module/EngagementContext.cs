@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Artifika.AI.Aggro
+namespace Archura.Aggro
 {
     public readonly struct EngagementContext
     {

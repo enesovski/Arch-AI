@@ -1,7 +1,7 @@
 using Unity.Behavior;
 using UnityEngine;
 
-namespace Artifika.AI.Aggro.Reactions
+namespace Archura.Aggro.Reactions
 {
     public class AggroBehaviorAssignerReaction : MonoBehaviour, IAggroReaction
     {

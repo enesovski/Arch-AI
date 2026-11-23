@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     public abstract class AttackSubModule : MonoBehaviour, IAttackSubModule
     {

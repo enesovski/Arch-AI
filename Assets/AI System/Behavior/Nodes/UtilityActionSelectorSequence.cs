@@ -1,15 +1,15 @@
 using System;
-using Artifika.AI.Utility;
+using Archura.Utility;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 using Composite = Unity.Behavior.Composite;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, GeneratePropertyBag]
     [NodeDescription(
         name: "Utility Action Selector",

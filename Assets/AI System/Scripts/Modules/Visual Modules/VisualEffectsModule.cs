@@ -1,17 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using HighlightPlus;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
-    public class VisualEffectsModule : NetworkBehaviour
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
+    public class VisualEffectsModule : NetworkBehaviour, IAnimationEffectPlayer
     {
         [Serializable]
         public struct EffectEntry
@@ -21,10 +21,14 @@ namespace Artifika.AI
         }
 
         [Title("References")]
-        [SerializeField] private HealthComponent healthComponent;
+        [Tooltip("Component implementing " + nameof(IEntityHealth) + ". Resolved from children when empty.")]
+        [FormerlySerializedAs("healthComponent")]
+        [SerializeField] private MonoBehaviour healthSource;
 
         [Title("Effects")]
-        [SerializeField] private HighlightEffect highlightEffect;
+        [Tooltip("Optional component implementing " + nameof(IHitHighlight) + ".")]
+        [FormerlySerializedAs("highlightEffect")]
+        [SerializeField] private MonoBehaviour hitHighlight;
         [Space]
         [SerializeField] private MMF_Player deathFeedback;
         [SerializeField] private MMF_Player hitFeedback;
@@ -33,15 +37,15 @@ namespace Artifika.AI
         [SerializeField] private List<EffectEntry> effectEntries = new();
 
         private readonly Dictionary<string, MMF_Player> map = new Dictionary<string, MMF_Player>(StringComparer.Ordinal);
+        private IEntityHealth healthComponent;
 
         private void Start()
         {
-            if (healthComponent == null)
-                healthComponent = GetComponentInChildren<HealthComponent>();
+            healthComponent = healthSource as IEntityHealth ?? GetComponentInChildren<IEntityHealth>();
 
             if (healthComponent != null)
             {
-                healthComponent.OnDamageTakenArgs += PlayDamagedFX;
+                healthComponent.OnDamageReceived += PlayDamagedFX;
                 healthComponent.OnDeath += PlayDeathFX;
             }
 
@@ -87,14 +91,14 @@ namespace Artifika.AI
             StartCoroutine(StopFeedbackAfterDuration(deathFeedback, 2));
         }
 
-        private void PlayDamagedFX(DamageInstance damageData, float damageAmount)
+        private void PlayDamagedFX(DamageReport report)
         {
-            StartHitFeedback(damageData.Context.ImpactPoint);
+            StartHitFeedback(report.ImpactPoint);
         }
 
         private void StartHitFeedback(Vector3 impactPoint)
         {
-            highlightEffect?.HitFX();
+            (hitHighlight as IHitHighlight)?.PlayHitHighlight(impactPoint);
             if (hitFeedback != null)
                 hitFeedback.transform.position = impactPoint;
             hitFeedback?.PlayFeedbacks();
@@ -122,7 +126,7 @@ namespace Artifika.AI
         {
             if (healthComponent != null)
             {
-                healthComponent.OnDamageTakenArgs -= PlayDamagedFX;
+                healthComponent.OnDamageReceived -= PlayDamagedFX;
                 healthComponent.OnDeath -= PlayDeathFX;
                 healthComponent = null;
             }

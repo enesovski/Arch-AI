@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     public partial class AttackModule
     {

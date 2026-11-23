@@ -8,9 +8,9 @@ using UnityEngine.AI;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.Serialization;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public class EntitySpawner : NetworkBehaviour
     {
         [SerializeField] public Vector3 zoneSize = new Vector3(10f, 20f, 10f);
@@ -28,8 +28,8 @@ namespace Artifika.AI
         [SerializeField, HideInInspector] private bool migrated;
 
         private Dictionary<SpawnData, int> currentSpawnCounts;
-        private readonly List<(HealthComponent entity, Action callback)> deathCallbacks
-            = new List<(HealthComponent, Action)>();
+        private readonly List<(IEntityHealth entity, Action callback)> deathCallbacks
+            = new List<(IEntityHealth, Action)>();
 
         public enum SpawnerTypes { OnTerrain, InsideSpawnZone }
 
@@ -68,11 +68,11 @@ namespace Artifika.AI
 
             if (spawnerType == SpawnerTypes.OnTerrain && terrain == null)
             {
-                GameLog.Error($"[EntitySpawner] '{gameObject.name}' is OnTerrain mode but has no Terrain assigned. Spawning aborted.");
+                ArchuraLog.Error($"[EntitySpawner] '{gameObject.name}' is OnTerrain mode but has no Terrain assigned. Spawning aborted.");
                 return;
             }
 
-            GameLog.Info($"[EntitySpawner] StartSpawning on '{gameObject.name}' — mode: {spawnerType}, types: {entitySpawnDatas.Count}");
+            ArchuraLog.Info($"[EntitySpawner] StartSpawning on '{gameObject.name}' — mode: {spawnerType}, types: {entitySpawnDatas.Count}");
 
             currentSpawnCounts = new Dictionary<SpawnData, int>();
 
@@ -80,7 +80,7 @@ namespace Artifika.AI
             {
                 if (spawnData.animalData == null)
                 {
-                    GameLog.Warning($"[EntitySpawner] '{gameObject.name}' has a SpawnData entry with no AnimalData assigned. Skipping.");
+                    ArchuraLog.Warning($"[EntitySpawner] '{gameObject.name}' has a SpawnData entry with no AnimalData assigned. Skipping.");
                     continue;
                 }
 
@@ -95,7 +95,7 @@ namespace Artifika.AI
                 if (spawnData.spawnRate > 0f)
                     StartCoroutine(SpawnTickCoroutine(spawnData));
                 else
-                    GameLog.Info($"[EntitySpawner] '{spawnData.animalData.name}' spawnRate is 0 — initial wave only.");
+                    ArchuraLog.Info($"[EntitySpawner] '{spawnData.animalData.name}' spawnRate is 0 — initial wave only.");
             }
         }
 
@@ -105,7 +105,7 @@ namespace Artifika.AI
 
             foreach (var (entity, cb) in deathCallbacks)
             {
-                if (entity != null)
+                if (!UnityNull.IsNull(entity))
                     entity.OnDeath -= cb;
             }
             deathCallbacks.Clear();
@@ -147,13 +147,13 @@ namespace Artifika.AI
 
             if (currentSpawnCounts[spawnData] < target)
             {
-                GameLog.Warning($"[EntitySpawner] '{gameObject.name}' initial wave for '{spawnData.animalData.name}' " +
+                ArchuraLog.Warning($"[EntitySpawner] '{gameObject.name}' initial wave for '{spawnData.animalData.name}' " +
                                 $"reached only {currentSpawnCounts[spawnData]}/{target} after {attempts} attempts. " +
                                 $"Check spawn zone placement, terrain layer mask, and NavMesh coverage.");
             }
             else
             {
-                GameLog.Info($"[EntitySpawner] '{gameObject.name}' initial wave complete for '{spawnData.animalData.name}': " +
+                ArchuraLog.Info($"[EntitySpawner] '{gameObject.name}' initial wave complete for '{spawnData.animalData.name}': " +
                              $"{currentSpawnCounts[spawnData]}/{target} spawned in {attempts} attempts.");
             }
         }
@@ -166,12 +166,12 @@ namespace Artifika.AI
 
             if (sampleOrigin == Vector3.zero) return;
 
-            GameLog.Info($"[EntitySpawner] Attempting '{spawnData.animalData.name}' at {sampleOrigin} " +
+            ArchuraLog.Info($"[EntitySpawner] Attempting '{spawnData.animalData.name}' at {sampleOrigin} " +
                          $"({currentSpawnCounts[spawnData] + 1}/{spawnData.maxCount})");
 
             if (!IsOnTerrain(sampleOrigin, out Vector3 terrainPosition))
             {
-                GameLog.Warning($"[EntitySpawner] No terrain found under {sampleOrigin} for '{spawnData.animalData.name}'.");
+                ArchuraLog.Warning($"[EntitySpawner] No terrain found under {sampleOrigin} for '{spawnData.animalData.name}'.");
                 return;
             }
 
@@ -179,7 +179,7 @@ namespace Artifika.AI
             {
                 if (terrainPosition.y > maxSpawnableHeight || terrainPosition.y < minSpawnableHeight)
                 {
-                    GameLog.Warning($"[EntitySpawner] Height {terrainPosition.y:F1} outside " +
+                    ArchuraLog.Warning($"[EntitySpawner] Height {terrainPosition.y:F1} outside " +
                                     $"[{minSpawnableHeight:F1}, {maxSpawnableHeight:F1}] " +
                                     $"for '{spawnData.animalData.name}'.");
                     return;
@@ -188,7 +188,7 @@ namespace Artifika.AI
 
             if (!IsOnNavmesh(terrainPosition))
             {
-                GameLog.Warning($"[EntitySpawner] No NavMesh at {terrainPosition} for '{spawnData.animalData.name}'.");
+                ArchuraLog.Warning($"[EntitySpawner] No NavMesh at {terrainPosition} for '{spawnData.animalData.name}'.");
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace Artifika.AI
 
             currentSpawnCounts[spawnData]++;
 
-            var livingEntity = spawnedGO.GetComponent<HealthComponent>();
+            var livingEntity = spawnedGO.GetComponent<IEntityHealth>();
             if (livingEntity != null)
             {
                 var key = spawnData;
@@ -211,7 +211,7 @@ namespace Artifika.AI
                 deathCallbacks.Add((livingEntity, onDeath));
             }
 
-            GameLog.Info($"[EntitySpawner] Spawned '{spawnData.animalData.name}' at {terrainPosition}. " +
+            ArchuraLog.Info($"[EntitySpawner] Spawned '{spawnData.animalData.name}' at {terrainPosition}. " +
                          $"Count: {currentSpawnCounts[spawnData]}/{spawnData.maxCount}");
         }
 
@@ -229,7 +229,7 @@ namespace Artifika.AI
         {
             if (terrain == null)
             {
-                GameLog.Error($"[EntitySpawner] '{gameObject.name}' terrain reference is null during spawn attempt.");
+                ArchuraLog.Error($"[EntitySpawner] '{gameObject.name}' terrain reference is null during spawn attempt.");
                 return Vector3.zero;
             }
 
@@ -288,7 +288,7 @@ namespace Artifika.AI
     #endif
     }
 
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [System.Serializable]
     public struct SpawnData : IEquatable<SpawnData>
     {

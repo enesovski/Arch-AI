@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Artifika.AI.Aggro;
-using Artifika.AI.Attack;
+using Archura.Aggro;
+using Archura.Attack;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     public sealed class AggroModule : UpdatableEntityModule, IEntityStateModule
     {
         public event Action<EngagementContext> OnContextChanged;
@@ -36,7 +36,7 @@ namespace Artifika.AI
         private bool hasSearchOrigin;
         private float nextTargetSwitchTime;
 
-        private HealthComponent targetHealth;
+        private IEntityHealth targetHealth;
         private bool targetDiedThisFrame;
 
         private readonly List<GameEntity> threatBuffer = new List<GameEntity>(16);
@@ -414,7 +414,7 @@ namespace Artifika.AI
         {
             if (target == null) return;
 
-            if (target.TryGetComponent(out HealthComponent health))
+            if (target.TryGetComponent(out IEntityHealth health))
             {
                 targetHealth = health;
                 targetHealth.OnDeath += HandleTargetDeath;

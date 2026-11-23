@@ -1,8 +1,8 @@
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI.Utility
+namespace Archura.Utility
 {
-    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Utility", sourceAssembly: "Artifika.AI.Utility")]
     public abstract class BoolAxisInput : AxisInput
     {
         public abstract bool GetBoolValue(TacticalContext ctx);

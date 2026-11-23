@@ -1,0 +1,22 @@
+{
+    "name": "Archura.Runtime",
+    "rootNamespace": "Archura",
+    "references": [
+        "Archura.Utility",
+        "Unity.Behavior",
+        "Unity.Behavior.SerializableGUID",
+        "Unity.Netcode.Runtime",
+        "Unity.Collections",
+        "Unity.RenderPipelines.Core.Runtime",
+        "MoreMountains.Feedbacks"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

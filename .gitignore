@@ -97,3 +97,13 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Private AI-assistant context and planning notes (kept out of the public repo)
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+[Pp][Ll][Aa][Nn].md
+[Pp][Ll][Aa][Nn][Ss]/
+[Rr][Oo][Aa][Dd][Mm][Aa][Pp]*.md
+[Tt][Oo][Dd][Oo]*.md
+*.plan.md

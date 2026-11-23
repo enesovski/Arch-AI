@@ -2,11 +2,11 @@ using System;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, Unity.Properties.GeneratePropertyBag]
     [Condition(name: "Is Dead", story: "[Blackboard] is dead", category: "Conditions", id: "bc490b19dd8287173d0aadab2b638275")]
     public partial class IsDeadCondition : Condition

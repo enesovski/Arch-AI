@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Artifika.AI.Sensors
+namespace Archura.Sensors
 {
     [Title("Visual Sensor")]
     public class VisualSensor : BaseSensor

@@ -2,11 +2,11 @@ using System;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
-using Blackboard = Artifika.AI.Blackboard;
+using Blackboard = Archura.Blackboard;
 
-namespace Artifika.AI
+namespace Archura
 {
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI", sourceAssembly: "Assembly-CSharp")]
     [Serializable, Unity.Properties.GeneratePropertyBag]
     [Condition(name: "Is Attack Committed", story: "[Blackboard] is attacking", category: "Conditions", id: "aa40f73e90f5400585a6fa49013c7f29")]
     public partial class IsAttackCommittedCondition : Condition

@@ -1,13 +1,13 @@
-using Artifika.AI.Aggro.Reactions;
-using Artifika.AI.Attack;
-using Artifika.AI.Stun.Reactions;
+using Archura.Aggro.Reactions;
+using Archura.Attack;
+using Archura.Stun.Reactions;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Artifika.AI.Visuals
+namespace Archura.Visuals
 {
     public class AggroEyeColorReaction : NetworkBehaviour, IAggroReaction, IStunReaction
     {
@@ -120,7 +120,7 @@ namespace Artifika.AI.Visuals
         {
             if (config == null)
             {
-                GameLog.Error($"[{nameof(AggroEyeColorReaction)}] Robot eye configuration is missing on {name}.");
+                ArchuraLog.Error($"[{nameof(AggroEyeColorReaction)}] Robot eye configuration is missing on {name}.");
                 return;
             }
 
@@ -335,7 +335,7 @@ namespace Artifika.AI.Visuals
             Material[] materials = eyeRenderer.materials;
             if (materialIndex < 0 || materialIndex >= materials.Length)
             {
-                GameLog.Error($"[{nameof(AggroEyeColorReaction)}] Material index {materialIndex} is invalid on {name}.");
+                ArchuraLog.Error($"[{nameof(AggroEyeColorReaction)}] Material index {materialIndex} is invalid on {name}.");
                 return;
             }
 

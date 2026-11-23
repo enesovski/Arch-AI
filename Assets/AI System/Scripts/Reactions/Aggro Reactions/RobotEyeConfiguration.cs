@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Artifika.AI.Visuals
+namespace Archura.Visuals
 {
     [CreateAssetMenu(fileName = "Robot Eye Configuration", menuName = "AI/Visuals/Robot Eye Configuration", order = 0)]
     public class RobotEyeConfiguration : ScriptableObject

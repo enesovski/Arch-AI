@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-namespace Artifika.AI.Attack
+namespace Archura.Attack
 {
     [CreateAssetMenu(fileName = "RangedAttackDefinition", menuName = "AI/Attacks/RangedAttackDefinition")]
     public class RangedAttackDefinition : BaseAttackDefinition
@@ -22,7 +22,7 @@ namespace Artifika.AI.Attack
         public float SpreadRadius => spreadRadius;
     }
 
-    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "Assembly-CSharp")]
+    [MovedFrom(true, sourceNamespace: "Artifika.AI.Attack", sourceAssembly: "Assembly-CSharp")]
     public enum ProjectileMovementType
     {
         Linear,
