@@ -117,9 +117,5 @@ Assets/AI System/
 ```
 
 ## Integration notes
-
-This repository contains the AI source and assets **extracted from a larger Unity project**. It has no standalone `Packages/manifest.json` or complete host-game implementation, so it is **not directly runnable as-is**.
-
-The code depends on **Unity Behavior**, **Netcode for GameObjects**, **Odin Inspector**, and other gameplay and presentation integrations. Host-game systems such as health/damage, projectiles, stats, and ground fitting must also be supplied. Existing EditMode tests are intended to run in the original host project.
-
+The code depends on **Unity Behavior**, **Netcode for GameObjects**, **Odin Inspector**, and other gameplay and presentation integrations.
 For the full system breakdown, important classes, communication patterns, and execution flow, see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
