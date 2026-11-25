@@ -12,9 +12,8 @@ namespace Archura
     public sealed class AggroModule : UpdatableEntityModule, IEntityStateModule
     {
         public event Action<EngagementContext> OnContextChanged;
-        public event Action<AggroStateChangeEventArgs> OnStateChanged;
+        public event Action<EngagementChangeEventArgs> OnEngagementChanged;
         public event Action<TargetChangeEventArgs> OnTargetChanged;
-        public event Action<SuspiciousStateChangeEventArgs> OnSuspiciousStateChanged;
 
         [Title("Aggro Module")] [SerializeField, Required, AssetsOnly, InlineEditor]
         public AggroConfiguration configuration;
@@ -24,7 +23,6 @@ namespace Archura
         private GameEntity selfEntity;
 
         private EngagementState state;
-        private SuspiciousState suspiciousState;
         private GameEntity currentTarget;
         private EngagementContext context;
 
@@ -39,17 +37,15 @@ namespace Archura
         private IEntityHealth targetHealth;
         private bool targetDiedThisFrame;
 
+        private IEntityHealth selfHealth;
+        private GameEntity registeredTarget;
+        private bool isAggroReleased;
+
         private readonly List<GameEntity> threatBuffer = new List<GameEntity>(16);
         private readonly List<ThreatCandidate> candidates = new List<ThreatCandidate>(16);
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Debug")]
-        public EngagementState CurrentEngagementState => state;
-
-        [ShowInInspector, ReadOnly, FoldoutGroup("Debug")]
-        public SuspiciousState CurrentSuspiciousState => suspiciousState;
-
-        [ShowInInspector, ReadOnly, FoldoutGroup("Debug")]
-        public AggroState CurrentAggroState => MapToAggroState(state);
+        public EngagementState CurrentState => state;
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Debug")]
         public GameEntity CurrentTarget => currentTarget;
@@ -67,8 +63,12 @@ namespace Archura
             attackModule = blackboard.attackModule;
 
             state = EngagementState.Passive;
-            suspiciousState = SuspiciousState.None;
             context = CreateDefaultContext();
+            isAggroReleased = false;
+
+            selfHealth = blackboard.Health;
+            if (selfHealth != null)
+                selfHealth.OnServerDeath += HandleSelfDeath;
         }
 
         public override void PerformUpdate(float deltaTime)
@@ -101,14 +101,43 @@ namespace Archura
 
             state = nextState;
             targetDiedThisFrame = false;
+
+            SyncAggroRegistration();
         }
 
         public override void DestroyModule()
         {
             UnsubscribeTargetDeath();
 
-            if (configuration != null && configuration.mode == AggressivenessMode.Aggressive && currentTarget != null)
-                currentTarget.AggroTracker?.UnregisterAggro(selfEntity);
+            if (selfHealth != null)
+                selfHealth.OnServerDeath -= HandleSelfDeath;
+
+            isAggroReleased = true;
+            SyncAggroRegistration();
+        }
+
+        private void HandleSelfDeath()
+        {
+            isAggroReleased = true;
+            SyncAggroRegistration();
+        }
+
+        private void SyncAggroRegistration()
+        {
+            bool holdsAggro = !isAggroReleased && configuration != null &&
+                              configuration.mode == AggressivenessMode.Aggressive && state == EngagementState.Engaged;
+            GameEntity desiredTarget = holdsAggro && currentTarget ? currentTarget : null;
+
+            if (registeredTarget == desiredTarget)
+                return;
+
+            if (registeredTarget && registeredTarget.AggroTracker)
+                registeredTarget.AggroTracker.UnregisterAggro(selfEntity);
+
+            registeredTarget = desiredTarget;
+
+            if (registeredTarget && registeredTarget.AggroTracker)
+                registeredTarget.AggroTracker.RegisterAggro(selfEntity);
         }
 
         private EngagementState EvaluateTransition(
@@ -312,16 +341,8 @@ namespace Archura
 
         private void ApplyStateTransition(EngagementState newState, float now)
         {
-            AggroState prevAggroState = MapToAggroState(state);
-            AggroState nextAggroState = MapToAggroState(newState);
-
             if (newState == EngagementState.Engaged)
-            {
                 engageHoldUntil = now + configuration.minEngageHoldSeconds;
-
-                if (configuration.mode == AggressivenessMode.Aggressive && currentTarget != null)
-                    currentTarget.AggroTracker?.RegisterAggro(selfEntity);
-            }
 
             if (newState == EngagementState.Alerted && state != EngagementState.Alerted)
             {
@@ -338,27 +359,12 @@ namespace Archura
                     EnsureSearchOrigin();
             }
 
-            if (state == EngagementState.Engaged && newState != EngagementState.Engaged)
-            {
-                if (configuration.mode == AggressivenessMode.Aggressive && currentTarget != null)
-                    currentTarget.AggroTracker?.UnregisterAggro(selfEntity);
-            }
-
             if (state == EngagementState.Searching && newState != EngagementState.Searching)
                 hasSearchOrigin = false;
 
-            if (prevAggroState != nextAggroState)
-                OnStateChanged?.Invoke(new AggroStateChangeEventArgs(prevAggroState, nextAggroState));
-
-            SuspiciousState prevSuspicious = MapToSuspiciousState(state);
-            SuspiciousState nextSuspicious = MapToSuspiciousState(newState);
-
-            if (prevSuspicious != nextSuspicious)
-            {
-                suspiciousState = nextSuspicious;
-                OnSuspiciousStateChanged?.Invoke(
-                    new SuspiciousStateChangeEventArgs(prevSuspicious, nextSuspicious));
-            }
+            EngagementState previousState = state;
+            state = newState;
+            OnEngagementChanged?.Invoke(new EngagementChangeEventArgs(previousState, newState));
         }
 
         private void ValidateCurrentTarget()
@@ -382,32 +388,12 @@ namespace Archura
             GameEntity previous = currentTarget;
             currentTarget = newTarget;
 
-            TransferAggroRegistration(previous, currentTarget, nextState);
+            if (currentTarget != null && nextState == EngagementState.Engaged &&
+                configuration != null && configuration.mode == AggressivenessMode.Aggressive)
+                nextTargetSwitchTime = Time.time + configuration.targetSwitchCooldownSeconds;
 
             SubscribeTargetDeath(currentTarget);
             OnTargetChanged?.Invoke(new TargetChangeEventArgs(previous, newTarget));
-        }
-
-        private void TransferAggroRegistration(
-            GameEntity previousTarget,
-            GameEntity nextTarget,
-            EngagementState nextState)
-        {
-            if (configuration == null || configuration.mode != AggressivenessMode.Aggressive)
-                return;
-
-            bool targetChanged = previousTarget != nextTarget;
-            if (!targetChanged)
-                return;
-
-            if (state == EngagementState.Engaged && previousTarget != null)
-                previousTarget.AggroTracker?.UnregisterAggro(selfEntity);
-
-            if (nextState == EngagementState.Engaged && nextTarget != null)
-            {
-                nextTarget.AggroTracker?.RegisterAggro(selfEntity);
-                nextTargetSwitchTime = Time.time + configuration.targetSwitchCooldownSeconds;
-            }
         }
 
         private void SubscribeTargetDeath(GameEntity target)
@@ -431,17 +417,12 @@ namespace Archura
 
         private void HandleTargetDeath()
         {
-            if (configuration != null && configuration.mode == AggressivenessMode.Aggressive
-                               && state == EngagementState.Engaged && currentTarget != null)
-            {
-                currentTarget.AggroTracker?.UnregisterAggro(selfEntity);
-            }
-
             targetDiedThisFrame = true;
             hasSearchOrigin = false;
             engageHoldUntil = 0f;
 
             SetTarget(null);
+            SyncAggroRegistration();
         }
 
         private void CaptureSearchOrigin(GameEntity target)
@@ -580,21 +561,6 @@ namespace Archura
             if (changed)
                 OnContextChanged?.Invoke(context);
         }
-
-        private static AggroState MapToAggroState(EngagementState e) => e switch
-        {
-            EngagementState.Engaged => AggroState.Alerted,
-            EngagementState.Alerted or
-                EngagementState.Searching => AggroState.Suspicious,
-            _ => AggroState.Passive
-        };
-
-        private static SuspiciousState MapToSuspiciousState(EngagementState e) => e switch
-        {
-            EngagementState.Alerted => SuspiciousState.Alerted,
-            EngagementState.Searching => SuspiciousState.Searching,
-            _ => SuspiciousState.None
-        };
 
         private EngagementContext CreateDefaultContext()
         {

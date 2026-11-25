@@ -11,7 +11,8 @@ namespace Archura.Death.Reactions
 
         public void Execute()
         {
-            feedback?.PlayFeedbacks();
+            if (feedback)
+                feedback.PlayFeedbacks();
         }
     }
 }

@@ -34,7 +34,8 @@ namespace Archura
             if (!attackModule.IsRangedShotClear(rangedDef, threat, true))
                 return;
 
-            feedbackPlayer?.PlayFeedbacks();
+            if (feedbackPlayer)
+                feedbackPlayer.PlayFeedbacks();
 
             Vector3 targetPos = threat.AimPosition;
 

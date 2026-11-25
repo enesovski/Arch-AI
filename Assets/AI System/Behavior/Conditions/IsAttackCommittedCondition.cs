@@ -19,8 +19,8 @@ namespace Archura
             var attackModule = blackboard != null ? blackboard.attackModule : null;
             bool isCommitted = attackModule != null && attackModule.IsAttackCommitted;
 
-            if (isCommitted)
-                blackboard.movementModule?.Stop();
+            if (isCommitted && blackboard.movementModule)
+                blackboard.movementModule.Stop();
 
             return isCommitted;
         }

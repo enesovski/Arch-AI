@@ -57,7 +57,8 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            blackboard?.movementModule?.EndRangedMovement();
+            if (blackboard && blackboard.movementModule)
+                blackboard.movementModule.EndRangedMovement();
             if (rotationModule == null) return;
 
             rotationModule.ClearLookTarget();

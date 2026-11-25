@@ -21,16 +21,16 @@ namespace Archura.Attack
         [SerializeField] private float attackRange = 1.5f;
 
         [Title("Player Knockback")]
-        [SerializeField, Tooltip("İsabet edip hasar verdiğinde oyuncuyu savurur. Kararı server verir; oyuncunun hareket motoru uygular. Ölü/yaralı, binen, tırmanan veya derin suda yüzen oyuncular savrulmaz.")]
+        [SerializeField, Tooltip("Knocks the target back when the hit deals damage. The AI computes the impulse on the server; the target's IAttackReceiver decides whether and how to apply it.")]
         private bool knockbackEnabled;
         [SerializeField, ShowIf(nameof(knockbackEnabled)), Range(0f, 20f)]
-        [Tooltip("Saldırandan dışarı doğru başlangıç hızı (m/s). Mesafe yaklaşık hız² / (2 × Deceleration). 8 hız ve 14 yavaşlama, düz zeminde yaklaşık 2.3 m itiş üretir.")]
+        [Tooltip("Initial speed away from the attacker (m/s). Distance is roughly speed² / (2 × Deceleration); 8 speed with 14 deceleration pushes about 2.3 m on flat ground.")]
         private float knockbackHorizontalSpeed = 8f;
         [SerializeField, ShowIf(nameof(knockbackEnabled)), Range(0f, 12f)]
-        [Tooltip("Yukarı başlangıç hızı (m/s). 7, mevcut oyuncu yerçekimiyle küçük bir havalanma üretir. Yüksek değerler inişte düşme hasarı verebilir. Zıplama tuşundan etkilenmez.")]
+        [Tooltip("Initial upward speed (m/s). Small values give a short hop; high values may cause fall damage on landing.")]
         private float knockbackUpwardSpeed = 7f;
         [SerializeField, ShowIf(nameof(knockbackEnabled)), Range(1f, 80f)]
-        [Tooltip("Yatay savrulma hızının saniyede ne kadar azalacağı (m/s²). Yüksek değer daha kısa savrulma üretir. Dikey hareketi yerçekimi yönetir.")]
+        [Tooltip("How fast the horizontal knockback speed decays (m/s²). Higher values give a shorter push; gravity handles vertical motion.")]
         private float knockbackDeceleration = 14f;
 
         public ScriptableObject DamageConfig => damageConfig;

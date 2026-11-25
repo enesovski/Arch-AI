@@ -20,18 +20,18 @@ namespace Archura
         private MovementModule movementModule;
         private RotationModule rotationModule;
 
-        private const float MOVE_THRESHOLD = 0.5f;
-        private Vector3 lastDestination = Vector3.positiveInfinity;
+        private const float MOVE_THRESHOLD_SQR = 0.5f;
+        private readonly DestinationThrottle destinationThrottle = new DestinationThrottle();
         private bool strafeRight;
 
         protected override Status OnStart()
         {
-            var blackboard = Blackboard != null ? Blackboard.Value : null;
-            movementModule = blackboard != null ? blackboard.movementModule : null;
-            rotationModule = blackboard != null ? blackboard.rotationModule : null;
-            lastDestination = Vector3.positiveInfinity;
+            Blackboard blackboard = Blackboard != null ? Blackboard.Value : null;
+            movementModule = blackboard ? blackboard.movementModule : null;
+            rotationModule = blackboard ? blackboard.rotationModule : null;
+            destinationThrottle.Reset();
 
-            if (movementModule)
+            if (movementModule && movementModule.MovementProfile)
                 movementModule.SetSpeed(movementModule.MovementProfile.walkMovementSpeed);
 
             strafeRight = Random.value > 0.5f;
@@ -71,11 +71,8 @@ namespace Archura
                 return Status.Failure;
             }
 
-            if ((lastDestination - desiredPoint).sqrMagnitude > MOVE_THRESHOLD)
-            {
+            if (destinationThrottle.ShouldMoveTo(desiredPoint, MOVE_THRESHOLD_SQR))
                 movementModule.MoveTo(desiredPoint);
-                lastDestination = desiredPoint;
-            }
 
             if (movementModule.HasArrived())
             {
@@ -87,8 +84,9 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            lastDestination = Vector3.positiveInfinity;
-            movementModule?.Stop();
+            destinationThrottle.Reset();
+            if (movementModule)
+                movementModule.Stop();
             if (rotationModule)
             {
                 rotationModule.ClearLookTarget();

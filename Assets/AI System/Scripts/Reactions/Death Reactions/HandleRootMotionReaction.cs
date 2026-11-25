@@ -31,9 +31,14 @@ namespace Archura
 
         public void Execute()
         {
-            attackModule?.InterruptAttackForDeath();
-            movementModule?.Stop();
-            movementModule?.SetStopped(true);
+            if (attackModule)
+                attackModule.InterruptAttackForDeath();
+
+            if (movementModule)
+            {
+                movementModule.Stop();
+                movementModule.SetStopped(true);
+            }
 
             if (!UnityNull.IsNull(groundFitter))
                 groundFitter.HandleRootMotion = false;

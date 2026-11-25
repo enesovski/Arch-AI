@@ -22,7 +22,7 @@ namespace Archura
             var bb  = Blackboard?.Value;
             var cmd = ActionCommand?.Value;
 
-            if (bb == null || cmd?.subgraph == null)
+            if (bb == null || !cmd || cmd.subgraph == null)
                 return Status.Failure;
 
             Subgraph.Value = cmd.subgraph;

@@ -24,7 +24,7 @@ namespace Archura.Aggro.Reactions
         private ParamMode alertedMode = ParamMode.Bool;
 
         [FoldoutGroup("Suspicious Sub"), SerializeField]
-        [Tooltip("Set true only while SuspiciousState.Alerted — agent stops and observes.")]
+        [Tooltip("Cleared when the agent engages.")]
         private string suspiciousLookParam = "SuspiciousLook";
 
         private int suspiciousHash;
@@ -42,34 +42,26 @@ namespace Archura.Aggro.Reactions
             suspiciousLookHash = ValidatedHash(suspiciousLookParam);
         }
 
-        public void OnAggroStateChanged(AggroStateChangeEventArgs args)
+        public void OnEngagementChanged(EngagementChangeEventArgs args)
         {
-            if (!animator) return;
+            if (!args.ChangesAwareness || !animator) return;
 
-            switch (args.NewState)
+            if (args.Current.IsEngaged())
             {
-                case AggroState.Passive:
-                    ClearBool(suspiciousHash, suspiciousMode);
-                    ClearBool(alertedHash, alertedMode);
-                    break;
-
-                case AggroState.Suspicious:
-                    Apply(suspiciousHash, suspiciousMode);
-                    ClearBool(alertedHash, alertedMode);
-                    break;
-
-                case AggroState.Alerted:
-                    Apply(alertedHash, alertedMode);
-                    ClearBool(suspiciousHash, suspiciousMode);
-                    ClearBool(suspiciousLookHash, ParamMode.Bool);
-                    break;
+                Apply(alertedHash, alertedMode);
+                ClearBool(suspiciousHash, suspiciousMode);
+                ClearBool(suspiciousLookHash, ParamMode.Bool);
             }
-        }
-
-        public void OnSuspiciousStateChanged(SuspiciousStateChangeEventArgs args)
-        {
-            if (!animator || suspiciousLookHash == 0) return;
-            animator.SetBool(suspiciousLookHash, args.NewState == SuspiciousState.Alerted);
+            else if (args.Current.IsSuspicious())
+            {
+                Apply(suspiciousHash, suspiciousMode);
+                ClearBool(alertedHash, alertedMode);
+            }
+            else
+            {
+                ClearBool(suspiciousHash, suspiciousMode);
+                ClearBool(alertedHash, alertedMode);
+            }
         }
 
         private void Apply(int hash, ParamMode mode)

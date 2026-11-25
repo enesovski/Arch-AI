@@ -22,7 +22,7 @@ namespace Archura
             var blackboard  = Blackboard?.Value;
             var command = AutonomousCommand?.Value;
 
-            if (blackboard == null || command?.subgraph == null)
+            if (blackboard == null || !command || command.subgraph == null)
                 return Status.Failure;
 
             command.subgraph.BlackboardReference.SetVariableValue("Blackboard", blackboard);

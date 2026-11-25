@@ -26,7 +26,6 @@ namespace Archura
         public event Action<GameEntity, float> OnDetectionUpdate;
         public event Action<GameEntity, float> OnHitDetected;
 
-        private float detectionTimeInterval;
         private List<BaseSensor> sensorComponents;
         private ThreatEvaluator threatEvaluator;
         private bool sensorsSubscribed;
@@ -38,8 +37,6 @@ namespace Archura
         {
             threatEvaluator = new ThreatEvaluator(configuration);
             sensorComponents = new List<BaseSensor>(GetComponentsInChildren<BaseSensor>(true));
-
-            detectionTimeInterval = GetComponent<EntityCoordinator>().GetUpdateInterval();
 
             foreach (var sensor in sensorComponents)
             {
@@ -105,7 +102,7 @@ namespace Archura
                 OnDetectionUpdate?.Invoke(kvp.Key, kvp.Value);
             }
 
-            threatEvaluator.DecayThreats(detectionTimeInterval);
+            threatEvaluator.DecayThreats(deltaTime);
         }
 
         public void GetThreatEntities(List<GameEntity> results)

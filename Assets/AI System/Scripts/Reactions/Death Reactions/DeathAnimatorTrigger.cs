@@ -42,8 +42,8 @@ namespace Archura
                 healthComponent = healthSource as IEntityHealth
                                   ?? GetComponent<IEntityHealth>() ?? GetComponentInChildren<IEntityHealth>(true);
 
-            if (animator == null)
-                animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>(true);
+            if (!animator && !TryGetComponent(out animator))
+                animator = GetComponentInChildren<Animator>(true);
         }
 
         private void Subscribe()
@@ -69,7 +69,8 @@ namespace Archura
             if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsServer)
                 return;
 
-            animator?.SetTrigger(deathTriggerHash);
+            if (animator)
+                animator.SetTrigger(deathTriggerHash);
         }
     }
 }

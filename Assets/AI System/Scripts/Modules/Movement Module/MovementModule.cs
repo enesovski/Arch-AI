@@ -17,28 +17,26 @@ namespace Archura
     public class MovementModule : NetworkBehaviour
     {
         [Title("Movement")]
-        [Tooltip("Yürüme, yaklaşma/Rush ve konum değiştirme hızları ile adım mesafeleri bu profildedir. Konum/mesafe tercihleri Melee veya Ranged Combat Profile içindedir.")]
+        [Tooltip("Walk, approach/rush and repositioning speeds and step distances. Position and distance preferences live in the Melee or Ranged Combat Profile.")]
         [SerializeField] private MovementProfile movementProfile;
 
         [Title("Melee Combat")]
-        [Tooltip("ChaseTarget için isteğe bağlı yakın dövüş konumlanması. Ön/yan bölge, geri çekilme mesafesi ve tekrar yaklaşmadan önceki toplam süre buradadır. Hızlar ve adımlar arası bekleme Movement Profile içindedir.")]
+        [Tooltip("Optional melee positioning for ChaseTarget: front/side sector, withdrawal distance and total time before re-approaching. Speeds and pauses between steps live in the Movement Profile.")]
         [SerializeField, InlineEditor] private MeleeCombatProfile meleeCombatProfile;
 
         [Title("Ranged Combat")]
-        [Tooltip("İsteğe bağlı menzilli konumlanma: tercih edilen atış mesafesi, yakın oyuncudan kısa kaçış ve atışlar arasında açık konuma geçme. Hızlar/adım mesafeleri Movement Profile içindedir. Melee Combat Profile ile aynı anda kullanılmaz.")]
+        [Tooltip("Optional ranged positioning: preferred firing distance, short evasion from close targets and moving to a clear spot between shots. Speeds and step distances live in the Movement Profile. Not used together with a Melee Combat Profile.")]
         [SerializeField, InlineEditor] private RangedCombatProfile rangedCombatProfile;
 
         private RangedCombatMovement rangedCombatMovement;
         public RangedCombatProfile RangedCombatProfile => rangedCombatProfile;
-        public bool UsesRangedCombatMovement => rangedCombatProfile && movementProfile && blackboard &&
-            blackboard.attackModule && blackboard.attackModule.HasRangedAttackModule && !UsesMeleeCombatMovement;
+        public bool UsesRangedCombatMovement { get; private set; }
         [ShowInInspector, ReadOnly, LabelText("Ranged Phase")]
         public RangedMovementPhase RangedPhase => rangedCombatMovement?.Phase ?? RangedMovementPhase.Aim;
 
         private MeleeCombatMovement meleeCombatMovement;
         public MeleeCombatProfile MeleeCombatProfile => meleeCombatProfile;
-        public bool UsesMeleeCombatMovement => meleeCombatProfile && blackboard &&
-            blackboard.attackModule && blackboard.attackModule.HasMeleeAttackModule;
+        public bool UsesMeleeCombatMovement { get; private set; }
         public bool SuppressRootMotionForAttack => (UsesMeleeCombatMovement || UsesRangedCombatMovement) &&
             blackboard.attackModule.IsAttackCommitted && blackboard.attackModule.CurrentAttackStopsMovement;
 
@@ -58,6 +56,7 @@ namespace Archura
         private IEntityHealth healthComponent;
 
         private NavMeshPath cachedPath;
+        private NavMeshPath scratchPath;
         private bool hasDestination;
         private bool movementLockedByDeath;
 
@@ -79,6 +78,7 @@ namespace Archura
             agent = blackboard.agent;
             animatorModule = blackboard.animatorModule;
             cachedPath = new NavMeshPath();
+            scratchPath = new NavMeshPath();
 
             agent.updateRotation = false;
             agent.updateUpAxis = false;
@@ -88,6 +88,11 @@ namespace Archura
             movementLockedByDeath = healthComponent != null && !healthComponent.IsAlive;
             if (movementLockedByDeath)
                 StopAndLockForDeath();
+
+            var attackModule = blackboard.attackModule;
+            UsesMeleeCombatMovement = meleeCombatProfile && attackModule && attackModule.HasMeleeAttackModule;
+            UsesRangedCombatMovement = rangedCombatProfile && movementProfile && attackModule &&
+                                       attackModule.HasRangedAttackModule && !UsesMeleeCombatMovement;
         }
 
         public void SetSpawnPoint(Vector3 point)
@@ -442,9 +447,8 @@ namespace Archura
             if (movementLockedByDeath) return false;
             if (!CanUseAgent()) return false;
 
-            NavMeshPath path = new NavMeshPath();
-            agent.CalculatePath(destination, path);
-            return path.status == NavMeshPathStatus.PathComplete;
+            agent.CalculatePath(destination, scratchPath);
+            return scratchPath.status == NavMeshPathStatus.PathComplete;
         }
 
         public bool IsPositionOnNavMesh(Vector3 position, float maxDistance = 2.0f)

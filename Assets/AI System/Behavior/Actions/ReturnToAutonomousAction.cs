@@ -17,7 +17,9 @@ namespace Archura
 
         protected override Status OnStart()
         {
-            Blackboard?.Value?.commandModule.RestorePreviousAutonomousCommand();
+            Blackboard blackboard = Blackboard?.Value;
+            if (blackboard)
+                blackboard.commandModule.RestorePreviousAutonomousCommand();
             return Status.Success;
         }
     }

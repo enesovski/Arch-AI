@@ -10,8 +10,6 @@ namespace Archura
     [DisallowMultipleComponent]
     public sealed class AnimatorEventRelay : MonoBehaviour
     {
-        private const string HarvestInstantEvent = "AE_HarvestInstant";
-
         [Tooltip("Component implementing " + nameof(IAttackAnimationEventSource) + ". Resolved from parents when empty.")]
         [FormerlySerializedAs("animatorEventHandler")]
         [SerializeField] private MonoBehaviour attackEventSource;
@@ -20,13 +18,9 @@ namespace Archura
         [FormerlySerializedAs("animatorEffectPlayer")]
         [SerializeField] private MonoBehaviour effectPlayer;
         [SerializeField] private DeathReactionsBus deathReactionsBus;
-        [Tooltip("Optional component implementing " + nameof(IAnimationEventReceiver) + " for host-specific events.")]
-        [FormerlySerializedAs("harvestAnimRelay")]
-        [SerializeField] private MonoBehaviour eventReceiver;
 
         private IAttackAnimationEventSource AttackEvents => attackEventSource as IAttackAnimationEventSource;
         private IAnimationEffectPlayer EffectPlayer => effectPlayer as IAnimationEffectPlayer;
-        private IAnimationEventReceiver EventReceiver => eventReceiver as IAnimationEventReceiver;
 
         private void Awake()
         {
@@ -47,14 +41,9 @@ namespace Archura
         public void PlayEffect(string key)
         {
             ResolveTargets();
-            visualEffectsModule?.PlayEffect(key);
+            if (visualEffectsModule)
+                visualEffectsModule.PlayEffect(key);
             EffectPlayer?.PlayEffect(key);
-        }
-
-        public void AE_HarvestInstant()
-        {
-            ResolveTargets();
-            EventReceiver?.OnAnimationEvent(HarvestInstantEvent);
         }
 
         public void AE_ExecuteOnDespawnReactions()
@@ -63,7 +52,8 @@ namespace Archura
                 return;
 
             ResolveTargets();
-            deathReactionsBus?.ExecuteOnDespawnReactions();
+            if (deathReactionsBus)
+                deathReactionsBus.ExecuteOnDespawnReactions();
         }
 
         private void ResolveTargets()
@@ -79,8 +69,6 @@ namespace Archura
 
             if (deathReactionsBus == null)
                 deathReactionsBus = GetComponentInParent<DeathReactionsBus>(true);
-            if (EventReceiver == null)
-                eventReceiver = GetComponentInParent<IAnimationEventReceiver>(true) as MonoBehaviour;
         }
 
         // First parent component of type T other than the one already handled explicitly.

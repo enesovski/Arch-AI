@@ -57,7 +57,8 @@ namespace Archura
             searchCenter = aggroModule.SearchOrigin;
 
             movementModule.SetSpeed(movementModule.MovementProfile.searchMovementSpeed);
-            rotationModule?.SetMode(RotationMode.Agent);
+            if (rotationModule)
+                rotationModule.SetMode(RotationMode.Agent);
 
             if (!MoveToSearchPoint(searchCenter))
                 MoveToNextSearchPoint();
@@ -67,7 +68,7 @@ namespace Archura
 
         protected override Status OnUpdate()
         {
-            if (aggroModule.CurrentSuspiciousState != SuspiciousState.Searching)
+            if (aggroModule.CurrentState != EngagementState.Searching)
                 return Status.Success;
 
             switch (currentPhase)
@@ -175,8 +176,10 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
-            rotationModule?.SetMode(RotationMode.Agent);
+            if (movementModule)
+                movementModule.Stop();
+            if (rotationModule)
+                rotationModule.SetMode(RotationMode.Agent);
         }
     }
 }

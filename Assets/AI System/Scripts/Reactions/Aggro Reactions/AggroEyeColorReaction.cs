@@ -1,3 +1,4 @@
+using Archura.Aggro;
 using Archura.Aggro.Reactions;
 using Archura.Attack;
 using Archura.Stun.Reactions;
@@ -39,7 +40,7 @@ namespace Archura.Visuals
 
         private Material eyeMat;
         private AttackModule attackModule;
-        private AggroState aggroState = AggroState.Passive;
+        private EngagementState engagementState = EngagementState.Passive;
         private bool isStunned;
         private bool isAttackTelegraphing;
         private bool attackEventsSubscribed;
@@ -52,7 +53,7 @@ namespace Archura.Visuals
         public void Initialize(Blackboard blackboard)
         {
             if (blackboard != null && blackboard.aggroModule != null)
-                aggroState = blackboard.aggroModule.CurrentAggroState;
+                engagementState = blackboard.aggroModule.CurrentState;
 
             if (attackTelegraphEnabled)
                 SubscribeToAttackEvents(blackboard != null ? blackboard.attackModule : null);
@@ -81,9 +82,12 @@ namespace Archura.Visuals
             KillTweens();
         }
 
-        public void OnAggroStateChanged(AggroStateChangeEventArgs args)
+        public void OnEngagementChanged(EngagementChangeEventArgs args)
         {
-            aggroState = args.NewState;
+            if (!args.ChangesAwareness)
+                return;
+
+            engagementState = args.Current;
             RefreshVisualState();
         }
 
@@ -108,7 +112,7 @@ namespace Archura.Visuals
                 ? RobotEyeVisualState.Stunned
                 : isAttackTelegraphing
                     ? RobotEyeVisualState.Telegraphing
-                    : ToVisualState(aggroState);
+                    : ToVisualState(engagementState);
 
             if (IsServer && IsSpawned)
                 syncedVisualState.Value = visualState;
@@ -355,14 +359,12 @@ namespace Archura.Visuals
                 DOTween.Kill(srpLensFlare);
         }
 
-        private static RobotEyeVisualState ToVisualState(AggroState state)
+        private static RobotEyeVisualState ToVisualState(EngagementState state)
         {
-            return state switch
-            {
-                AggroState.Suspicious => RobotEyeVisualState.Suspicious,
-                AggroState.Alerted => RobotEyeVisualState.Alerted,
-                _ => RobotEyeVisualState.Passive
-            };
+            if (state.IsEngaged())
+                return RobotEyeVisualState.Alerted;
+
+            return state.IsSuspicious() ? RobotEyeVisualState.Suspicious : RobotEyeVisualState.Passive;
         }
     }
 }

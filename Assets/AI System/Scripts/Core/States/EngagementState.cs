@@ -1,10 +1,13 @@
+using Unity.Behavior;
+
 namespace Archura.Aggro
 {
+    [BlackboardEnum]
     public enum EngagementState
     {
-        Passive,
-        Alerted,
-        Searching,
-        Engaged
+        Passive = 0,
+        Alerted = 1,
+        Searching = 2,
+        Engaged = 3
     }
 }

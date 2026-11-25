@@ -18,15 +18,18 @@ namespace Archura
 
         private MovementModule movementModule;
 
-        private const float MOVE_THRESHOLD = 0.5f;
-        private Vector3 lastDestination = Vector3.positiveInfinity;
+        private const float MOVE_THRESHOLD_SQR = 0.5f;
+        private readonly DestinationThrottle destinationThrottle = new DestinationThrottle();
 
         protected override Status OnStart()
         {
-            movementModule = Blackboard.Value.movementModule;
+            Blackboard blackboard = Blackboard != null ? Blackboard.Value : null;
+            movementModule = blackboard ? blackboard.movementModule : null;
+            destinationThrottle.Reset();
 
-            if (movementModule)
+            if (movementModule && movementModule.MovementProfile)
                 movementModule.SetSpeed(movementModule.MovementProfile.runMovementSpeed);
+
             return Status.Running;
         }
 
@@ -56,11 +59,8 @@ namespace Archura
                 desiredPoint = threatPos.position;
             }
 
-            if ((lastDestination - desiredPoint).sqrMagnitude > MOVE_THRESHOLD)
-            {
+            if (destinationThrottle.ShouldMoveTo(desiredPoint, MOVE_THRESHOLD_SQR))
                 movementModule.MoveTo(desiredPoint);
-                lastDestination = desiredPoint;
-            }
 
             if (movementModule.HasArrived())
             {
@@ -72,7 +72,9 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
+            destinationThrottle.Reset();
+            if (movementModule)
+                movementModule.Stop();
         }
     }
 }

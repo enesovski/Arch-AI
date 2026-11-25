@@ -21,7 +21,7 @@ namespace Archura.Aggro.Reactions
             rotationModule = this.blackboard.rotationModule;
 
             if (aggroModule)
-                aggroModule.OnStateChanged += HandleStateChanged;
+                aggroModule.OnEngagementChanged += HandleEngagementChanged;
 
             reactions = GetComponents<IAggroReaction>();
             hasExplicitRotationReaction = reactions.Any(r => r is AggroRotationReaction);
@@ -33,16 +33,16 @@ namespace Archura.Aggro.Reactions
         private void OnDisable()
         {
             if (aggroModule != null)
-                aggroModule.OnStateChanged -= HandleStateChanged;
+                aggroModule.OnEngagementChanged -= HandleEngagementChanged;
         }
 
-        private void HandleStateChanged(AggroStateChangeEventArgs args)
+        private void HandleEngagementChanged(EngagementChangeEventArgs args)
         {
             foreach (var reaction in reactions)
             {
                 try
                 {
-                    reaction.OnAggroStateChanged(args);
+                    reaction.OnEngagementChanged(args);
                 }
                 catch (Exception e)
                 {
@@ -50,12 +50,13 @@ namespace Archura.Aggro.Reactions
                 }
             }
 
-            ApplyFallbackRotation(args.NewState);
+            if (args.ChangesAwareness)
+                ApplyFallbackRotation();
         }
 
-        private void ApplyFallbackRotation(AggroState state)
+        private void ApplyFallbackRotation()
         {
-            if (hasExplicitRotationReaction || rotationModule == null)
+            if (hasExplicitRotationReaction || !rotationModule)
                 return;
 
             rotationModule.SetMode(RotationMode.Agent);

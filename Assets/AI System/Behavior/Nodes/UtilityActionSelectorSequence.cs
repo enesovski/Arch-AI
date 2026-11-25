@@ -111,7 +111,9 @@ namespace Archura
 
             currentIndex = -1;
             decisionTimer = 0f;
-            Blackboard.Value?.movementModule?.Stop();
+            Blackboard blackboard = Blackboard.Value;
+            if (blackboard && blackboard.movementModule)
+                blackboard.movementModule.Stop();
         }
 
         private int SelectBestIndex()

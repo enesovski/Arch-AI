@@ -27,7 +27,8 @@ namespace Archura
             if (attackPoint == null)
             {
                 InvokeOnAttack();
-                feedbackPlayer?.PlayFeedbacks();
+                if (feedbackPlayer)
+                    feedbackPlayer.PlayFeedbacks();
                 return;
             }
 
@@ -86,7 +87,8 @@ namespace Archura
                 hitSurface?.PlayHitEffect(impactPoint, dir);
             }
 
-            feedbackPlayer?.PlayFeedbacks();
+            if (feedbackPlayer)
+                feedbackPlayer.PlayFeedbacks();
         }
 
     }

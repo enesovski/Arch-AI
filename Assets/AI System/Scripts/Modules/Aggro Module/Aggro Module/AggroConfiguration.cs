@@ -81,8 +81,7 @@ namespace Archura.Aggro
 
         [Title("Tactics")]
         [Range(0f, 1f)]
-        [Tooltip(
-            "Base aggressiveness. Influences utility action scoring (higher = attack/chase, lower = kite/strafe).")]
+        [Tooltip("Agent temperament exposed to utility scoring as TacticalContext.Aggressiveness.")]
         public float aggressiveness = 0.5f;
 
         private void OnValidate()

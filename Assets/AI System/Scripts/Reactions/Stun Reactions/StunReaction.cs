@@ -46,8 +46,10 @@ namespace Archura.Stun.Reactions
             if (isStunned)
             {
                 CancelPendingRelease();
-                attackModule?.InterruptAttack();
-                animatorModule?.SetSpeedParam(0f);
+                if (attackModule)
+                    attackModule.InterruptAttack();
+                if (animatorModule)
+                    animatorModule.SetSpeedParam(0f);
 
                 if (movementModule != null)
                 {

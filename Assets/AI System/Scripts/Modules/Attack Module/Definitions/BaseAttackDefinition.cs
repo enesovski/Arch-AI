@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Archura.Attack
 {
-    public enum AttackType { Melee, Ranged, Dash }
+    public enum AttackType { Melee, Ranged }
 
     public abstract class BaseAttackDefinition : ScriptableObject
     {

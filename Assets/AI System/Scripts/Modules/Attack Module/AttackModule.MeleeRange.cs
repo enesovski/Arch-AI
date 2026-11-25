@@ -62,8 +62,7 @@ namespace Archura.Attack
 
         public override void OnModuleDisabled()
         {
-            movementModule?.ResetMeleeCombat();
-            movementModule?.ResetRangedCombat();
+            ResetCombatMovement();
             base.OnModuleDisabled();
         }
 

@@ -22,24 +22,8 @@ namespace Archura
         [HideLabel]
         public EntityType baseEntityType = EntityType.Aggressive;
 
-        [HideIf("baseEntityType", EntityType.Boss)]
-        [BoxGroup("Attributes/Taming", ShowLabel = true)]
-        public bool isTameable;
-
-        [BoxGroup("Attributes/Taming")]
-        [ShowIf("@this.isTameable && this.baseEntityType != Archura.EntityType.Boss")]
-        public GameObject tamedPrefab;
-
         [BoxGroup("Attributes/Combat Response")]
         [ShowIf("baseEntityType", EntityType.Passive)]
         public bool rangedHitForcesEngage = true;
-
-        [ShowIf("baseEntityType", EntityType.Boss)]
-        [BoxGroup("Attributes/Boss", ShowLabel = true)]
-        public string bossDisplayName;
-
-        [Title("Drop Table")]
-        [TableList(AlwaysExpanded = true)]
-        public DropData[] potentialDrops;
     }
 }

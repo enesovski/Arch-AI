@@ -24,18 +24,16 @@ namespace Archura.Aggro.Reactions
             rotationModule = blackboard.rotationModule;
         }
 
-        public void OnAggroStateChanged(AggroStateChangeEventArgs args)
+        public void OnEngagementChanged(EngagementChangeEventArgs args)
         {
-            if (rotationModule == null)
+            if (!args.ChangesAwareness || !rotationModule)
                 return;
 
-            RotationMode mode = args.NewState switch
-            {
-                AggroState.Passive    => passive,
-                AggroState.Suspicious => suspicious,
-                AggroState.Alerted    => alerted,
-                _                     => passive
-            };
+            RotationMode mode = passive;
+            if (args.Current.IsEngaged())
+                mode = alerted;
+            else if (args.Current.IsSuspicious())
+                mode = suspicious;
 
             rotationModule.SetMode(mode);
         }

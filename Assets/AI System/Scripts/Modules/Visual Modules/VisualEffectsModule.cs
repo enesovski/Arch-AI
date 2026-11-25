@@ -77,7 +77,7 @@ namespace Archura
             {
                 return;
             }
-            player?.PlayFeedbacks();
+            player.PlayFeedbacks();
         }
 
         private void PlayDeathFX()
@@ -87,7 +87,8 @@ namespace Archura
 
         private void StartDeathFeedback()
         {
-            deathFeedback?.PlayFeedbacks();
+            if (deathFeedback)
+                deathFeedback.PlayFeedbacks();
             StartCoroutine(StopFeedbackAfterDuration(deathFeedback, 2));
         }
 
@@ -99,16 +100,19 @@ namespace Archura
         private void StartHitFeedback(Vector3 impactPoint)
         {
             (hitHighlight as IHitHighlight)?.PlayHitHighlight(impactPoint);
-            if (hitFeedback != null)
+            if (hitFeedback)
+            {
                 hitFeedback.transform.position = impactPoint;
-            hitFeedback?.PlayFeedbacks();
+                hitFeedback.PlayFeedbacks();
+            }
         }
 
         private IEnumerator StopFeedbackAfterDuration(MMF_Player feedback, float duration)
         {
             yield return new WaitForSeconds(duration);
 
-            feedback?.StopFeedbacks();
+            if (feedback)
+                feedback.StopFeedbacks();
         }
 
         public void PlayVisualEffect(GameObject effectPrefab, Vector3 position, Quaternion rotation)

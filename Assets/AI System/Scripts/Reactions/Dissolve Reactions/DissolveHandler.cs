@@ -129,7 +129,8 @@ namespace Archura
             }
 
             ApplyDissolveValue(EndValue);
-            dissolveSoundLoop?.Stop();
+            if (dissolveSoundLoop)
+                dissolveSoundLoop.Stop();
 
             if (DestroyDelay > 0f)
                 yield return new WaitForSeconds(DestroyDelay);

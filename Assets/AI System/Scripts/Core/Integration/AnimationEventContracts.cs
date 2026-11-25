@@ -25,10 +25,4 @@ namespace Archura
     {
         void PlayHitHighlight(Vector3 impactPoint);
     }
-
-    /// <summary>Receives named animation events the AI does not handle itself.</summary>
-    public interface IAnimationEventReceiver
-    {
-        void OnAnimationEvent(string eventName);
-    }
 }

@@ -5,9 +5,8 @@ namespace Archura.Aggro.Reactions
 {
     public class AggroBehaviorAssignerReaction : MonoBehaviour, IAggroReaction
     {
-        private const string AggroStatusVar = "Aggro Status";
         private const string TargetVar = "Target";
-        private const string SuspiciousStateVar = "Suspicious State";
+        private const string EngagementStateVar = "Engagement State";
 
         private AggroModule aggroModule;
         private BehaviorGraphAgent behaviorGraphAgent;
@@ -20,9 +19,8 @@ namespace Archura.Aggro.Reactions
 
             TrySubscribe();
 
-            SetTarget(null);
-            SetAggroStatus(AggroState.Passive);
-            SetSuspiciousState(SuspiciousState.None);
+            SetVariable(TargetVar, (GameEntity)null);
+            SetVariable(EngagementStateVar, EngagementState.Passive);
         }
 
         private void OnEnable() => TrySubscribe();
@@ -35,8 +33,6 @@ namespace Archura.Aggro.Reactions
             if (aggroModule == null) return;
 
             aggroModule.OnTargetChanged += OnTargetChanged;
-            aggroModule.OnStateChanged += OnAggroStateChanged;
-            aggroModule.OnSuspiciousStateChanged += OnSuspiciousStateChanged;
             isSubscribed = true;
         }
 
@@ -46,54 +42,19 @@ namespace Archura.Aggro.Reactions
             if (aggroModule == null) return;
 
             aggroModule.OnTargetChanged -= OnTargetChanged;
-            aggroModule.OnStateChanged -= OnAggroStateChanged;
-            aggroModule.OnSuspiciousStateChanged -= OnSuspiciousStateChanged;
             isSubscribed = false;
         }
 
-        public void OnTargetChanged(TargetChangeEventArgs args) => SetTarget(args.NewTarget);
-        public void OnAggroStateChanged(AggroStateChangeEventArgs args) => SetAggroStatus(args.NewState);
-        public void OnSuspiciousStateChanged(SuspiciousStateChangeEventArgs args) => SetSuspiciousState(args.NewState);
+        public void OnTargetChanged(TargetChangeEventArgs args) => SetVariable(TargetVar, args.NewTarget);
 
-        private void SetTarget(GameEntity target)
+        public void OnEngagementChanged(EngagementChangeEventArgs args) => SetVariable(EngagementStateVar, args.Current);
+
+        private void SetVariable<T>(string variableName, T value)
         {
             if (behaviorGraphAgent == null) return;
             if (behaviorGraphAgent.BlackboardReference == null) return;
 
-            behaviorGraphAgent.BlackboardReference.SetVariableValue(TargetVar, target);
+            behaviorGraphAgent.BlackboardReference.SetVariableValue(variableName, value);
         }
-
-        private void SetAggroStatus(AggroState newState)
-        {
-            if (behaviorGraphAgent == null) return;
-            if (behaviorGraphAgent.BlackboardReference == null) return;
-
-            behaviorGraphAgent.BlackboardReference
-                .SetVariableValue(AggroStatusVar, MapAggroStatus(newState));
-        }
-
-        private void SetSuspiciousState(SuspiciousState newState)
-        {
-            if (behaviorGraphAgent == null) return;
-            if (behaviorGraphAgent.BlackboardReference == null) return;
-
-            behaviorGraphAgent.BlackboardReference
-                .SetVariableValue(SuspiciousStateVar, MapSuspiciousStatus(newState));
-        }
-
-        private static AggroStatus MapAggroStatus(AggroState state) => state switch
-        {
-            AggroState.Passive => AggroStatus.Passive,
-            AggroState.Suspicious => AggroStatus.Suspicious,
-            AggroState.Alerted => AggroStatus.Aggressive,
-            _ => AggroStatus.Passive
-        };
-
-        private static SuspiciousStatus MapSuspiciousStatus(SuspiciousState state) => state switch
-        {
-            SuspiciousState.Alerted => SuspiciousStatus.Alerted,
-            SuspiciousState.Searching => SuspiciousStatus.Searching,
-            _ => SuspiciousStatus.None
-        };
     }
 }

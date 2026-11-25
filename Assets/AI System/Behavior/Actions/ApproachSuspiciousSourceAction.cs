@@ -41,7 +41,8 @@ namespace Archura
                 return Status.Failure;
 
             movementModule.SetSpeed(GetApproachSpeed());
-            rotationModule?.SetMode(RotationMode.Agent);
+            if (rotationModule)
+                rotationModule.SetMode(RotationMode.Agent);
             lastDestination = Vector3.positiveInfinity;
 
             return Status.Running;
@@ -49,7 +50,7 @@ namespace Archura
 
         protected override Status OnUpdate()
         {
-            if (aggroModule.CurrentSuspiciousState != SuspiciousState.Alerted)
+            if (aggroModule.CurrentState != EngagementState.Alerted)
                 return Status.Success;
 
             float stopDistance = GetStopDistance();
@@ -85,8 +86,10 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
-            rotationModule?.SetMode(RotationMode.Agent);
+            if (movementModule)
+                movementModule.Stop();
+            if (rotationModule)
+                rotationModule.SetMode(RotationMode.Agent);
         }
 
         private float GetApproachSpeed()

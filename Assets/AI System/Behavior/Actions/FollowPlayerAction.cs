@@ -25,7 +25,7 @@ namespace Archura
         protected override Status OnStart()
         {
             var blackboard = Blackboard?.Value;
-            if (blackboard == null || !blackboard.movementModule || !blackboard.gameEntity?.owner) return Status.Failure;
+            if (blackboard == null || !blackboard.movementModule || !blackboard.gameEntity || !blackboard.gameEntity.owner) return Status.Failure;
 
             movementModule = blackboard.movementModule;
             ownerTransform = blackboard.gameEntity.owner.transform;
@@ -110,7 +110,8 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
+            if (movementModule)
+                movementModule.Stop();
             lastDestination = Vector3.positiveInfinity;
         }
     }

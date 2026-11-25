@@ -49,13 +49,13 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 755774693303124199
-      type: {class: 'BlackboardVariable`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.Aggro.EngagementState, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
           m_Value0: 4115349608820521418
           m_Value1: 15896924365692445531
-        Name: Aggro Status
+        Name: Engagement State
         m_Value: 0
     - rid: 755774693303124200
       type: {class: 'BlackboardVariable`1[[Archura.GameEntity, Archura.Runtime]]', ns: Unity.Behavior,
@@ -66,15 +66,6 @@ MonoBehaviour:
           m_Value1: 3422612384055187252
         Name: Target
         m_Value: {fileID: 0}
-    - rid: 755774693303124201
-      type: {class: 'BlackboardVariable`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 12040153351318515444
-          m_Value1: 5812137341571822915
-        Name: Suspicious State
-        m_Value: 0
     - rid: 1220832118827123153
       type: {class: BehaviorGraphModule, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -103,7 +94,6 @@ MonoBehaviour:
         - rid: 755774693303124198
         - rid: 755774693303124199
         - rid: 755774693303124200
-        - rid: 755774693303124201
     - rid: 3737962888551202923
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -177,7 +167,8 @@ MonoBehaviour:
           rid: 3737962888551202925
         m_Children:
         - rid: 3737962888551202930
-        - rid: 3737962888551202931
+        - rid: 3737962888551202935
+        - rid: 3737962888551202936
         - rid: 3737962888551202932
         m_RegisteredObservers: []
         EnumVariable:
@@ -203,23 +194,6 @@ MonoBehaviour:
         - rid: 3737962888551202933
         - rid: 3737962888551202934
         m_RegisteredObservers: []
-    - rid: 3737962888551202931
-      type: {class: SwitchComposite, ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        ID:
-          m_Value0: 7528360337853817683
-          m_Value1: 8216069705508253671
-        Graph:
-          rid: 1220832118827123153
-        m_Parent:
-          rid: 3737962888551202928
-        m_Children:
-        - rid: 3737962888551202935
-        - rid: 3737962888551202936
-        - rid: -2
-        m_RegisteredObservers: []
-        EnumVariable:
-          rid: 755774693303124201
     - rid: 3737962888551202932
       type: {class: SelectorComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -272,7 +246,7 @@ MonoBehaviour:
         Graph:
           rid: 1220832118827123153
         m_Parent:
-          rid: 3737962888551202931
+          rid: 3737962888551202928
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202936
@@ -284,7 +258,7 @@ MonoBehaviour:
         Graph:
           rid: 1220832118827123153
         m_Parent:
-          rid: 3737962888551202931
+          rid: 3737962888551202928
         Blackboard:
           rid: 755774693303124197
     - rid: 3737962888551202937
@@ -449,7 +423,6 @@ MonoBehaviour:
   - rid: 5478665651093241941
   - rid: 5478665787085947225
   - rid: 5478665787085947263
-  - rid: 5478665787085947264
   - rid: 5478665787085947265
   - rid: 5478665853039543177
   - rid: 5478665855455986160
@@ -463,10 +436,8 @@ MonoBehaviour:
   - rid: 3036306313047179417
   - rid: 3036306313047179553
   - rid: 3036306316220695522
-  - rid: 755774692322967930
   - rid: 755774692322967960
   - rid: 755774692322967962
-  - rid: 755774693303124101
   - rid: 755774693303124132
   m_VersionTimestamp: 639176495456735369
   m_SerializedVersion: 2
@@ -678,68 +649,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 755774692322967930
-      type: {class: SwitchNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        Position: {x: 60.028076, y: 1365.6781}
-        ID:
-          m_Value0: 7528360337853817683
-          m_Value1: 8216069705508253671
-        Parents: []
-        PortModels:
-        - rid: 755774692322967931
-        - rid: 755774692322967963
-        - rid: 755774692322967965
-        - rid: 755774693303124102
-        NodeType:
-          m_SerializableType: Unity.Behavior.SwitchComposite, Unity.Behavior, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-        NodeTypeID:
-          m_Value0: 7697158487413557231
-          m_Value1: 14836087705204215232
-        m_FieldValues:
-        - rid: 755774692322967957
-        m_Mode: 0
-    - rid: 755774692322967931
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: InputPort
-        m_PortDataFlowType: 0
-        m_IsFloating: 0
-        m_NodeModel:
-          rid: 755774692322967930
-        m_Connections:
-        - rid: 5478665787085947272
-    - rid: 755774692322967957
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: EnumVariable
-        Type:
-          m_SerializableType: System.Enum, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        LocalValue:
-          rid: 755774692322967958
-        LinkedVariable:
-          rid: 755774692322967959
-    - rid: 755774692322967958
-      type: {class: 'BlackboardVariable`1[[System.Enum, mscorlib]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-    - rid: 755774692322967959
-      type: {class: 'TypedVariableModel`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
-        asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 12040153351318515444
-          m_Value1: 5812137341571822915
-        Name: Suspicious State
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: 0
     - rid: 755774692322967960
       type: {class: FloatingPortNodeModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -752,8 +661,8 @@ MonoBehaviour:
         - rid: 755774692322967966
         - rid: 755774692322967967
         ParentNodeID:
-          m_Value0: 7528360337853817683
-          m_Value1: 8216069705508253671
+          m_Value0: 15361606613077037072
+          m_Value1: 4004982279234036612
         PortName: Alerted
     - rid: 755774692322967962
       type: {class: FloatingPortNodeModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
@@ -767,8 +676,8 @@ MonoBehaviour:
         - rid: 755774692322967970
         - rid: 755774692322967971
         ParentNodeID:
-          m_Value0: 7528360337853817683
-          m_Value1: 8216069705508253671
+          m_Value0: 15361606613077037072
+          m_Value1: 4004982279234036612
         PortName: Searching
     - rid: 755774692322967963
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
@@ -777,7 +686,7 @@ MonoBehaviour:
         m_PortDataFlowType: 1
         m_IsFloating: 1
         m_NodeModel:
-          rid: 755774692322967930
+          rid: 5478665787085947225
         m_Connections:
         - rid: 755774692322967966
     - rid: 755774692322967965
@@ -787,7 +696,7 @@ MonoBehaviour:
         m_PortDataFlowType: 1
         m_IsFloating: 1
         m_NodeModel:
-          rid: 755774692322967930
+          rid: 5478665787085947225
         m_Connections:
         - rid: 755774692322967970
     - rid: 755774692322967966
@@ -830,50 +739,6 @@ MonoBehaviour:
           rid: 755774692322967962
         m_Connections:
         - rid: 7360397157645156512
-    - rid: 755774693303124101
-      type: {class: FloatingPortNodeModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        Position: {x: -191.97192, y: 1476.4781}
-        ID:
-          m_Value0: 4942830271705770180
-          m_Value1: 15017092513123113792
-        Parents: []
-        PortModels:
-        - rid: 755774693303124103
-        - rid: 755774693303124104
-        ParentNodeID:
-          m_Value0: 7528360337853817683
-          m_Value1: 8216069705508253671
-        PortName: None
-    - rid: 755774693303124102
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: None
-        m_PortDataFlowType: 1
-        m_IsFloating: 1
-        m_NodeModel:
-          rid: 755774692322967930
-        m_Connections:
-        - rid: 755774693303124103
-    - rid: 755774693303124103
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: InputPort
-        m_PortDataFlowType: 0
-        m_IsFloating: 1
-        m_NodeModel:
-          rid: 755774693303124101
-        m_Connections:
-        - rid: 755774693303124102
-    - rid: 755774693303124104
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: OutputPort
-        m_PortDataFlowType: 1
-        m_IsFloating: 0
-        m_NodeModel:
-          rid: 755774693303124101
-        m_Connections: []
     - rid: 755774693303124132
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
@@ -1808,7 +1673,8 @@ MonoBehaviour:
         PortModels:
         - rid: 5478665787085947226
         - rid: 5478665787085947266
-        - rid: 5478665787085947267
+        - rid: 755774692322967963
+        - rid: 755774692322967965
         - rid: 5478665787085947268
         NodeType:
           m_SerializableType: Unity.Behavior.SwitchComposite, Unity.Behavior, Version=0.0.0.0,
@@ -1849,13 +1715,13 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665787085947262
-      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.Aggro.EngagementState, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
           m_Value0: 4115349608820521418
           m_Value1: 15896924365692445531
-        Name: Aggro Status
+        Name: Engagement State
         IsExposed: 1
         m_IsShared: 0
         m_Value: 0
@@ -1874,21 +1740,6 @@ MonoBehaviour:
           m_Value0: 15361606613077037072
           m_Value1: 4004982279234036612
         PortName: Passive
-    - rid: 5478665787085947264
-      type: {class: FloatingPortNodeModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        Position: {x: 60.028076, y: 1274.878}
-        ID:
-          m_Value0: 12180465935287846604
-          m_Value1: 3543470605594920155
-        Parents: []
-        PortModels:
-        - rid: 5478665787085947271
-        - rid: 5478665787085947272
-        ParentNodeID:
-          m_Value0: 15361606613077037072
-          m_Value1: 4004982279234036612
-        PortName: Suspicious
     - rid: 5478665787085947265
       type: {class: FloatingPortNodeModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -1903,7 +1754,7 @@ MonoBehaviour:
         ParentNodeID:
           m_Value0: 15361606613077037072
           m_Value1: 4004982279234036612
-        PortName: Aggressive
+        PortName: Engaged
     - rid: 5478665787085947266
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -1914,20 +1765,10 @@ MonoBehaviour:
           rid: 5478665787085947225
         m_Connections:
         - rid: 5478665787085947269
-    - rid: 5478665787085947267
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: Suspicious
-        m_PortDataFlowType: 1
-        m_IsFloating: 1
-        m_NodeModel:
-          rid: 5478665787085947225
-        m_Connections:
-        - rid: 5478665787085947271
     - rid: 5478665787085947268
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
-        m_Name: Aggressive
+        m_Name: Engaged
         m_PortDataFlowType: 1
         m_IsFloating: 1
         m_NodeModel:
@@ -1954,26 +1795,6 @@ MonoBehaviour:
           rid: 5478665787085947263
         m_Connections:
         - rid: 1220831998922981580
-    - rid: 5478665787085947271
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: InputPort
-        m_PortDataFlowType: 0
-        m_IsFloating: 1
-        m_NodeModel:
-          rid: 5478665787085947264
-        m_Connections:
-        - rid: 5478665787085947267
-    - rid: 5478665787085947272
-      type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        m_Name: OutputPort
-        m_PortDataFlowType: 1
-        m_IsFloating: 0
-        m_NodeModel:
-          rid: 5478665787085947264
-        m_Connections:
-        - rid: 755774692322967931
     - rid: 5478665787085947273
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -2113,13 +1934,13 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
     - rid: 5478665855455986274
-      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.Aggro.EngagementState, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
           m_Value0: 4115349608820521418
           m_Value1: 15896924365692445531
-        Name: Aggro Status
+        Name: Engagement State
         IsExposed: 0
         m_IsShared: 0
         m_Value: 0
@@ -2222,20 +2043,10 @@ MonoBehaviour:
     - rid: 5478665580825281458
     - rid: 5478665787085947106
     - rid: 1220832001267073674
-    - rid: 755774692322967835
   m_SharedBlackboardVariableGuids: []
   references:
     version: 2
     RefIds:
-    - rid: 755774692322967835
-      type: {class: 'BlackboardVariable`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior,
-        asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 12040153351318515444
-          m_Value1: 5812137341571822915
-        Name: Suspicious State
-        m_Value: 0
     - rid: 1220831909989056680
       type: {class: 'BlackboardVariable`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior, asm: Unity.Behavior}
@@ -2273,13 +2084,13 @@ MonoBehaviour:
         Name: Idle Time
         m_Value: 3
     - rid: 5478665787085947106
-      type: {class: 'BlackboardVariable`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior,
+      type: {class: 'BlackboardVariable`1[[Archura.Aggro.EngagementState, Archura.Runtime]]', ns: Unity.Behavior,
         asm: Unity.Behavior}
       data:
         GUID:
           m_Value0: 4115349608820521418
           m_Value1: 15896924365692445531
-        Name: Aggro Status
+        Name: Engagement State
         m_Value: 0
 --- !u!114 &4308791823320252404
 MonoBehaviour:
@@ -2302,7 +2113,6 @@ MonoBehaviour:
   - rid: 5478665580825281432
   - rid: 5478665787085947072
   - rid: 1220832001267073667
-  - rid: 755774692322967833
   m_VersionTimestamp: 639161269293365401
   m_CommandBuffer:
     m_Commands: []
@@ -2310,17 +2120,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 755774692322967833
-      type: {class: 'TypedVariableModel`1[[Archura.SuspiciousStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
-        asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 12040153351318515444
-          m_Value1: 5812137341571822915
-        Name: Suspicious State
-        IsExposed: 0
-        m_IsShared: 0
-        m_Value: 0
     - rid: 1220831909989056630
       type: {class: 'TypedVariableModel`1[[Archura.Blackboard, Archura.Runtime]]',
         ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
@@ -2366,13 +2165,13 @@ MonoBehaviour:
         m_IsShared: 0
         m_Value: 3
     - rid: 5478665787085947072
-      type: {class: 'TypedVariableModel`1[[Archura.AggroStatus, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
+      type: {class: 'TypedVariableModel`1[[Archura.Aggro.EngagementState, Archura.Runtime]]', ns: Unity.Behavior.GraphFramework,
         asm: Unity.Behavior.GraphFramework}
       data:
         ID:
           m_Value0: 4115349608820521418
           m_Value1: 15896924365692445531
-        Name: Aggro Status
+        Name: Engagement State
         IsExposed: 0
         m_IsShared: 0
         m_Value: 0

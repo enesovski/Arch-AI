@@ -49,7 +49,8 @@ namespace Archura
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
+            if (movementModule)
+                movementModule.Stop();
         }
     }
 }

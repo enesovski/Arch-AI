@@ -45,7 +45,9 @@ namespace Archura
         {
             Health = GetComponent<IEntityHealth>();
             NetworkObject = GetComponent<NetworkObject>();
-            AggroTracker = GetComponent<AggroTracker>() ?? GetComponentInChildren<AggroTracker>(true);
+            if (!TryGetComponent(out AggroTracker aggroTracker))
+                aggroTracker = GetComponentInChildren<AggroTracker>(true);
+            AggroTracker = aggroTracker;
 
             if (entityConfiguration != null && entityType != EntityType.Player && entityType != EntityType.Tamed)
             {

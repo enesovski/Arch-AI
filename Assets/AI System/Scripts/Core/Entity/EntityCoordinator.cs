@@ -14,7 +14,6 @@ namespace Archura
         [Title("Update Settings")]
         [SerializeField] private float updateInterval = 0.3f;
         [SerializeField] protected Blackboard blackboard;
-        public float GetUpdateInterval() => updateInterval;
 
         private IEntityHealth healthComponent;
         private readonly List<IUpdatableEntityModule> registeredModules = new();
@@ -46,12 +45,13 @@ namespace Archura
                 return;
             }
 
-            blackboard?.Initialize();
+            if (blackboard)
+                blackboard.Initialize();
 
             foreach (var module in GetComponents<IEntityModule>())
                 module?.Initialize();
 
-            healthComponent = blackboard?.Health;
+            healthComponent = blackboard ? blackboard.Health : null;
 
             waitForSeconds = new WaitForSeconds(ScaledInterval);
             updateCoroutine = StartCoroutine(UpdateCycle());

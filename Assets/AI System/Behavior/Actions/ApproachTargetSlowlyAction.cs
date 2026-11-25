@@ -24,13 +24,18 @@ namespace Archura
 
         private MovementModule movementModule;
 
-        private const float MOVE_THRESHOLD = 0.01f;
-        private Vector3 lastDestination = Vector3.positiveInfinity;
+        private const float MOVE_THRESHOLD_SQR = 0.01f;
+        private readonly DestinationThrottle destinationThrottle = new DestinationThrottle();
 
         protected override Status OnStart()
         {
-            movementModule = Blackboard.Value.movementModule;
-            movementModule.SetSpeed(movementModule.MovementProfile.walkMovementSpeed);
+            Blackboard blackboard = Blackboard != null ? Blackboard.Value : null;
+            movementModule = blackboard ? blackboard.movementModule : null;
+            destinationThrottle.Reset();
+
+            if (movementModule && movementModule.MovementProfile)
+                movementModule.SetSpeed(movementModule.MovementProfile.walkMovementSpeed);
+
             return Status.Running;
         }
 
@@ -38,6 +43,9 @@ namespace Archura
         {
             if (!Target.Value)
                 return Status.Success;
+
+            if (!movementModule)
+                return Status.Failure;
 
             float standoff = StandoffDistance.Value > 0f ? StandoffDistance.Value : 4f;
             float distance = Vector3.Distance(movementModule.transform.position, Target.Value.transform.position);
@@ -52,18 +60,17 @@ namespace Archura
             Vector3 dir = (Target.Value.transform.position - movementModule.transform.position).normalized;
             Vector3 destination = Target.Value.transform.position - dir * standoff;
 
-            if ((lastDestination - destination).sqrMagnitude > MOVE_THRESHOLD)
-            {
+            if (destinationThrottle.ShouldMoveTo(destination, MOVE_THRESHOLD_SQR))
                 movementModule.MoveTo(destination);
-                lastDestination = destination;
-            }
 
             return Status.Running;
         }
 
         protected override void OnEnd()
         {
-            movementModule?.Stop();
+            destinationThrottle.Reset();
+            if (movementModule)
+                movementModule.Stop();
         }
     }
 }

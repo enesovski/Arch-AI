@@ -10,32 +10,32 @@ namespace Archura
     public sealed class MeleeCombatProfile : ScriptableObject
     {
         [Title("Positioning")]
-        [Tooltip("Front: hedefin ön bölgesinde kalır. Flank: hedefin yan/arka bölgesini tercih eder. Unrestricted: açı kısıtlaması yoktur. Bölge ulaşılamazsa Advanced > Blocked Sector Grace sonrası alternatif açı kullanılabilir.")]
+        [Tooltip("Front: stays in the target's front sector. Flank: prefers the target's side/rear. Unrestricted: no angle limit. If the sector is unreachable, another angle may be used after Advanced > Blocked Sector Grace.")]
         public MeleePositioning positioning = MeleePositioning.Front;
-        [ShowIf(nameof(IsFront)), Range(20f, 85f), Tooltip("Hedefin ileri yönünün her iki yanında izin verilen açı. 50 = toplam 100 derecelik ön bölge. Küçültmek daha dar bir ön alanda konumlanmayı sağlar; bekleme süresini değiştirmez.")]
+        [ShowIf(nameof(IsFront)), Range(20f, 85f), Tooltip("Allowed angle on each side of the target's forward direction. 50 = a 100 degree front sector. Lower values keep the agent in a narrower front area; does not change wait times.")]
         public float frontHalfAngle = 70f;
-        [ShowIf(nameof(IsFlank)), Range(90f, 180f), Tooltip("Flank modunda hedefin ileri yönüne göre tercih edilen açı. 90 = yan, 180 = arka. Bu açının yaklaşık 20 derece çevresinde hareket eder.")]
+        [ShowIf(nameof(IsFlank)), Range(90f, 180f), Tooltip("Preferred angle relative to the target's forward direction in Flank mode. 90 = side, 180 = rear. The agent moves within about 20 degrees of it.")]
         public float flankAngle = 120f;
 
         [Title("Spacing")]
-        [HideIf(nameof(HoldsGround)), Min(0.1f), Tooltip("Maintain Distance modunda geri çekilme/circle sırasında hedefin yatay gövde sınırı ile robotun kök noktası arasındaki mesafe (metre). Saldırı erişimi veya agent yarıçapı gerektirirse otomatik büyütülür. Hold Ground beklemesinde kullanılmaz.")]
+        [HideIf(nameof(HoldsGround)), Min(0.1f), Tooltip("Maintain Distance mode: distance (m) between the target's horizontal body bounds and the agent's root while withdrawing or circling. Grows automatically if attack reach or agent radius requires it. Not used while holding ground.")]
         public float holdingDistance = 4.5f;
 
         [Title("Recovery")]
-        [Tooltip("Maintain Distance: oyuncu yaklaştıkça mesafeyi yeniden açar. Hold Ground: saldırı sonrası sabit bir kısa geri adım atıp bulunduğu bölgeyi korur; oyuncu yaklaşınca kaçmaz. Geri adım Movement Profile > Withdrawal Step Distance, yana adımlar Circling Steps ile ayarlanır.")]
+        [Tooltip("Maintain Distance: re-opens the gap as the target closes in. Hold Ground: takes one short step back after an attack and keeps its spot; does not retreat when the target approaches. Back step: Movement Profile > Withdrawal Step Distance; side steps: Circling Steps.")]
         public MeleeRecoveryMode recoveryMode;
-        [Min(0f), Tooltip("Geri çekilmeden sonraki Circle/bekleme aşamasının saniyesi. Adımlar arasındaki bekleme buna dahildir; cooldown beklemeyi uzatabilir. Hold Ground'da oyuncu en az 0.5 m yaklaşırsa hazır ve menzildeki saldırı ile erken karşılık verebilir.")]
+        [Min(0f), Tooltip("Duration (s) of the circle/wait phase after withdrawing, including pauses between steps; cooldowns can extend it. In Hold Ground, if the target closes in by at least 0.5 m, a ready attack in range may trigger early.")]
         public float circleDuration = 1.5f;
-        [Min(0f), Tooltip("Her Circle aşamasında toplam süreye 0 ile bu değer arasında rastgele saniye ekler. Örn. Duration 3 + Variance 0.5 = 3–3.5 saniye. Adımlar arasındaki beklemeyi ayarlamaz.")]
+        [Min(0f), Tooltip("Adds a random 0..value seconds to each circle phase, e.g. Duration 3 + Variance 0.5 = 3–3.5 s. Does not affect pauses between steps.")]
         public float circleDurationVariance = 0.5f;
 
-        [FoldoutGroup("Advanced"), Min(0f), Tooltip("Holding Distance'a ulaşsa bile geri çekilme aşamasında geçirilecek minimum saniye. Bu süre boyunca mutlaka hareket edeceği anlamına gelmez.")]
+        [FoldoutGroup("Advanced"), Min(0f), Tooltip("Minimum time (s) spent in the withdrawal phase even after reaching Holding Distance. The agent is not forced to keep moving during it.")]
         public float minimumWithdrawalTime = 0.6f;
-        [FoldoutGroup("Advanced"), Min(0.1f), Tooltip("Geri çekilme için izin verilen maksimum saniye. Mesafeye ulaşamasa veya yol kapalı olsa bile süre dolunca Circle aşamasına geçer.")]
+        [FoldoutGroup("Advanced"), Min(0.1f), Tooltip("Maximum time (s) allowed for withdrawal. When it runs out the agent moves on to circling, even if the distance was not reached or the path is blocked.")]
         public float withdrawalTimeout = 2.5f;
-        [FoldoutGroup("Advanced"), Min(0.1f), Tooltip("Tercih edilen bölgeye ulaşılabilir konum bulunamazsa veya açı düzeltmesinde ilerleme yoksa alternatif açıya izin vermeden önce beklenecek saniye. Saldırı menzili ve hedefe bakma şartı korunur.")]
+        [FoldoutGroup("Advanced"), Min(0.1f), Tooltip("Time (s) to wait before allowing another angle when no reachable point exists in the preferred sector or angle correction makes no progress. Attack range and facing requirements still apply.")]
         public float blockedSectorGrace = 2f;
-        [FoldoutGroup("Advanced"), Range(5f, 90f), Tooltip("Saldırı başlayabilmesi için robotun ileri yönü ile hedef yönü arasındaki maksimum açı. Küçük değer daha düzgün hedefe dönmeyi gerektirir. Front Half Angle farklıdır: o, hedef çevresindeki konumu sınırlar.")]
+        [FoldoutGroup("Advanced"), Range(5f, 90f), Tooltip("Maximum angle between the agent's forward and the direction to the target for an attack to start. Smaller values require more precise facing. Unlike Front Half Angle, which limits position around the target.")]
         public float attackFacingHalfAngle = 45f;
 
         private bool IsFront => positioning == MeleePositioning.Front;

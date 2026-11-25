@@ -52,7 +52,10 @@ namespace Archura.Attack
         private BaseAttackDefinition currentAttackDefinition;
         private bool hasRotationOverride;
 
-        public bool canAttack { get; private set; } = true;
+        private int selectionFrame = -1;
+        private BaseAttackDefinition selectedDefinition;
+
+        public bool CanAttack { get; private set; } = true;
         public bool IsAttackCommitted { get; private set; } = false;
         public float TimeSinceLastAttack { get; private set; } = 0f;
 
@@ -110,11 +113,13 @@ namespace Archura.Attack
                     cooldowns[def.attackDefinition] = Mathf.Max(0f, currentCooldown - deltaTime);
                 }
             }
+
+            InvalidateSelection();
         }
 
         public bool CanStartAttack()
         {
-            if (!canAttack)
+            if (!CanAttack)
                 return false;
 
             if (currentAttackCoroutine != null || IsAttackCommitted)
@@ -126,7 +131,7 @@ namespace Archura.Attack
             if (!TryGetTargetDistance(out _))
                 return false;
 
-            return SelectBestDefinition() != null;
+            return GetSelectedDefinition() != null;
         }
 
         public bool ShouldUseAttackBranch()
@@ -142,13 +147,13 @@ namespace Archura.Attack
             if (currentAttackCoroutine != null || IsAttackCommitted)
                 return true;
 
-            if (!canAttack || (healthComponent != null && healthComponent.Health <= 0f))
+            if (!CanAttack || (healthComponent != null && healthComponent.Health <= 0f))
                 return false;
 
             if (!TryGetTargetDistance(out _))
                 return false;
 
-            BaseAttackDefinition def = SelectBestDefinition();
+            BaseAttackDefinition def = GetSelectedDefinition();
 
             if (def == null)
                 return false;
@@ -191,7 +196,8 @@ namespace Archura.Attack
 
         private void BeginAttack(BaseAttackDefinition def)
         {
-            canAttack = false;
+            InvalidateSelection();
+            CanAttack = false;
             TimeSinceLastAttack = 0f;
             currentAttackDefinition = def;
 
@@ -202,8 +208,8 @@ namespace Archura.Attack
             animatorModule.SetAttacking(true);
 
             IsAttackCommitted = true;
-            if (def is RangedAttackDefinition)
-                movementModule?.BeginRangedAttack(target);
+            if (def is RangedAttackDefinition && movementModule)
+                movementModule.BeginRangedAttack(target);
             OnAttackCommittedStarted?.Invoke();
         }
 
@@ -213,28 +219,32 @@ namespace Archura.Attack
 
         private void InterruptCurrentAttack(bool forDeath)
         {
-            movementModule?.ResetMeleeCombat();
-            movementModule?.ResetRangedCombat();
+            InvalidateSelection();
+            ResetCombatMovement();
             if (currentAttackCoroutine != null)
             {
                 StopCoroutine(currentAttackCoroutine);
                 currentAttackCoroutine = null;
             }
 
-            animatorModule?.SetAttacking(false);
+            if (animatorModule)
+                animatorModule.SetAttacking(false);
             if (forDeath)
             {
-                animatorModule?.SetSpeedParam(0f);
-                movementModule?.Stop();
+                if (animatorModule)
+                    animatorModule.SetSpeedParam(0f);
+                if (movementModule)
+                    movementModule.Stop();
             }
-            movementModule?.SetStopped(forDeath);
+            if (movementModule)
+                movementModule.SetStopped(forDeath);
 
             EndAttackRotation();
 
             bool wasCommitted = IsAttackCommitted;
 
             IsAttackCommitted = false;
-            canAttack = !forDeath;
+            CanAttack = !forDeath;
             currentAttackDefinition = null;
 
             if (wasCommitted)
@@ -251,14 +261,18 @@ namespace Archura.Attack
             EndAttackRotation();
 
             IsAttackCommitted = false;
-            if (def is MeleeAttackDefinition)
-                movementModule?.BeginMeleeWithdrawal(target);
-            else if (def is RangedAttackDefinition)
-                movementModule?.BeginRangedReposition(target);
+            if (movementModule)
+            {
+                if (def is MeleeAttackDefinition)
+                    movementModule.BeginMeleeWithdrawal(target);
+                else if (def is RangedAttackDefinition)
+                    movementModule.BeginRangedReposition(target);
+            }
             OnAttackCommittedEnded?.Invoke();
 
             cooldowns[def] = def.Cooldown;
-            canAttack = true;
+            CanAttack = true;
+            InvalidateSelection();
             currentAttackDefinition = null;
         }
 
@@ -438,6 +452,24 @@ namespace Archura.Attack
             return true;
         }
 
+        // Several graph nodes ask for the same selection every frame; positions only change between frames.
+        private BaseAttackDefinition GetSelectedDefinition()
+        {
+            if (selectionFrame != Time.frameCount)
+            {
+                selectedDefinition = SelectBestDefinition();
+                selectionFrame = Time.frameCount;
+            }
+
+            return selectedDefinition;
+        }
+
+        private void InvalidateSelection()
+        {
+            selectionFrame = -1;
+            selectedDefinition = null;
+        }
+
         private BaseAttackDefinition SelectBestDefinition()
         {
             if (!TryGetTargetDistance(out _))
@@ -508,9 +540,18 @@ namespace Archura.Attack
 
         private void HandleTargetChanged(TargetChangeEventArgs args)
         {
-            movementModule?.ResetMeleeCombat();
-            movementModule?.ResetRangedCombat();
+            ResetCombatMovement();
             target = args.NewTarget;
+            InvalidateSelection();
+        }
+
+        private void ResetCombatMovement()
+        {
+            if (!movementModule)
+                return;
+
+            movementModule.ResetMeleeCombat();
+            movementModule.ResetRangedCombat();
         }
 
         public bool TryGetCurrentTarget(out GameEntity currentTarget)
@@ -521,8 +562,7 @@ namespace Archura.Attack
 
         public override void DestroyModule()
         {
-            movementModule?.ResetMeleeCombat();
-            movementModule?.ResetRangedCombat();
+            ResetCombatMovement();
             if (healthComponent != null)
             {
                 healthComponent.OnServerDeath -= HandleServerDeath;

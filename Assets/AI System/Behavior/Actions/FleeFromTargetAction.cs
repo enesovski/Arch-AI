@@ -1,4 +1,5 @@
 using System;
+using Archura.Aggro;
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace Archura
         protected override Status OnStart()
         {
             blackboard = Blackboard?.Value;
-            movementModule = blackboard?.movementModule;
+            movementModule = blackboard ? blackboard.movementModule : null;
             threat = Target?.Value ? Target.Value.transform : null;
 
             if (movementModule == null || threat == null)
@@ -169,7 +170,7 @@ namespace Archura
         {
             return blackboard != null
                    && blackboard.aggroModule != null
-                   && blackboard.aggroModule.CurrentAggroState == AggroState.Alerted
+                   && blackboard.aggroModule.CurrentState.IsEngaged()
                    && Target?.Value != null;
         }
     }

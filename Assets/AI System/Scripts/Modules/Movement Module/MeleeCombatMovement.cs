@@ -98,8 +98,11 @@ namespace Archura
         public void EndMeleeMovement()
         {
             if (!meleeMovementActive) return;
-            movementModule?.SetStoppingDistance(savedStoppingDistance);
-            movementModule?.SetAutoBraking(savedAutoBraking);
+            if (movementModule)
+            {
+                movementModule.SetStoppingDistance(savedStoppingDistance);
+                movementModule.SetAutoBraking(savedAutoBraking);
+            }
             IGroundFitter fitter = blackboard ? blackboard.Fitter : null;
             if (!UnityNull.IsNull(fitter))
                 fitter.SuppressRootMotionTranslation = savedRootMotionSuppression;

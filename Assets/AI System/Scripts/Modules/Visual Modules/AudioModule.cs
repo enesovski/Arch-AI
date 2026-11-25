@@ -1,4 +1,5 @@
 using System.Collections;
+using Archura.Aggro;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using Unity.Netcode;
@@ -28,17 +29,13 @@ namespace Archura
         [SerializeField] private MMF_Player footstepFeedbackPlayer;
 
         private Coroutine gruntCycleCoroutine;
-        private System.Action<AggroStateChangeEventArgs> onAggroStateChanged;
 
         public override void OnNetworkSpawn()
         {
             if (IsServer)
             {
-                if (aggroModule != null)
-                {
-                    onAggroStateChanged = HandleAggroStateChanged;
-                    aggroModule.OnStateChanged += onAggroStateChanged;
-                }
+                if (aggroModule)
+                    aggroModule.OnEngagementChanged += HandleEngagementChanged;
 
                 gruntCycleCoroutine = StartCoroutine(GruntSoundCycle());
             }
@@ -53,20 +50,15 @@ namespace Archura
                     StopCoroutine(gruntCycleCoroutine);
                 }
 
-                if (aggroModule != null && onAggroStateChanged != null)
-                {
-                    aggroModule.OnStateChanged -= onAggroStateChanged;
-                    onAggroStateChanged = null;
-                }
+                if (aggroModule)
+                    aggroModule.OnEngagementChanged -= HandleEngagementChanged;
             }
         }
 
-        private void HandleAggroStateChanged(AggroStateChangeEventArgs state)
+        private void HandleEngagementChanged(EngagementChangeEventArgs args)
         {
-            if (state.NewState == AggroState.Alerted)
-            {
-                onAlertedFeedback?.PlayFeedbacks();
-            }
+            if (args.ChangesAwareness && args.Current.IsEngaged())
+                PlayFeedback(onAlertedFeedback);
         }
 
         private IEnumerator GruntSoundCycle()
@@ -76,28 +68,29 @@ namespace Archura
                 float wait = Random.Range(gruntTimerRange.x, gruntTimerRange.y);
                 yield return new WaitForSeconds(wait);
 
-                AggroState state = aggroModule != null ? aggroModule.CurrentAggroState : AggroState.Passive;
+                EngagementState state = aggroModule ? aggroModule.CurrentState : EngagementState.Passive;
 
                 PlayGruntClientRpc(state);
             }
         }
 
         [ClientRpc]
-        private void PlayGruntClientRpc(AggroState state)
+        private void PlayGruntClientRpc(EngagementState state)
         {
             switch (state)
             {
-                case AggroState.Passive:
-                    passiveGruntFeedback?.PlayFeedbacks();
+                case EngagementState.Passive:
+                    PlayFeedback(passiveGruntFeedback);
                     break;
-                case AggroState.Suspicious:
-                    suspiciousGruntFeedback?.PlayFeedbacks();
+                case EngagementState.Alerted:
+                case EngagementState.Searching:
+                    PlayFeedback(suspiciousGruntFeedback);
                     break;
-                case AggroState.Alerted:
-                    alertedGruntFeedback?.PlayFeedbacks();
+                case EngagementState.Engaged:
+                    PlayFeedback(alertedGruntFeedback);
                     break;
                 default:
-                    defaultGruntFeedback?.PlayFeedbacks();
+                    PlayFeedback(defaultGruntFeedback);
                     break;
             }
         }
@@ -111,7 +104,13 @@ namespace Archura
         [ClientRpc]
         private void PlayFootstepClientRpc()
         {
-            footstepFeedbackPlayer?.PlayFeedbacks();
+            PlayFeedback(footstepFeedbackPlayer);
+        }
+
+        private static void PlayFeedback(MMF_Player feedback)
+        {
+            if (feedback)
+                feedback.PlayFeedbacks();
         }
     }
 }
